@@ -33,261 +33,47 @@ public class Main {
         while (running) {
             displayMenu();
             int choice = getChoice(1, HIGH_BOUND, keyboard);
-            if (choice == 1) { // Add member
-                System.out.println("Please enter a name: ");
-                String name = keyboard.nextLine();
-
-                boolean added = librarySystem.addMember(new Member(name));
-                if (added) {
-                    System.out.println("Member " + name + " added.");
-                } else {
-                    System.out.println("Member already exists. Could not add.");
-                }
-            } else if (choice == 2) { // Show member
-                if (!librarySystem.getMembers().isEmpty()) {
-                    System.out.println("Please choose the member to show: ");
-                    int memberChoice = chooseMember(librarySystem.getMembers(), keyboard);
-
-                    MemberPrinter memberPrinter = new MemberPrinter(librarySystem.getMember(memberChoice));
-                    memberPrinter.print();
-                } else {
-                    System.out.println("Please add a member first.");
-                }
-            } else if (choice == 3) { // Remove member
-                if (!librarySystem.getMembers().isEmpty()) { // Checks there is a member to choose from
-                    System.out.println("Please choose a member to remove: ");
-                    int memberChoice = chooseMember(librarySystem.getMembers(), keyboard);
-
-                    if (librarySystem.removeMember(librarySystem.getMember(memberChoice))) {
-                        System.out.println("Member removed.");
-                    } else {
-                        System.out.println("Failed to remove member. Member not found.");
-                    }
-                } else {
-                    System.out.println("Please add a member first.");
-                }
-            } else if (choice == 4) { // Add library
-                System.out.println("Please enter a name for the library:");
-                String name = keyboard.nextLine();
-
-                librarySystem.addLibrary(new Library(name));
-                System.out.println(name + " library created.");
-            } else if (choice == 5) { // Show library
-                if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                    System.out.println("Please choose a library to show:");
-                    int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                    LibraryPrinter libraryPrinter = new LibraryPrinter(librarySystem.getLibraries().get(libraryChoice));
-                    libraryPrinter.print();
-                } else {
-                    System.out.println("Please add a library first.");
-                }
-            } else if (choice == 6) { // Add media
-                if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                    System.out.println("Please choose a library to add media to: ");
-                    int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                    System.out.println("Please enter the media name: ");
-                    String name = keyboard.nextLine();
-
-                    System.out.println("Please enter the creator of this media: ");
-                    String creator = keyboard.nextLine();
-
-                    System.out.println("Please choose the media format: ");
-                    // Cycles through the enum MediaFormat once to display the choices, then cycles through again
-                    // to match the choice to a value
-                    int counter = 1;
-                    for (MediaFormat format : MediaFormat.values()) {
-                        System.out.println(counter + ". " + format);
-                        counter++;
-                    }
-                    int formatChoice = getChoice(1, MediaFormat.values().length, keyboard);
-                    MediaFormat format = null;
-                    counter = 1;
-                    for (MediaFormat f : MediaFormat.values()) {
-                        if (formatChoice == counter) {
-                            format = f;
-                        }
-                        counter++;
-                    }
-
-                    System.out.println("Please choose a media category: ");
-                    // Cycles through the enum MediaCategory once to display the choices, then cycles through again
-                    // to match the choice to a value
-                    counter = 1;
-                    for (MediaCategory category : MediaCategory.values()) {
-                        System.out.println(counter + ". " + category);
-                        counter++;
-                    }
-                    int categoryChoice = getChoice(1, MediaCategory.values().length, keyboard);
-                    MediaCategory category = null;
-                    counter = 1;
-                    for (MediaCategory c : MediaCategory.values()) {
-                        if (categoryChoice == counter) {
-                            category = c;
-                        }
-                        counter++;
-                    }
-
-                    Media newMedia = new Media(name, creator, format, category);
-                    librarySystem.getLibraries().get(libraryChoice).addMedia(newMedia);
-                    System.out.println(name + " added to " + librarySystem.getLibraries().get(libraryChoice).getName());
-                } else {
-                    System.out.println("Please add a library first.");
-                }
-            } else if (choice == 7) { // Show media
-                if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                    System.out.println("Please choose a library to show media from: ");
-                    int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                    List<Media> media = librarySystem.getLibraries().get(libraryChoice).getMedia();
-                    if (!media.isEmpty()) { // Checks there is media to choose from
-                        System.out.println("Please choose a piece of media to show:");
-                        int mediaChoice = chooseMedia(media, keyboard);
-
-                        MediaPrinter mediaPrinter = new MediaPrinter(media.get(mediaChoice));
-                        mediaPrinter.print();
-                    } else {
-                        System.out.println("Please add media first.");
-                    }
-                } else {
-                    System.out.println("Please add a library first.");
-                }
-            } else if (choice == 8) { // Remove media
-                if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                    System.out.println("Please choose a library to remove media from: ");
-                    int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                    List<Media> media = librarySystem.getLibraries().get(libraryChoice).getMedia();
-                    if (!media.isEmpty()) { // Checks there is media to choose from
-                        System.out.println("Please choose a piece of media to remove:");
-                        int mediaChoice = chooseMedia(media, keyboard);
-
-                        librarySystem.getLibraries().get(libraryChoice).removeMedia(media.get(mediaChoice));
-                        System.out.println(media + " removed from "
-                                + librarySystem.getLibraries().get(libraryChoice).getName());
-                    } else {
-                        System.out.println("Please add media first.");
-                    }
-                } else {
-                    System.out.println("Please add a library first.");
-                }
-            } else if (choice == 9) { // Add resource
-                if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                    System.out.println("Please choose a library to add a resource to: ");
-                    int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                    System.out.println("Please choose a resource type: ");
-                    // Prints both resource types
-                    int counter = 1;
-                    for (ResourceType type : ResourceType.values()) {
-                        System.out.println(counter + ". " + type);
-                        counter++;
-                    }
-                    int typeChoice = getChoice(1, ResourceType.values().length, keyboard);
-
-                    // There are only 2 choices
-                    if (typeChoice == 1) { // Room
-                        Room newRoom = new Room();
-                        librarySystem.getLibraries().get(libraryChoice).addResource(newRoom);
-                    } else { // Computer
-                        Computer newComputer = new Computer();
-                        librarySystem.getLibraries().get(libraryChoice).addResource(newComputer);
-                    }
-
-                    System.out.println("Resource added to "
-                            + librarySystem.getLibraries().get(libraryChoice).getName() + " library.");
-                } else {
-                    System.out.println("Please add a library first.");
-                }
-            } else if (choice == 10) { // Show resource
-                if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                    System.out.println("Please choose the library the resource belongs to: ");
-                    int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                    List<Resource> resources = librarySystem.getLibraries().get(libraryChoice).getResources();
-                    if (!resources.isEmpty()) { // Checks there is a resource to choose from
-                        System.out.println("Please choose the resource to show: ");
-                        int resourceChoice = chooseResource(resources, keyboard);
-
-                        ResourcePrinter resourcePrinter = new ResourcePrinter(resources.get(resourceChoice));
-                        resourcePrinter.print();
-                    } else {
-                        System.out.println("Please add a resource first.");
-                    }
-                } else {
-                    System.out.println("Please add a library first.");
-                }
-            } else if (choice == 11) { // Add review
-                if (!librarySystem.getMembers().isEmpty()) { // Checks there is a member to choose from
-                    System.out.println("Please choose the member making the review");
-                    int memberChoice = chooseMember(librarySystem.getMembers(), keyboard);
-                    Member member = librarySystem.getMember(memberChoice);
-
-                    if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                        System.out.println("Please choose the library the media belongs to: ");
-                        int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                        List<Media> media = librarySystem.getLibraries().get(libraryChoice).getMedia();
-                        if (!media.isEmpty()) { // Checks there is media to choose from
-                            System.out.println("Please choose a piece of media to add a review to: ");
-                            int mediaChoice = chooseMedia(media, keyboard);
-
-                            System.out.println("Please enter a star rating (1-5): ");
-                            int starChoice = getChoice(1, 6, keyboard);
-
-                            System.out.println("Please type out your review: ");
-                            String review = keyboard.nextLine();
-
-                            Review newReview = new Review(member, media.get(mediaChoice), review, starChoice);
-                            media.get(mediaChoice).addReview(newReview);
-                            System.out.println("Review added.");
-                        } else {
-                            System.out.println("Please add media first.");
-                        }
-                    } else {
-                        System.out.println("Please add a library first.");
-                    }
-                } else {
-                    System.out.println("Please add a member first.");
-                }
-            } else if (choice == 12) { // Show review
-                if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                    System.out.println("Please choose the library the media of the review belongs to: ");
-                    int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                    List<Media> media = librarySystem.getLibraries().get(libraryChoice).getMedia();
-                    if (!media.isEmpty()) { // Checks there is media to choose from
-                        System.out.println("Please choose the media of the review: ");
-                        int mediaChoice = chooseMedia(media, keyboard);
-
-                        List<Review> reviews = media.get(mediaChoice).getReviews();
-                        if (!reviews.isEmpty()) { // Checks there is a review to choose from
-                            System.out.println("Please choose a review to show: ");
-                            int reviewChoice = chooseReview(reviews, keyboard);
-
-                            ReviewPrinter reviewPrinter = new ReviewPrinter(reviews.get(reviewChoice));
-                            reviewPrinter.print();
-                        } else {
-                            System.out.println("Please add a review first.");
-                        }
-                    } else {
-                        System.out.println("Please add media first.");
-                    }
-                } else {
-                    System.out.println("Please add a library first.");
-                }
-            } else if (choice == 13) { // Show map
-                if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
-                    System.out.println("Please choose a library to show the map of: ");
-                    int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
-
-                    MapPrinter mapPrinter = new MapPrinter(librarySystem.getLibraries().get(libraryChoice).getMap());
-                    mapPrinter.print();
-                } else {
-                    System.out.println("Please add a library first.");
-                }
-            } else { // Quit
+            if (choice == 1) {
+                // Add member
+                addMember(librarySystem, keyboard);
+            } else if (choice == 2) {
+                // Show member
+                showMember(librarySystem, keyboard);
+            } else if (choice == 3) {
+                // Remove member
+                removeMember(librarySystem, keyboard);
+            } else if (choice == 4) {
+                // Add library
+                addLibrary(librarySystem, keyboard);
+            } else if (choice == 5) {
+                // Show library
+                showLibrary(librarySystem, keyboard);
+            } else if (choice == 6) {
+                // Add media
+                addMedia(librarySystem, keyboard);
+            } else if (choice == 7) {
+                // Show media
+                showMedia(librarySystem, keyboard);
+            } else if (choice == 8) {
+                // Remove media
+                removeMedia(librarySystem, keyboard);
+            } else if (choice == 9) {
+                // Add resource
+                addResource(librarySystem, keyboard);
+            } else if (choice == 10) {
+                // Show resource
+                showResource(librarySystem, keyboard);
+            } else if (choice == 11) {
+                // Add review
+                addReview(librarySystem, keyboard);
+            } else if (choice == 12) {
+                // Show review
+                showReview(librarySystem, keyboard);
+            } else if (choice == 13) {
+                // Show map
+                showMap(librarySystem, keyboard);
+            } else {
+                // Quit
                 running = false;
                 keyboard.close();
                 System.out.println("Goodbye.");
@@ -318,6 +104,364 @@ public class Main {
                 13. SHOW MAP
                 14. QUIT
                 """);
+    }
+
+    /**
+     * Adds a member to the library system
+     *
+     * @param librarySystem the library system the member is being added to
+     * @param keyboard the scanner to receive input
+     */
+    public static void addMember(LibrarySystem librarySystem, Scanner keyboard) {
+        System.out.println("Please enter a name: ");
+        String name = keyboard.nextLine();
+
+        boolean added = librarySystem.addMember(new Member(name));
+        if (added) {
+            System.out.println("Member " + name + " added.");
+        } else {
+            System.out.println("Member already exists. Could not add.");
+        }
+    }
+
+    /**
+     * Shows a member from the library system
+     *
+     * @param librarySystem the library system of the member
+     * @param keyboard the scanner to receive input
+     */
+    public static void showMember(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getMembers().isEmpty()) {
+            System.out.println("Please choose the member to show: ");
+            int memberChoice = chooseMember(librarySystem.getMembers(), keyboard);
+
+            MemberPrinter memberPrinter = new MemberPrinter(librarySystem.getMember(memberChoice));
+            memberPrinter.print();
+        } else {
+            System.out.println("Please add a member first.");
+        }
+    }
+
+    /**
+     * Removes a member from the library system
+     *
+     * @param librarySystem the library system of the member
+     * @param keyboard the scanner to receive input
+     */
+    public static void removeMember(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getMembers().isEmpty()) { // Checks there is a member to choose from
+            System.out.println("Please choose a member to remove: ");
+            int memberChoice = chooseMember(librarySystem.getMembers(), keyboard);
+
+            if (librarySystem.removeMember(librarySystem.getMember(memberChoice))) {
+                System.out.println("Member removed.");
+            } else {
+                System.out.println("Failed to remove member. Member not found.");
+            }
+        } else {
+            System.out.println("Please add a member first.");
+        }
+    }
+
+    /**
+     * Adds a library to the library system
+     *
+     * @param librarySystem the library system the library is being added to
+     * @param keyboard the scanner to receive input
+     */
+    public static void addLibrary(LibrarySystem librarySystem, Scanner keyboard) {
+        System.out.println("Please enter a name for the library:");
+        String name = keyboard.nextLine();
+
+        librarySystem.addLibrary(new Library(name));
+        System.out.println(name + " library created.");
+    }
+
+    /**
+     * Shows a library from the library system
+     *
+     * @param librarySystem the library system of the library
+     * @param keyboard the scanner to receive input
+     */
+    public static void showLibrary(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+            System.out.println("Please choose a library to show:");
+            int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+            LibraryPrinter libraryPrinter = new LibraryPrinter(librarySystem.getLibraries().get(libraryChoice));
+            libraryPrinter.print();
+        } else {
+            System.out.println("Please add a library first.");
+        }
+    }
+
+    /**
+     * Adds media to a library in the library system
+     *
+     * @param librarySystem the library system the media is being added to
+     * @param keyboard the scanner to receive input
+     */
+    public static void addMedia(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+            System.out.println("Please choose a library to add media to: ");
+            int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+            System.out.println("Please enter the media name: ");
+            String name = keyboard.nextLine();
+
+            System.out.println("Please enter the creator of this media: ");
+            String creator = keyboard.nextLine();
+
+            System.out.println("Please choose the media format: ");
+            // Cycles through the enum MediaFormat once to display the choices, then cycles through again
+            // to match the choice to a value
+            int counter = 1;
+            for (MediaFormat format : MediaFormat.values()) {
+                System.out.println(counter + ". " + format);
+                counter++;
+            }
+            int formatChoice = getChoice(1, MediaFormat.values().length, keyboard);
+            MediaFormat format = null;
+            counter = 1;
+            for (MediaFormat f : MediaFormat.values()) {
+                if (formatChoice == counter) {
+                    format = f;
+                }
+                counter++;
+            }
+
+            System.out.println("Please choose a media category: ");
+            // Cycles through the enum MediaCategory once to display the choices, then cycles through again
+            // to match the choice to a value
+            counter = 1;
+            for (MediaCategory category : MediaCategory.values()) {
+                System.out.println(counter + ". " + category);
+                counter++;
+            }
+            int categoryChoice = getChoice(1, MediaCategory.values().length, keyboard);
+            MediaCategory category = null;
+            counter = 1;
+            for (MediaCategory c : MediaCategory.values()) {
+                if (categoryChoice == counter) {
+                    category = c;
+                }
+                counter++;
+            }
+
+            Media newMedia = new Media(name, creator, format, category);
+            librarySystem.getLibraries().get(libraryChoice).addMedia(newMedia);
+            System.out.println(name + " added to " + librarySystem.getLibraries().get(libraryChoice).getName());
+        } else {
+            System.out.println("Please add a library first.");
+        }
+    }
+
+    /**
+     * Shows media from a library in the library system
+     *
+     * @param librarySystem the library system of the media
+     * @param keyboard the scanner to receive input
+     */
+    public static void showMedia(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+            System.out.println("Please choose a library to show media from: ");
+            int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+            List<Media> media = librarySystem.getLibraries().get(libraryChoice).getMedia();
+            if (!media.isEmpty()) { // Checks there is media to choose from
+                System.out.println("Please choose a piece of media to show:");
+                int mediaChoice = chooseMedia(media, keyboard);
+
+                MediaPrinter mediaPrinter = new MediaPrinter(media.get(mediaChoice));
+                mediaPrinter.print();
+            } else {
+                System.out.println("Please add media first.");
+            }
+        } else {
+            System.out.println("Please add a library first.");
+        }
+    }
+
+    /**
+     * Removes media from a library in the library system
+     *
+     * @param librarySystem the library system of the media
+     * @param keyboard the scanner to receive input
+     */
+    public static void removeMedia(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+            System.out.println("Please choose a library to remove media from: ");
+            int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+            List<Media> media = librarySystem.getLibraries().get(libraryChoice).getMedia();
+            if (!media.isEmpty()) { // Checks there is media to choose from
+                System.out.println("Please choose a piece of media to remove:");
+                int mediaChoice = chooseMedia(media, keyboard);
+
+                librarySystem.getLibraries().get(libraryChoice).removeMedia(media.get(mediaChoice));
+                System.out.println(media + " removed from "
+                        + librarySystem.getLibraries().get(libraryChoice).getName());
+            } else {
+                System.out.println("Please add media first.");
+            }
+        } else {
+            System.out.println("Please add a library first.");
+        }
+    }
+
+    /**
+     * Adds a resource to a library in the library system
+     *
+     * @param librarySystem the library system the resource is being added to
+     * @param keyboard the scanner to receive input
+     */
+    public static void addResource(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+            System.out.println("Please choose a library to add a resource to: ");
+            int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+            System.out.println("Please choose a resource type: ");
+            // Prints both resource types
+            int counter = 1;
+            for (ResourceType type : ResourceType.values()) {
+                System.out.println(counter + ". " + type);
+                counter++;
+            }
+            int typeChoice = getChoice(1, ResourceType.values().length, keyboard);
+
+            // There are only 2 choices
+            if (typeChoice == 1) { // Room
+                Room newRoom = new Room();
+                librarySystem.getLibraries().get(libraryChoice).addResource(newRoom);
+            } else { // Computer
+                Computer newComputer = new Computer();
+                librarySystem.getLibraries().get(libraryChoice).addResource(newComputer);
+            }
+
+            System.out.println("Resource added to "
+                    + librarySystem.getLibraries().get(libraryChoice).getName() + " library.");
+        } else {
+            System.out.println("Please add a library first.");
+        }
+    }
+
+    /**
+     * Shows a resource from a library in the library system
+     *
+     * @param librarySystem the library system of the resource
+     * @param keyboard the scanner to receive input
+     */
+    public static void showResource(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+            System.out.println("Please choose the library the resource belongs to: ");
+            int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+            List<Resource> resources = librarySystem.getLibraries().get(libraryChoice).getResources();
+            if (!resources.isEmpty()) { // Checks there is a resource to choose from
+                System.out.println("Please choose the resource to show: ");
+                int resourceChoice = chooseResource(resources, keyboard);
+
+                ResourcePrinter resourcePrinter = new ResourcePrinter(resources.get(resourceChoice));
+                resourcePrinter.print();
+            } else {
+                System.out.println("Please add a resource first.");
+            }
+        } else {
+            System.out.println("Please add a library first.");
+        }
+    }
+
+    /**
+     * Adds a review to a media in a library in the library system
+     *
+     * @param librarySystem the library system the review is being added to
+     * @param keyboard the scanner to receive input
+     */
+    public static void addReview(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getMembers().isEmpty()) { // Checks there is a member to choose from
+            System.out.println("Please choose the member making the review");
+            int memberChoice = chooseMember(librarySystem.getMembers(), keyboard);
+            Member member = librarySystem.getMember(memberChoice);
+
+            if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+                System.out.println("Please choose the library the media belongs to: ");
+                int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+                List<Media> media = librarySystem.getLibraries().get(libraryChoice).getMedia();
+                if (!media.isEmpty()) { // Checks there is media to choose from
+                    System.out.println("Please choose a piece of media to add a review to: ");
+                    int mediaChoice = chooseMedia(media, keyboard);
+
+                    System.out.println("Please enter a star rating (1-5): ");
+                    int starChoice = getChoice(1, 6, keyboard);
+
+                    System.out.println("Please type out your review: ");
+                    String text = keyboard.nextLine();
+
+                    Review review = new Review(member, media.get(mediaChoice), text, starChoice);
+                    media.get(mediaChoice).addReview(review);
+                    System.out.println("Review added.");
+                } else {
+                    System.out.println("Please add media first.");
+                }
+            } else {
+                System.out.println("Please add a library first.");
+            }
+        } else {
+            System.out.println("Please add a member first.");
+        }
+    }
+
+    /**
+     * Shows a review of a media in a library in the library system
+     *
+     * @param librarySystem the library system of the review
+     * @param keyboard the scanner to receive input
+     */
+    public static void showReview(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+            System.out.println("Please choose the library the media of the review belongs to: ");
+            int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+            List<Media> media = librarySystem.getLibraries().get(libraryChoice).getMedia();
+            if (!media.isEmpty()) { // Checks there is media to choose from
+                System.out.println("Please choose the media of the review: ");
+                int mediaChoice = chooseMedia(media, keyboard);
+
+                List<Review> reviews = media.get(mediaChoice).getReviews();
+                if (!reviews.isEmpty()) { // Checks there is a review to choose from
+                    System.out.println("Please choose a review to show: ");
+                    int reviewChoice = chooseReview(reviews, keyboard);
+
+                    ReviewPrinter reviewPrinter = new ReviewPrinter(reviews.get(reviewChoice));
+                    reviewPrinter.print();
+                } else {
+                    System.out.println("Please add a review first.");
+                }
+            } else {
+                System.out.println("Please add media first.");
+            }
+        } else {
+            System.out.println("Please add a library first.");
+        }
+    }
+
+    /**
+     * Shows a map of a library in the library system
+     *
+     * @param librarySystem the library system of the map
+     * @param keyboard the scanner to receive input
+     */
+    public static void showMap(LibrarySystem librarySystem, Scanner keyboard) {
+        if (!librarySystem.getLibraries().isEmpty()) { // Checks there is a library to choose from
+            System.out.println("Please choose a library to show the map of: ");
+            int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
+
+            MapPrinter mapPrinter = new MapPrinter(librarySystem.getLibraries().get(libraryChoice).getMap());
+            mapPrinter.print();
+        } else {
+            System.out.println("Please add a library first.");
+        }
     }
 
     /**

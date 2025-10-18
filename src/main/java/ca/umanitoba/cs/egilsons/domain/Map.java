@@ -112,11 +112,12 @@ public class Map {
         final int HORIZONTAL = REGULAR_HORIZONTAL + (Math.max(ROOM_LENGTH, COMPUTER_LENGTH));
         this.display = new char[VERTICAL][HORIZONTAL];
 
-//        for (int i = 0; i < this.display.length; i++) {
-//            for (int j = 0; j < this.display[0].length; j++) {
-//                this.display[i][j] = SPACE;
-//            }
-//        }
+        // Filling in map with white space
+        for (int i = 0; i < this.display.length; i++) {
+            for (int j = 0; j < this.display[0].length; j++) {
+                this.display[i][j] = SPACE;
+            }
+        }
 
         // Walls
         for (int i = 1; i < VERTICAL; i++) {
@@ -142,14 +143,17 @@ public class Map {
         for (int i = 0; i < BOOKSHELF; i++) {
             this.display[BOOKSHELF_ROW1][i + BOOKSHELF1_SPACE] = FANTASY;
             this.display[BOOKSHELF_ROW1][i + BOOKSHELF2_SPACE + BOOKSHELF] = YOUNG_ADULT;
+            // There are 2 bookshelves and open space before this bookshelf
             this.display[BOOKSHELF_ROW1][i + BOOKSHELF3_SPACE + (2 * BOOKSHELF)] = ROMANCE;
 
             this.display[BOOKSHELF_ROW2][i + BOOKSHELF1_SPACE] = SCIENCE_FICTION;
             this.display[BOOKSHELF_ROW2][i + BOOKSHELF2_SPACE + BOOKSHELF] = CHILDREN;
+            // There are 2 bookshelves and open space before this bookshelf
             this.display[BOOKSHELF_ROW2][i + BOOKSHELF3_SPACE + (2 * BOOKSHELF)] = HISTORICAL_FICTION;
 
             this.display[BOOKSHELF_ROW3][i + BOOKSHELF1_SPACE] = NON_FICTION;
             this.display[BOOKSHELF_ROW3][i + BOOKSHELF2_SPACE + BOOKSHELF] = MYSTERY;
+            // There are 2 bookshelves and open space before this bookshelf
             this.display[BOOKSHELF_ROW3][i + BOOKSHELF3_SPACE + (2 * BOOKSHELF)] = HORROR;
         }
         

@@ -34,8 +34,8 @@ Here's my domain model:
 ```mermaid
 classDiagram
     class LibrarySystem {
-        %% A collection of libraries
         -List<Library> libraries
+        %% No duplicate member
         -TreeSet<Member> members
         
         +addLibrary(String name) void
