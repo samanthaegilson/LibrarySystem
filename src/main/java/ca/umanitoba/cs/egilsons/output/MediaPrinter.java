@@ -1,8 +1,11 @@
 package ca.umanitoba.cs.egilsons.output;
 
-import ca.umanitoba.cs.egilsons.domain.Media;
-import ca.umanitoba.cs.egilsons.domain.Member;
+import ca.umanitoba.cs.egilsons.domain.Library;
+import ca.umanitoba.cs.egilsons.domain.media.Media;
 
+/**
+ * Prints the information of a {@link Media}.
+ */
 public class MediaPrinter implements Printer {
     private Media media;
 

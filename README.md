@@ -1,8 +1,42 @@
+---
+title: LibrarySystem
+author: Samantha Egilson (egilsons@myumanitoba.ca)
+date: Fall 2025
+---
+
+# Overview
+
+LibrarySystem is an implementation of an online system for a library for COMP 2450 in
+Fall 2025. LibrarySystem can create libraries with a map and different kinds of media and 
+resources. LibrarySystem can also create members who can borrow media, return them, add 
+themselves to waitlists for media that are already borrowed, request media from other 
+libraries within the system and write reviews for media. Members can also book resources 
+at an available time. Members can have various ways of being contacted and can have
+constraints placed on their account.
+
+# Running
+
+This project was developed using IntelliJ IDEA and uses Maven, so there are two
+ways to run it:
+
+1. Open the class called `Main.java` and click the green play button on the
+   `main`method, or
+2. Run Maven on the command line:
+
+   ```
+   mvn compile exec:java -Dexec.mainClass="ca.umanitoba.cs.egilsons.Main"
+   ```
+
+# Domain model
+
+Here's my domain model:
+
 ```mermaid
 classDiagram
     class LibrarySystem {
-        -Collection libraries
-        -TreeSet members
+        %% A collection of libraries
+        -List<Library> libraries
+        -TreeSet<Member> members
         
         %% For now replaces the old instance with a new instance
         +addLibrary(String) void
@@ -140,9 +174,6 @@ classDiagram
         -PositiveNumber stars
         %% Stars?
         %% record?
-        
-        +edit(Text) void
-        +delete() void
     }
     
     note for Review "Invariant Properties:

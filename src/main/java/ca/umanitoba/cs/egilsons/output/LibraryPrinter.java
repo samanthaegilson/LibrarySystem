@@ -1,9 +1,12 @@
 package ca.umanitoba.cs.egilsons.output;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
-import ca.umanitoba.cs.egilsons.domain.Media;
-import ca.umanitoba.cs.egilsons.domain.Resource;
+import ca.umanitoba.cs.egilsons.domain.media.Media;
+import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 
+/**
+ * Prints the information of a {@link Library}.
+ */
 public class LibraryPrinter implements Printer {
     private Library library;
 

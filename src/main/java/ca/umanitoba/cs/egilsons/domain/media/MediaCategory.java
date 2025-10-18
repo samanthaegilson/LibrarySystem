@@ -1,5 +1,8 @@
-package ca.umanitoba.cs.egilsons.domain;
+package ca.umanitoba.cs.egilsons.domain.media;
 
+/**
+ * An enum for the different types of categories a {@link Media} could belong to.
+ */
 public enum MediaCategory {
     FANTASY,
     YOUNG_ADULT,

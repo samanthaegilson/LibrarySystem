@@ -1,13 +1,24 @@
 package ca.umanitoba.cs.egilsons.domain;
 
+import ca.umanitoba.cs.egilsons.domain.media.Media;
+import ca.umanitoba.cs.egilsons.domain.resource.Resource;
+
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A library. Libraries contain {@link Media} and {@link Resource}.
+ */
 public class Library {
     private String name;
     private List<Media> media;
     private List<Resource> resources;
 
+    /**
+     * Constructor for a library. Receives input for the name
+     *
+     * @param name the name of the library
+     */
     public Library(String name) {
         this.name = name;
         this.media = new ArrayList<>();
@@ -30,6 +41,11 @@ public class Library {
         this.resources.add(resource);
     }
 
+    /**
+     * Adds a media to the library's media
+     *
+     * @param newMedia the media being added
+     */
     public void addMedia(Media newMedia) {
         boolean found = false;
         int index = 0;
@@ -47,20 +63,12 @@ public class Library {
         }
     }
 
-    public void removeMedia(String name) {
-        boolean found = false;
-        int i = 0;
-        while (!found || i > this.media.size()) {
-            if (this.media.get(i).getName().equalsIgnoreCase(name)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        if (found) {
-            this.media.remove(i);
-        } else {
-            System.out.println("No such media found.");
-        }
+    /**
+     * Removes media from the library's media
+     *
+     * @param mediaIndex the index of the media to be removed
+     */
+    public void removeMedia(int mediaIndex) {
+        this.media.remove(mediaIndex);
     }
 }

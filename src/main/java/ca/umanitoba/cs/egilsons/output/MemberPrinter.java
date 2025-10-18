@@ -1,8 +1,11 @@
 package ca.umanitoba.cs.egilsons.output;
 
-import ca.umanitoba.cs.egilsons.domain.Media;
+import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.Member;
 
+/**
+ * Prints the information of a {@link Member}.
+ */
 public class MemberPrinter {
     private Member member;
 
@@ -12,7 +15,7 @@ public class MemberPrinter {
 
     public void print() {
         System.out.println("Member name: " + this.member.getName());
-        System.out.println("Contact information : ");
+        System.out.println("Contact information: ");
         for (int i = 0; i < this.member.getContactInfo().size(); i++) {
             System.out.println(this.member.getContactInfo().get(i));
         }
@@ -23,11 +26,6 @@ public class MemberPrinter {
         System.out.println("Current media: ");
         for (int i = 0; i < this.member.getCurrentMedia().size(); i++) {
             System.out.println(this.member.getCurrentMedia().get(i).getName());
-        }
-        System.out.println("Reviews: ");
-        for (int i = 0; i < this.member.getReviews().size(); i++) {
-            System.out.println(this.member.getReviews().get(i).getStars() + ", "
-                    + this.member.getReviews().get(i).getMedia().getName());
         }
     }
 }

@@ -1,8 +1,11 @@
 package ca.umanitoba.cs.egilsons.output;
 
+import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.Map;
-import ca.umanitoba.cs.egilsons.domain.Media;
 
+/**
+ * Prints the information of a {@link Map}.
+ */
 public class MapPrinter implements Printer {
     private Map map;
 
@@ -18,8 +21,9 @@ public class MapPrinter implements Printer {
         System.out.println("Map: ");
         for (int i = 0; i < map.getDisplay().length; i++) {
             for (int j = 0; j < map.getDisplay()[i].length; j++) {
-                System.out.println(map.getDisplay()[i][j]);
+                System.out.print(map.getDisplay()[i][j]);
             }
+            System.out.println();
         }
     }
 }

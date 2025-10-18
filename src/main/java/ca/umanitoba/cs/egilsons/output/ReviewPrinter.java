@@ -1,7 +1,11 @@
 package ca.umanitoba.cs.egilsons.output;
 
-import ca.umanitoba.cs.egilsons.domain.Review;
+import ca.umanitoba.cs.egilsons.domain.Library;
+import ca.umanitoba.cs.egilsons.domain.media.Review;
 
+/**
+ * Prints the information of a {@link Review}.
+ */
 public class ReviewPrinter implements Printer {
     private Review review;
 
@@ -10,9 +14,9 @@ public class ReviewPrinter implements Printer {
     }
 
     public void print() {
-        System.out.println("Media: " + this.review.getMedia());
-        System.out.println("Author: " + this.review.getMember());
-        System.out.println(this.review.getStars() + " stars");
-        System.out.println(this.review.getReview());
+        System.out.println("Media: " + this.review.media().getName());
+        System.out.println("Author: " + this.review.member().getName());
+        System.out.println(this.review.stars() + " stars");
+        System.out.println(this.review.review());
     }
 }

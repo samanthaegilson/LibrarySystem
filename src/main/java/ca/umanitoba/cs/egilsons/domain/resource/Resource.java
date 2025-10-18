@@ -1,10 +1,11 @@
-package ca.umanitoba.cs.egilsons.domain;
+package ca.umanitoba.cs.egilsons.domain.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An interface for resources that belong to a {@link ca.umanitoba.cs.egilsons.domain.Library}.
+ */
 public interface Resource {
-    public boolean bookTime(Booking booking);
     public ResourceType getType();
     public int getNumber();
     public List<Booking> getBookings();
