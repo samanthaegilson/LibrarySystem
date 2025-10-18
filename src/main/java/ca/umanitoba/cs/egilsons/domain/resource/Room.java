@@ -1,16 +1,23 @@
 package ca.umanitoba.cs.egilsons.domain.resource;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.base.Preconditions;
 
 /**
  * A room. Rooms are a bookable type of {@link Resource}.
  */
 public class Room implements Resource {
-    private ResourceType type = ResourceType.ROOM;
-    private int number;
-    private List<Booking> bookings;
+    private final ResourceType type = ResourceType.ROOM;
+    private final int number;
     private static int count = 0;
+
+    /**
+     * Invariant properties for Room
+     */
+    private void checkRoom() {
+        Preconditions.checkNotNull(type, "Type should never be null.");
+        Preconditions.checkState(number > 0, "Number should be bigger than 0.");
+        Preconditions.checkState(count >= 0, "Count should never be below 0.");
+    }
 
     /**
      * Default constructor for a room. Determines the room number by how
@@ -18,7 +25,6 @@ public class Room implements Resource {
      */
     public Room () {
         count++;
-        this.bookings = new ArrayList<>();
         this.number = count;
     }
 
@@ -28,9 +34,5 @@ public class Room implements Resource {
 
     public int getNumber() {
         return this.number;
-    }
-
-    public List<Booking> getBookings() {
-        return this.bookings;
     }
 }

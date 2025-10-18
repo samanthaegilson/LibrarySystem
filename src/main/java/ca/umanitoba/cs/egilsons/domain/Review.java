@@ -1,6 +1,6 @@
-package ca.umanitoba.cs.egilsons.domain.media;
+package ca.umanitoba.cs.egilsons.domain;
 
-import ca.umanitoba.cs.egilsons.domain.Member;
+import ca.umanitoba.cs.egilsons.domain.media.Media;
 import com.google.common.base.Preconditions;
 
 /**
@@ -8,10 +8,10 @@ import com.google.common.base.Preconditions;
  *
  * @param member the author of the review.
  * @param media the media the review is about.
- * @param review the content of the review.
+ * @param text the content of the review.
  * @param stars a ranking out of five.
  */
-public record Review(Member member, Media media, String review, int stars) {
+public record Review(Member member, Media media, String text, int stars) {
 
     /**
      * Invariant properties for Review
@@ -19,23 +19,23 @@ public record Review(Member member, Media media, String review, int stars) {
     private void checkReview() {
         Preconditions.checkNotNull(member, "Member should never be null.");
         Preconditions.checkNotNull(media, "Media should never be null.");
-        Preconditions.checkNotNull(review, "Review should never be null.");
-        Preconditions.checkState(review.length() >= 1, "Review should be at least 1 symbol.");
+        Preconditions.checkNotNull(text, "Review should never be null.");
+        Preconditions.checkState(text.length() >= 1, "Review should be at least 1 symbol.");
         Preconditions.checkState(stars > 0 && stars <= 5, "Review should be between 1 and 5 stars");
     }
 
     /**
-     * Constructor for a review. Recieves input for the member, media, review text and stars
+     * Constructor for a review. Receives input for the member, media, text and stars
      *
      * @param member the member that created the review
      * @param media the media the review is about
-     * @param review the content of the review
+     * @param text the content of the review
      * @param stars the ranking of the review
      */
-    public Review(Member member, Media media, String review, int stars) {
+    public Review(Member member, Media media, String text, int stars) {
         this.member = member;
         this.media = media;
-        this.review = review;
+        this.text = text;
         this.stars = stars;
         checkReview();
     }

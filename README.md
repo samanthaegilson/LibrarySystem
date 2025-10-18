@@ -38,10 +38,8 @@ classDiagram
         -List<Library> libraries
         -TreeSet<Member> members
         
-        %% For now replaces the old instance with a new instance
-        +addLibrary(String) void
-        %% don't want duplicates, use "set"?
-        +addMember(String, List<String>) void
+        +addLibrary(String name) void
+        +addMember(String name, List<String> contactInfo) void
         +removeMember() boolean
     }
     LibrarySystem --* Library
@@ -56,15 +54,15 @@ classDiagram
     </ul>"
     
     class Library {
-        %% interface?
-        -Text name
-        -Collection media
-        -Collection resources
+        -String name
+        -List<Media> media
+        -List<Resource> resources
         -Map map
         
-        +addResource() void
-        +addMedia() void
-        +removeMedia(Media) void
+        +addResource(Resource resource) void
+        +addMedia(Media media) void
+        +removeMedia(Media media) void
+        -updateMap() void
     }
     Library --* Media
     Library --* Resource
@@ -72,24 +70,19 @@ classDiagram
 
     note for Library "Invariant properties:
     <ul>
+        <li>name != null
+        <li>name.length() >= 1
         <li>media != null
         <li>resources != null
+        <li>map != null
         <li>loop: no media are null in media.
         <li>loop: no resources are null in resources.
     </ul>"
     
     class Member {
-        %% class
-        %% becoming member for entire system
-        -Text name
-        -Collection constraints
-        -Collection contactInfo
-        -Collection currentMedia
-        -Collection reviews
-        %% Library card number?
-        
-        %% asks for member, so should be in library?
-        +addReview(Review) void
+        -String name
+
+        +compareTo(Member other) int
     }
     Member --* Review
 
@@ -97,24 +90,20 @@ classDiagram
     <ul>
         <li>name != null
         <li>name.length() >= 1
-        <li>constraints != null
-        <li>contactInfo != null
-        <li>currentMedia != null
-        <li>loop: no media are null in currentMedia.
     </ul>"
 
     
     class Media {
-        %%record
-        %% class for copies and lists
-        -Text name
-        -Text creator
+        -String name
+        -String creator
         -Format format
         -Category category
-        -PositiveNumber copies
-        -Collection reviews
-        %% should waitlist be a stack?
+        %% Has to be a positive number
+        -int copies
+        -List<Reviews> reviews
  
+        +equals(Media other) boolean
+        +addCopy() void
         +addReview() void
     }
     Media --* Review
@@ -129,61 +118,74 @@ classDiagram
         <li>creator.length() >= 1
         <li>format != null
         <li>category != null
-        <li>waitlist != null
         <li>copies >= 0
         <li>reviews != null
-        <li>loop: no members are null in waitlist.
         <li>loop: no reviews are null in reviews.
     </ul>"
     
     class Resource {
         <<interface>>
-        %% time
-        +bookTime(Time) boolean
-        +cancelBooking(Time) boolean
     }
+    Resource --* ResourceType
     
     class Computer {
+        -ResourceType type
         -int number
-        -Collection bookings
-        +bookTime(Time) boolean
-        +cancelBooking(Time) boolean
+        -static int count
     }
     Computer ..|> Resource
+
+    note for Computer "Invariant properties:
+    <ul>
+        <li>type != null
+        <li>number > 0
+        <li>count >= 0
+    </ul>"
     
     class Room {
+        -ResourceType type
         -int number
-        -Collection bookings
-        +bookTime(Time) boolean
-        +cancelBooking(Time) boolean
+        -static int count
     }
     Room ..|> Resource
+
+    note for Room "Invariant properties:
+    <ul>
+        <li>type != null
+        <li>number > 0
+        <li>count >= 0
+    </ul>"
     
     class Map {
-        -Display map
-        %% Written list of symbols
-        -String legend
+        %% An overhead visual representation of the map
+        -char[][] display
+        -String[] legend
     }
-    Map --o MediaCategory
+
+    note for Map "Invariant properties:
+    <ul>
+        <li>display != null
+        <li>legend != null
+        <li>loop: no entries are null in legend.
+        <li>loop: all entries.length() >= 1 in legend.
+    </ul>"
     
     class Review {
-        %% can also review resources!!!
+        <<record>>
         -Member member
         -Media media
-        -Text review
-        -PositiveNumber stars
-        %% Stars?
-        %% record?
+        -String text
+        %% Number between 1 and 5
+        -int stars
     }
     
     note for Review "Invariant Properties:
     <ul>
         <li>member != null
         <li>media != null
-        <li>review != null
-        <li>review.length() >= 1
-        <li>stars > 0
-        <li>stars <= 5
+        <li>text != null
+        <li>text.length() >= 1
+        <li>stars > 0 && stars <= 5
     </ul>"
     
     class MediaCategory {

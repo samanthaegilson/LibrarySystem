@@ -12,36 +12,22 @@ import java.util.List;
  */
 public class Member implements Comparable<Member> {
     private final String name;
-    private List<Media> currentMedia;
-    private List<String> contactInfo;
-    private List<String> constraints;
 
     /**
-     * Invariant properties for a member
+     * Invariant properties for Member
      */
     private void checkMember() {
         Preconditions.checkNotNull(name, "Name should never be null.");
         Preconditions.checkState(name.length() >= 1,"Member name should have at least 1 symbol.");
-        Preconditions.checkNotNull(currentMedia, "Current Media should never be null.");
-        Preconditions.checkNotNull(contactInfo, "Contact Info should never be null.");
-        Preconditions.checkNotNull(constraints, "Constraints should never be null.");
-
-        for (Media m:currentMedia) {
-            Preconditions.checkNotNull(m, "Media in currentMedia should never be null.");
-        }
     }
 
     /**
      * Constructor for a member. Receives input for the name and contact information
      *
      * @param name the name of the member
-     * @param contactInfo the contact information of the member
      */
-    public Member(String name, List<String> contactInfo) {
+    public Member(String name) {
         this.name = name;
-        this.currentMedia = new ArrayList<>();
-        this.contactInfo = contactInfo;
-        this.constraints = new ArrayList<>();
         checkMember();
     }
 
@@ -49,27 +35,12 @@ public class Member implements Comparable<Member> {
         return this.name;
     }
 
-    public List<Media> getCurrentMedia() {
-        return this.currentMedia;
-    }
-
-    public List<String> getContactInfo() {
-        return this.contactInfo;
-    }
-
-    public List<String> getConstraints() {
-        return this.constraints;
-    }
-
-    public boolean equals(Member other) {
-        boolean equal = false;
-        if (this.name.equals(other.getName())) {
-            equal = true;
-        }
-        return equal;
-    }
-
-    @Override
+    /**
+     * Compares a member to another member
+     *
+     * @param other the member being compared
+     * @return 0 if the members are equal, 1 if the members are different
+     */
     public int compareTo(Member other) {
         int equal = 1;
         if (this.name.equals(other.getName())) {

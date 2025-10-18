@@ -1,5 +1,9 @@
 package ca.umanitoba.cs.egilsons.domain;
 
+import ca.umanitoba.cs.egilsons.domain.media.Media;
+import ca.umanitoba.cs.egilsons.domain.resource.Resource;
+import com.google.common.base.Preconditions;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -10,6 +14,22 @@ import java.util.TreeSet;
 public class LibrarySystem {
     private List<Library> libraries;
     private TreeSet<Member> members;
+
+    /**
+     * Invariant properties for LibrarySystem
+     */
+    private void checkLibrary() {
+        Preconditions.checkNotNull(libraries, "Libraries should never be null.");
+        Preconditions.checkNotNull(members, "Members should never be null.");
+
+        for (Library library : libraries) {
+            Preconditions.checkNotNull(library, "Libraries in libraries should never be null.");
+        }
+
+        for (Member member : members) {
+            Preconditions.checkNotNull(member, "Members in members should never be null.");
+        }
+    }
 
     /**
      * Default constructor for the Library System
@@ -33,7 +53,8 @@ public class LibrarySystem {
      * @param library the library being added
      */
     public void addLibrary(Library library) {
-        if (this.libraries.size() > 0) {
+        // Only allowing 1 library to exist at a time
+        if (!this.libraries.isEmpty()) {
             this.libraries.remove(0);
         }
         this.libraries.add(library);
@@ -43,15 +64,10 @@ public class LibrarySystem {
      * Adds a member to the library system
      *
      * @param member the member being added
-     * @return
+     * @return if the member has been added or not
      */
     public boolean addMember(Member member) {
-        boolean added = false;
-        if (this.members.add(member)) {
-            // !this.members.contains(member)
-            added = true;
-        }
-        return added;
+        return this.members.add(member);
     }
 
     /**
@@ -73,6 +89,7 @@ public class LibrarySystem {
     public Member getMember(int index) {
         Member member = null;
         int count = 0;
+        // Goes through members until the count matches the index
         for (Member m : this.members) {
             if (count == index) {
                 member = m;

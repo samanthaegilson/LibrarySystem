@@ -8,5 +8,4 @@ import java.util.List;
 public interface Resource {
     public ResourceType getType();
     public int getNumber();
-    public List<Booking> getBookings();
 }

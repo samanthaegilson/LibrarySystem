@@ -15,13 +15,14 @@ public class MapPrinter implements Printer {
 
     public void print() {
         System.out.println("Legend: ");
-        for (int i = 0; i < map.getLegend().length; i++) {
-            System.out.println(map.getLegend()[i]);
+        for (int i = 0; i < this.map.getLegend().length; i++) {
+            System.out.println(this.map.getLegend()[i]);
         }
+
         System.out.println("Map: ");
-        for (int i = 0; i < map.getDisplay().length; i++) {
-            for (int j = 0; j < map.getDisplay()[i].length; j++) {
-                System.out.print(map.getDisplay()[i][j]);
+        for (int i = 0; i < this.map.getDisplay().length; i++) {
+            for (int j = 0; j < this.map.getDisplay()[i].length; j++) {
+                System.out.print(this.map.getDisplay()[i][j]);
             }
             System.out.println();
         }

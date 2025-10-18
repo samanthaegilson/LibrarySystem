@@ -1,6 +1,6 @@
 package ca.umanitoba.cs.egilsons.domain.media;
 
-import ca.umanitoba.cs.egilsons.domain.Member;
+import ca.umanitoba.cs.egilsons.domain.Review;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ public class Media {
     private final String creator;
     private final MediaFormat format;
     private final MediaCategory category;
-    private List<Member> waitlist;
     private List<Review> reviews;
     private int copies;
 
@@ -28,16 +27,11 @@ public class Media {
         Preconditions.checkState(creator.length() >= 1,"Creator name should have at least 1 symbol.");
         Preconditions.checkNotNull(format, "Format should never be null.");
         Preconditions.checkNotNull(category, "Category should never be null.");
-        Preconditions.checkNotNull(waitlist, "Waitlist should never be null.");
         Preconditions.checkNotNull(reviews, "Reviews should never be null.");
         Preconditions.checkState(copies >= 0, "Copies should never go below 0.");
 
-        for(Member m:waitlist) {
-            Preconditions.checkNotNull(m, "Members in waitlist should never be null");
-        }
-
-        for (Review r:reviews) {
-            Preconditions.checkNotNull(r, "Reviews in reviews should never be null.");
+        for (Review review : reviews) {
+            Preconditions.checkNotNull(review, "Reviews in reviews should never be null.");
         }
     }
 
@@ -54,7 +48,6 @@ public class Media {
         this.creator = creator;
         this.format = format;
         this.category = category;
-        this.waitlist = new ArrayList<>();
         this.reviews = new ArrayList<>();
         this.copies++;
         checkMedia();
@@ -76,10 +69,6 @@ public class Media {
         return this.category;
     }
 
-    public List<Member> getWaitlist() {
-        return this.waitlist;
-    }
-
     public List<Review> getReviews() {
         return this.reviews;
     }
@@ -95,7 +84,9 @@ public class Media {
      * @return if the two medias are equal or not
      */
     public boolean equals(Media other) {
+        checkMedia();
         boolean equal = false;
+        // Only equal if the name, creator, format and category are all the same
         if (other.name.equals(this.name) && other.creator.equals(this.creator) && other.format == this.format
                 && other.category == this.category) {
             equal = true;
@@ -107,7 +98,9 @@ public class Media {
      * Adds a copy of this media
      */
     public void addCopy() {
+        checkMedia();
         this.copies++;
+        checkMedia();
     }
 
     /**

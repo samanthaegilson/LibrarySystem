@@ -1,6 +1,7 @@
 package ca.umanitoba.cs.egilsons.output;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
+import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 
 /**
@@ -19,10 +20,10 @@ public class MediaPrinter implements Printer {
         System.out.println("Format: " + this.media.getFormat());
         System.out.println("Category: " + this.media.getCategory());
         System.out.println("Copies available: " + this.media.getCopies());
-        System.out.println("Waitlist: ");
-        for (int i = 0; i < this.media.getWaitlist().size(); i++) {
-            System.out.println((i + 1) + ". " + this.media.getWaitlist().get(i).getName());
+
+        System.out.println("Reviews: ");
+        for (Review review : this.media.getReviews()) {
+            System.out.println(review.stars() + " stars by " + review.member());
         }
-        // Add reviews
     }
 }
