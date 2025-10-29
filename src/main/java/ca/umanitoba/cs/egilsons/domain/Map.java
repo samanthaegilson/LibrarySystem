@@ -47,7 +47,6 @@ public class Map {
         final char HORROR = 'H';
         final char COMPUTERS = 'C';
         final char DOOR = 'O';
-        final char KIOSK = 'K';
         // Constants for spacing
         final int LEGEND_ESSENTIALS = 13;
         final int VERTICAL = 10;
