@@ -47,6 +47,7 @@ public class Map {
         final char HORROR = 'H';
         final char COMPUTERS = 'C';
         final char DOOR = 'O';
+        final char KIOSK = 'K';
         // Constants for spacing
         final int LEGEND_ESSENTIALS = 13;
         final int VERTICAL = 10;
@@ -70,6 +71,7 @@ public class Map {
         final int VERTICAL_ROOM_WALL2 = 2;
         final int HORIZONTAL_ROOM_WALL = 3;
         final int DOOR_SPOT = 3;
+        final int KIOSK_SPOT = 34;
 
         int roomCount = 0;
         int computerCount = 0;
@@ -133,6 +135,9 @@ public class Map {
         // Exits
         this.display[0][HORIZONTAL_EXIT] = EXIT;
         this.display[VERTICAL_EXIT][HORIZONTAL - 1] = EXIT;
+
+        // Kiosk
+        this.display[1][KIOSK_SPOT] = KIOSK;
         
         // Main desk
         for (int i = 0; i < DESK_LENGTH; i++) {

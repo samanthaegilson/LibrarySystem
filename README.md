@@ -26,6 +26,143 @@ ways to run it:
    ```
    mvn compile exec:java -Dexec.mainClass="ca.umanitoba.cs.egilsons.Main"
    ```
+   
+## Flow of interaction
+
+Here is the flowchart for the "Enter account" task...
+
+```mermaid
+flowchart
+    subgraph ENTER ACCOUNT
+        %% Should logout be apart of this??
+        signinscreen[[Sign In Screen]]
+
+        signinscreen ==No Account==> chooseCredentials
+        signinscreen ==Username==> checkUser
+        signinscreen ==Password==> checkUser
+
+        chooseCredentials[Choose Credentials]
+        makeAccount{Make Account}
+        
+        %% Enter name and other information too?
+        chooseCredentials ==Username==> makeAccount
+        chooseCredentials ==Password==> makeAccount
+        makeAccount -.Account Created.-> enterAccount
+        
+        checkUser{Check User}
+        enterAccount[[Enter Account]]
+        
+        checkUser -.No Such User Exists.->signinscreen
+        checkUser -.Credentials Match Account.->enterAccount
+            
+    end
+```
+
+Here is the flowchart for the "Borrow Media" task
+
+```mermaid
+flowchart
+    subgraph BORROW MEDIA
+        %% Account for constraints?
+        browseMedia[[Browse Media]]
+        
+        filterSelection[Filter Selection]
+        filterMedia{Filter Media}
+        
+        browseMedia ==Filter==> filterSelection
+        filterSelection==Selected Filter==> filterMedia
+        filterMedia-.Filter Applied.->browseMedia
+        browseMedia ==Chosen Media==> mediaInfo
+        
+        mediaInfo[Media Info]
+        borrowMedia{Borrow Media}
+        mediaBorrowed[[Media Borrowed]]
+        
+        mediaInfo-.Cancel.->browseMedia
+        mediaInfo-.Selected Media.->borrowMedia
+        borrowMedia-.No Copies Available.->waitlistInformation
+        borrowMedia-.Media borrowed.-> mediaBorrowed
+
+        waitlistInformation[Waitlist Information]
+        addToWaitlist{Add to Waitlist}
+        
+        waitlistInformation-.Join Waitlist.-> addToWaitlist
+        
+    end
+```
+
+Here is the flowchart for the "Book Resource" task
+
+```mermaid
+flowchart
+    subgraph BOOK RESOURCE
+        %% Divide by hours
+        availableTimes[[Available Timeslots Screen]]
+        
+        filterChoice[Filter Choice]
+        filterTimes{Filter Times}
+        
+        availableTimes==Filter==>filterChoice
+        filterChoice==Selected filter==>filterTimes
+        filterTimes-.Filter applied.->availableTimes
+        
+        bookTime{bookTime}
+        resourceBooked[[Resource Booked]]
+        
+        availableTimes==Book time==>bookTime
+        bookTime-.Time booked.->resourceBooked
+        
+    end
+```
+
+Here is the flowchart for the "Map Path" task
+
+```mermaid
+flowchart
+    subgraph MAP PATH 
+        enterItem[[Enter Item]]
+        
+        findItemLocation{Find Item Location}
+        findItemPath{Find Item Path}
+        showItemPath[[Show Item Path]]
+        
+        enterItem==Chosen item==>findItemLocation
+        findItemLocation-.Item location.->findItemPath
+        findItemPath-.Path to item.->showItemPath
+        
+    end
+```
+
+Here is the flowchart for the "Return Media" task
+
+```mermaid
+flowchart
+    subgraph RETURN MEDIA 
+        returnScreen[[Return Screen]]
+        
+        makeReview[Make Review]
+        addReview{Add Review}
+        
+        returnScreen==Review==>makeReview
+        %% Need to make more specific input??
+        makeReview==Review information==>addReview
+        addReview-.Review added.->returnScreen
+        
+        selectReview[Review Selection]
+        reviewInformation[Review Information]
+        
+        returnScreen==Read review==>selectReview
+        selectReview==Chosen review==>reviewInformation
+        reviewInformation-.Review read.->returnScreen
+        
+        returnMedia{Return Media}
+        mediaReturned[[Media Returned]]
+        
+        returnScreen==Return media==>returnMedia
+        returnMedia-.Returned.->mediaReturned
+        
+    end
+```
 
 # Domain model
 
