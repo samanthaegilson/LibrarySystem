@@ -34,9 +34,10 @@ Here's my domain model:
 ```mermaid
 classDiagram
     class LibrarySystem {
-        -List<Library> libraries
-        %% No duplicate member
-        -TreeSet<Member> members
+        %% Collection of libraries
+        -List~Library~ libraries
+        %% Collection of members with no duplicate members
+        -TreeSet~Member~ members
         
         +addLibrary(String name) void
         +addMember(String name, List<String> contactInfo) void
@@ -54,9 +55,14 @@ classDiagram
     </ul>"
     
     class Library {
+        %% Text for the name of the library
         -String name
-        -List<Media> media
-        -List<Resource> resources
+        %% Collection of media in the library
+        -List~Media~ media
+        %% Collection of resources in the library
+        -List~Resource~ resources
+        %% An overhead visual representation of 
+        %% the library
         -Map map
         
         +addResource(Resource resource) void
@@ -80,11 +86,11 @@ classDiagram
     </ul>"
     
     class Member {
+        %% Text for the name of the member
         -String name
 
         +compareTo(Member other) int
     }
-    Member --* Review
 
     note for Member "Invariant properties:
     <ul>
@@ -94,13 +100,18 @@ classDiagram
 
     
     class Media {
+        %% Text for the name of the media
         -String name
+        %% Text for the name of the creator
         -String creator
-        -Format format
-        -Category category
-        %% Has to be a positive number
+        %% The type of format
+        -MediaFormat format
+        %% The type of category or genre
+        -MediaCategory category
+        %% Has to be a positive number or zero
         -int copies
-        -List<Reviews> reviews
+        %% Collection of reviews about the media
+        -List~Reviews~ reviews
  
         +equals(Media other) boolean
         +addCopy() void
@@ -129,8 +140,12 @@ classDiagram
     Resource --* ResourceType
     
     class Computer {
+        %% The type of resource
         -ResourceType type
+        %% A positive number representing the
+        %% amount in a library
         -int number
+        %% Has to be a positive number or zero
         -static int count
     }
     Computer ..|> Resource
@@ -143,8 +158,12 @@ classDiagram
     </ul>"
     
     class Room {
+        %% The type of resource
         -ResourceType type
+        %% A positive number representing the
+        %% amount in a library
         -int number
+        %% Has to be a positive number or zero
         -static int count
     }
     Room ..|> Resource
@@ -159,6 +178,7 @@ classDiagram
     class Map {
         %% An overhead visual representation of the map
         -char[][] display
+        %% A list of what every symbol represents
         -String[] legend
     }
 
@@ -172,8 +192,12 @@ classDiagram
     
     class Review {
         <<record>>
+        %% The member who made the review
         -Member member
+        %% The media the review is about
         -Media media
+        %% Text that expresses the member's 
+        %% opinion on the media
         -String text
         %% Number between 1 and 5
         -int stars
