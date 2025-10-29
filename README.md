@@ -38,7 +38,7 @@ flowchart
         signinscreen[[Sign In Screen]]
 
         signinscreen ==No Account==> chooseCredentials
-        signinscreen ==Username==> checkUser
+        signinscreen ==Name==> checkUser
         signinscreen ==Password==> checkUser
 
         chooseCredentials[Choose Credentials]
@@ -225,6 +225,7 @@ classDiagram
     class Member {
         %% Text for the name of the member
         -String name
+        -String password
 
         +compareTo(Member other) int
     }
