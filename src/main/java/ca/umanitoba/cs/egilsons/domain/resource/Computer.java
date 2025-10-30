@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
  * A computer. Computers are a bookable type of {@link Resource}.
  */
 public class Computer implements Resource {
-    private final ResourceType type = ResourceType.COMPUTER;
     private final int number;
     private static int count = 0;
 
@@ -14,7 +13,6 @@ public class Computer implements Resource {
      * Invariant properties for Computer
      */
     private void checkComputer() {
-        Preconditions.checkNotNull(type, "Type should never be null.");
         Preconditions.checkState(number > 0, "Number should be bigger than 0.");
         Preconditions.checkState(count >= 0, "Count should never be below 0.");
     }
@@ -26,10 +24,7 @@ public class Computer implements Resource {
     public Computer() {
         count++;
         this.number = count;
-    }
-
-    public ResourceType getType() {
-        return this.type;
+        checkComputer();
     }
 
     public int getNumber() {

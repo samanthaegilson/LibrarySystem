@@ -8,7 +8,7 @@ public enum MediaCategory {
     YOUNG_ADULT,
     ROMANCE,
     SCIENCE_FICTION,
-    CHILDRENS,
+    CHILDREN,
     HISTORICAL_FICTION,
     NON_FICTION,
     MYSTERY,

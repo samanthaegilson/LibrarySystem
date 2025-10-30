@@ -3,9 +3,6 @@ package ca.umanitoba.cs.egilsons.domain;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import com.google.common.base.Preconditions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A member. Members belong to the {@link LibrarySystem} and can interact with {@link Media} and
  * {@link ca.umanitoba.cs.egilsons.domain.resource.Resource} through a {@link Library}.

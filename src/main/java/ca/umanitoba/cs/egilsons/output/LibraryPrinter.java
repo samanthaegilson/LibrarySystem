@@ -1,6 +1,8 @@
 package ca.umanitoba.cs.egilsons.output;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
+import ca.umanitoba.cs.egilsons.domain.media.Book;
+import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 
@@ -19,12 +21,19 @@ public class LibraryPrinter implements Printer {
 
         System.out.println("Media: ");
         for (final Media media : this.library.getMedia()) {
-            new MediaPrinter(media).print();
+            // There are only 2 options for media
+            if (media instanceof Book) {
+                BookPrinter bookPrinter = new BookPrinter((Book) media);
+                bookPrinter.print();
+            } else {
+                DVDPrinter dvdPrinter = new DVDPrinter((DVD) media);
+                dvdPrinter.print();
+            }
         }
 
         System.out.println("Resources: ");
         for (final Resource resource : this.library.getResources()) {
-            System.out.println(resource.getType() + " " + resource.getNumber());
+            System.out.println(resource.getClass().getSimpleName() + " " + resource.getNumber());
         }
 
         System.out.println("Map: ");

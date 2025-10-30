@@ -1,14 +1,13 @@
 package ca.umanitoba.cs.egilsons;
 
 import ca.umanitoba.cs.egilsons.domain.*;
-import ca.umanitoba.cs.egilsons.domain.media.Media;
-import ca.umanitoba.cs.egilsons.domain.media.MediaCategory;
-import ca.umanitoba.cs.egilsons.domain.media.MediaFormat;
+import ca.umanitoba.cs.egilsons.domain.media.*;
 import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.resource.Computer;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
-import ca.umanitoba.cs.egilsons.domain.resource.ResourceType;
 import ca.umanitoba.cs.egilsons.domain.resource.Room;
+import ca.umanitoba.cs.egilsons.domain.media.Book;
+import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.output.*;
 
 import java.util.List;
@@ -206,54 +205,68 @@ public class Main {
             System.out.println("Please choose a library to add media to: ");
             int libraryChoice = chooseLibrary(librarySystem.getLibraries(), keyboard);
 
-            System.out.println("Please enter the media name: ");
-            String name = keyboard.nextLine();
+            System.out.println("Please choose a type of media: ");
+            System.out.println("""
+                    1. Book
+                    2. DVD
+                    """);
+            int mediaType = getChoice(1, 2, keyboard);
 
-            System.out.println("Please enter the creator of this media: ");
-            String creator = keyboard.nextLine();
-
-            System.out.println("Please choose the media format: ");
-            // Cycles through the enum MediaFormat once to display the choices, then cycles through again
-            // to match the choice to a value
-            int counter = 1;
-            for (MediaFormat format : MediaFormat.values()) {
-                System.out.println(counter + ". " + format);
-                counter++;
-            }
-            int formatChoice = getChoice(1, MediaFormat.values().length, keyboard);
-            MediaFormat format = null;
-            counter = 1;
-            for (MediaFormat f : MediaFormat.values()) {
-                if (formatChoice == counter) {
-                    format = f;
-                }
-                counter++;
+            // There are only 2 choices
+            if (mediaType == 1) {
+                Book book = createBook(keyboard);
+                librarySystem.getLibraries().get(libraryChoice).addMedia(book);
+            } else {
+                DVD dvd = createDVD(keyboard);
+                librarySystem.getLibraries().get(libraryChoice).addMedia(dvd);
             }
 
-            System.out.println("Please choose a media category: ");
-            // Cycles through the enum MediaCategory once to display the choices, then cycles through again
-            // to match the choice to a value
-            counter = 1;
-            for (MediaCategory category : MediaCategory.values()) {
-                System.out.println(counter + ". " + category);
-                counter++;
-            }
-            int categoryChoice = getChoice(1, MediaCategory.values().length, keyboard);
-            MediaCategory category = null;
-            counter = 1;
-            for (MediaCategory c : MediaCategory.values()) {
-                if (categoryChoice == counter) {
-                    category = c;
-                }
-                counter++;
-            }
-
-            Media newMedia = new Media(name, creator, format, category);
-            librarySystem.getLibraries().get(libraryChoice).addMedia(newMedia);
-            System.out.println(name + " added to " + librarySystem.getLibraries().get(libraryChoice).getName());
+            System.out.println("Media added to " + librarySystem.getLibraries().get(libraryChoice).getName());
         } else {
             System.out.println("Please add a library first.");
         }
+    }
+
+    /**
+     * Creates a book object with input from the user
+     *
+     * @param keyboard the scanner to receive input
+     * @return the book created
+     */
+    public static Book createBook(Scanner keyboard) {
+        System.out.println("Please enter the book title: ");
+        String title = keyboard.nextLine();
+
+        System.out.println("Please enter the author of this book: ");
+        String author = keyboard.nextLine();
+
+        System.out.println("Please enter the amount of pages in the book: ");
+        int pages = getChoice(0, Integer.MAX_VALUE, keyboard); // Can have any positive number of pages
+
+        MediaCategory category = chooseCategory(keyboard);
+
+        return new Book(title, author, pages, category);
+    }
+
+    /**
+     * Creates a DVD object with input from the user
+     *
+     * @param keyboard the scanner to receive input
+     * @return the DVD created
+     */
+    public static DVD createDVD(Scanner keyboard) {
+        System.out.println("Please enter the DVD title: ");
+        String title = keyboard.nextLine();
+
+        System.out.println("Please enter the director of this movie: ");
+        String director = keyboard.nextLine();
+
+        System.out.println("Please enter the run time of this movie (in minutes): ");
+        int runTime = getChoice(0, Integer.MAX_VALUE, keyboard); // Can have any positive number for the run time
+
+        MediaCategory category = chooseCategory(keyboard);
+
+        return new DVD(title, director, runTime, category);
     }
 
     /**
@@ -272,8 +285,13 @@ public class Main {
                 System.out.println("Please choose a piece of media to show:");
                 int mediaChoice = chooseMedia(media, keyboard);
 
-                MediaPrinter mediaPrinter = new MediaPrinter(media.get(mediaChoice));
-                mediaPrinter.print();
+                if (media.get(mediaChoice) instanceof Book) {
+                    BookPrinter bookPrinter = new BookPrinter((Book) media.get(mediaChoice));
+                    bookPrinter.print();
+                } else {
+                    DVDPrinter dvdPrinter = new DVDPrinter((DVD) media.get(mediaChoice));
+                    dvdPrinter.print();
+                }
             } else {
                 System.out.println("Please add media first.");
             }
@@ -322,12 +340,11 @@ public class Main {
 
             System.out.println("Please choose a resource type: ");
             // Prints both resource types
-            int counter = 1;
-            for (ResourceType type : ResourceType.values()) {
-                System.out.println(counter + ". " + type);
-                counter++;
-            }
-            int typeChoice = getChoice(1, ResourceType.values().length, keyboard);
+            System.out.println("""
+                    1. Room
+                    2. Computer
+                    """);
+            int typeChoice = getChoice(1, 2, keyboard); // Only 2 choices of resources
 
             // There are only 2 choices
             if (typeChoice == 1) { // Room
@@ -361,8 +378,17 @@ public class Main {
                 System.out.println("Please choose the resource to show: ");
                 int resourceChoice = chooseResource(resources, keyboard);
 
-                ResourcePrinter resourcePrinter = new ResourcePrinter(resources.get(resourceChoice));
-                resourcePrinter.print();
+                // .getClass().getName().equals(ROOM)
+                if (resources.get(resourceChoice) instanceof Room) {
+                    RoomPrinter roomPrinter = new RoomPrinter((Room) resources.get(resourceChoice));
+                    roomPrinter.print();
+                } else {
+                    ComputerPrinter computerPrinter = new ComputerPrinter((Computer) resources.get(resourceChoice));
+                    computerPrinter.print();
+                }
+
+//                ResourcePrinter resourcePrinter = new ResourcePrinter(resources.get(resourceChoice));
+//                resourcePrinter.print();
             } else {
                 System.out.println("Please add a resource first.");
             }
@@ -531,9 +557,36 @@ public class Main {
      */
     public static int chooseMedia(List<Media> media, Scanner keyboard) {
         for (int i = 0; i < media.size(); i++) {
-            System.out.println((i + 1) + ". " + media.get(i).getName() + ", " + media.get(i).getFormat());
+            System.out.println((i + 1) + ". " + media.get(i).getTitle() + ", " + media.get(i).getClass().getSimpleName());
         }
         return getChoice(1, media.size(), keyboard) - 1; // Adjusts for the index
+    }
+
+    /**
+     * Gets the user's choice of media category or genre from the list it prints
+     *
+     * @param keyboard the scanner to receive input
+     * @return the choice of media category
+     */
+    public static MediaCategory chooseCategory(Scanner keyboard) {
+        System.out.println("Please choose a media category: ");
+        // Cycles through the enum MediaCategory once to display the choices, then cycles through again
+        // to match the choice to a value
+        int counter = 1;
+        for (MediaCategory category : MediaCategory.values()) {
+            System.out.println(counter + ". " + category);
+            counter++;
+        }
+        int categoryChoice = getChoice(1, MediaCategory.values().length, keyboard);
+        MediaCategory category = null;
+        counter = 1;
+        for (MediaCategory c : MediaCategory.values()) {
+            if (categoryChoice == counter) {
+                category = c;
+            }
+            counter++;
+        }
+        return category;
     }
 
     /**
@@ -545,7 +598,7 @@ public class Main {
      */
     public static int chooseResource(List<Resource> resources, Scanner keyboard) {
         for (int i = 0; i < resources.size(); i++) {
-            System.out.println((i + 1) + ". " + resources.get(i).getType() + " " + resources.get(i).getNumber());
+            System.out.println((i + 1) + ". " + resources.get(i).getClass().getSimpleName() + " " + resources.get(i).getNumber());
         }
         return getChoice(1, resources.size(), keyboard) - 1; // Adjusts for the index
     }

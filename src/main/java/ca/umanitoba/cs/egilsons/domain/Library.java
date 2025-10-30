@@ -1,5 +1,6 @@
 package ca.umanitoba.cs.egilsons.domain;
 
+import ca.umanitoba.cs.egilsons.domain.map.Map;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import com.google.common.base.Preconditions;
@@ -52,6 +53,7 @@ public class Library {
         this.media = new ArrayList<>();
         this.resources = new ArrayList<>();
         updateMap();
+        checkLibrary();
     }
 
     public String getName() {

@@ -1,7 +1,5 @@
 package ca.umanitoba.cs.egilsons.domain;
 
-import ca.umanitoba.cs.egilsons.domain.media.Media;
-import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ public class LibrarySystem {
     /**
      * Invariant properties for LibrarySystem
      */
-    private void checkLibrary() {
+    private void checkLibrarySystem() {
         Preconditions.checkNotNull(libraries, "Libraries should never be null.");
         Preconditions.checkNotNull(members, "Members should never be null.");
 
@@ -37,6 +35,7 @@ public class LibrarySystem {
     public LibrarySystem() {
         this.libraries = new ArrayList<>();
         this.members = new TreeSet<>();
+        checkLibrarySystem();
     }
 
     public List<Library> getLibraries() {

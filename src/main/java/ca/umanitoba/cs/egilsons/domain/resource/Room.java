@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
  * A room. Rooms are a bookable type of {@link Resource}.
  */
 public class Room implements Resource {
-    private final ResourceType type = ResourceType.ROOM;
     private final int number;
     private static int count = 0;
 
@@ -14,7 +13,6 @@ public class Room implements Resource {
      * Invariant properties for Room
      */
     private void checkRoom() {
-        Preconditions.checkNotNull(type, "Type should never be null.");
         Preconditions.checkState(number > 0, "Number should be bigger than 0.");
         Preconditions.checkState(count >= 0, "Count should never be below 0.");
     }
@@ -26,10 +24,7 @@ public class Room implements Resource {
     public Room () {
         count++;
         this.number = count;
-    }
-
-    public ResourceType getType() {
-        return this.type;
+        checkRoom();
     }
 
     public int getNumber() {

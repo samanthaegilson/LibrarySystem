@@ -13,7 +13,7 @@ public class ReviewPrinter implements Printer {
     }
 
     public void print() {
-        System.out.println("Media: " + this.review.media().getName());
+        System.out.println("Media: " + this.review.media().getTitle());
         System.out.println("Author: " + this.review.member().getName());
         System.out.println(this.review.stars() + " stars");
         System.out.println(this.review.text());

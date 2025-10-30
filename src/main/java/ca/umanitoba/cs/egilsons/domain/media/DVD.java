@@ -1,0 +1,120 @@
+package ca.umanitoba.cs.egilsons.domain.media;
+
+import ca.umanitoba.cs.egilsons.domain.Review;
+import com.google.common.base.Preconditions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * A DVD. DVDs are a type of {@link Media} stored in a {@link ca.umanitoba.cs.egilsons.domain.Library}.
+ */
+public class DVD implements Media {
+    private final String title;
+    private final String director;
+    private final int runTime; // in minutes
+    private final MediaCategory category;
+    private List<Review> reviews;
+    private int copies;
+
+    /**
+     * Invariant properties for DVD.
+     */
+    private void checkDVD() {
+        Preconditions.checkNotNull(title, "Title should never be null.");
+        Preconditions.checkState(title.length() >= 1,"Book title should have at least 1 symbol.");
+        Preconditions.checkNotNull(director, "Director should never be null.");
+        Preconditions.checkState(director.length() >= 1,"Director name should have at least 1 symbol.");
+        Preconditions.checkState(runTime > 0, "Run time should be above 0.");
+        Preconditions.checkNotNull(category, "Category should never be null.");
+        Preconditions.checkNotNull(reviews, "Reviews should never be null.");
+        Preconditions.checkState(copies >= 0, "Copies should never go below 0.");
+
+        for (Review review : reviews) {
+            Preconditions.checkNotNull(review, "Reviews in reviews should never be null.");
+        }
+    }
+
+
+    /**
+     * Constructor for DVDs. Takes input for the title, director, run time and category.
+     *
+     * @param title the title of the DVD
+     * @param director the director of the DVD
+     * @param runTime the run time of the DVD
+     * @param category the category or genre of the DVD
+     */
+    public DVD(String title, String director, int runTime, MediaCategory category) {
+        this.title = title;
+        this.director = director;
+        this.runTime = runTime;
+        this.category = category;
+        this.reviews = new ArrayList<>();
+        this.copies++;
+        checkDVD();
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public String getDirector() {
+        return this.director;
+    }
+
+    public int getRunTime() {
+        return this.runTime;
+    }
+
+    public MediaCategory getCategory() {
+        return this.category;
+    }
+
+    public List<Review> getReviews() {
+        return this.reviews;
+    }
+
+    public int getCopies() {
+        return this.copies;
+    }
+
+    /**
+     * Checks if another media is equal to this DVD
+     *
+     * @param other the media being compared
+     * @return if the two media are equal or not
+     */
+    public boolean equals(Media other) {
+        checkDVD();
+        boolean equal = false;
+        // Checking the media is a DVD
+        if (other instanceof DVD otherDVD) {
+            // Only equal if the title, director, run time and category are all the same
+            if (otherDVD.title.equals(this.title) && otherDVD.director.equals(this.director) && otherDVD.runTime == this.runTime
+                    && otherDVD.category == this.category) {
+                equal = true;
+            }
+        }
+        return equal;
+    }
+
+    /**
+     * Adds a copy of this DVD
+     */
+    public void addCopy() {
+        checkDVD();
+        this.copies++;
+        checkDVD();
+    }
+
+    /**
+     * Adds a review to the DVD
+     *
+     * @param review the review being added
+     */
+    public void addReview(Review review) {
+        checkDVD();
+        this.reviews.add(review);
+        checkDVD();
+    }
+}

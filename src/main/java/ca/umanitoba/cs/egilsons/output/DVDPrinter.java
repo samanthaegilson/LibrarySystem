@@ -1,0 +1,28 @@
+package ca.umanitoba.cs.egilsons.output;
+
+import ca.umanitoba.cs.egilsons.domain.Review;
+import ca.umanitoba.cs.egilsons.domain.media.DVD;
+
+/**
+ * Prints the information of a {@link DVD}.
+ */
+public class DVDPrinter implements Printer {
+    private DVD dvd;
+
+    public DVDPrinter(final DVD dvd) {
+        this.dvd = dvd;
+    }
+
+    public void print() {
+        System.out.println("DVD title: " + this.dvd.getTitle());
+        System.out.println("Director: " + this.dvd.getDirector());
+        System.out.println("Run time: " + this.dvd.getRunTime());
+        System.out.println("Category: " + this.dvd.getCategory());
+        System.out.println("Copies available: " + this.dvd.getCopies());
+
+        System.out.println("Reviews: ");
+        for (Review review : this.dvd.getReviews()) {
+            System.out.println(review.stars() + " stars by " + review.member());
+        }
+    }
+}
