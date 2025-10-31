@@ -8,10 +8,10 @@ import java.util.List;
  * A piece of media. Media are part of a {@link ca.umanitoba.cs.egilsons.domain.Library}.
  */
 public interface Media {
-    public String getTitle();
-    public MediaCategory getCategory();
-    public List<Review> getReviews();
-    public int getCopies();
+    String getTitle();
+    MediaCategory getCategory();
+    List<Review> getReviews();
+    int getCopies();
 
     /**
      * Checks if another media is equal to this media
@@ -19,17 +19,17 @@ public interface Media {
      * @param other the media being compared
      * @return if the two medias are equal or not
      */
-    public boolean equals(Media other);
+    boolean equals(Media other);
 
     /**
      * Adds a copy of this media
      */
-    public void addCopy();
+    void addCopy();
 
     /**
      * Adds a review to the media
      *
      * @param review the review being added
      */
-    public void addReview(Review review);
+    void addReview(Review review);
 }

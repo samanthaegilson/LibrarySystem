@@ -48,23 +48,23 @@ public class MapPrinter implements Printer {
                     System.out.print(EXIT);
                 } else if (this.map.getDisplay()[i][j] == MapType.DESK){
                     System.out.print(MAIN_DESK);
-                } else if (this.map.getDisplay()[i][j] == MapType.FANTASY) {
+                } else if (this.map.getDisplay()[i][j] == MapType.FANTASY_SECTION) {
                     System.out.print(FANTASY);
-                } else if (this.map.getDisplay()[i][j] == MapType.YOUNG_ADULT) {
+                } else if (this.map.getDisplay()[i][j] == MapType.YOUNG_ADULT_SECTION) {
                     System.out.print(YOUNG_ADULT);
-                } else if (this.map.getDisplay()[i][j] == MapType.ROMANCE) {
+                } else if (this.map.getDisplay()[i][j] == MapType.ROMANCE_SECTION) {
                     System.out.print(ROMANCE);
-                } else if (this.map.getDisplay()[i][j] == MapType.SCIENCE_FICTION) {
+                } else if (this.map.getDisplay()[i][j] == MapType.SCIENCE_FICTION_SECTION) {
                     System.out.print(SCIENCE_FICTION);
-                } else if (this.map.getDisplay()[i][j] == MapType.CHILDREN) {
+                } else if (this.map.getDisplay()[i][j] == MapType.CHILDREN_SECTION) {
                     System.out.print(CHILDREN);
-                } else if (this.map.getDisplay()[i][j] == MapType.HISTORICAL_FICTION) {
+                } else if (this.map.getDisplay()[i][j] == MapType.HISTORICAL_FICTION_SECTION) {
                     System.out.print(HISTORICAL_FICTION);
-                } else if (this.map.getDisplay()[i][j] == MapType.NON_FICTION) {
+                } else if (this.map.getDisplay()[i][j] == MapType.NON_FICTION_SECTION) {
                     System.out.print(NON_FICTION);
-                } else if (this.map.getDisplay()[i][j] == MapType.MYSTERY) {
+                } else if (this.map.getDisplay()[i][j] == MapType.MYSTERY_SECTION) {
                     System.out.print(MYSTERY);
-                } else if (this.map.getDisplay()[i][j] == MapType.HORROR) {
+                } else if (this.map.getDisplay()[i][j] == MapType.HORROR_SECTION) {
                     System.out.print(HORROR);
                 } else if (this.map.getDisplay()[i][j] == MapType.COMPUTER) {
                     System.out.print(COMPUTERS);

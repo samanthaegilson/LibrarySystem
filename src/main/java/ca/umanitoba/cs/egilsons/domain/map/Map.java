@@ -54,9 +54,9 @@ public class Map {
         int computerCount = 0;
         // Counting the amount of rooms and computers the library has
         for (int i = 0; i < library.getResources().size(); i++) {
-            if (library.getResources().get(i) instanceof Room room) {
+            if (library.getResources().get(i) instanceof Room) {
                 roomCount++;
-            } else if (library.getResources().get(i) instanceof Computer computer) {
+            } else if (library.getResources().get(i) instanceof Computer) {
                 computerCount++;
             }
         }
@@ -90,19 +90,19 @@ public class Map {
         // Bookshelves
         for (int i = 0; i < BOOKSHELF; i++) {
             // First row of bookshelves
-            this.display[BOOKSHELF_ROW1][i + BOOKSHELF1_START] = MapType.FANTASY;
-            this.display[BOOKSHELF_ROW1][i + BOOKSHELF2_START] = MapType.YOUNG_ADULT;
-            this.display[BOOKSHELF_ROW1][i + BOOKSHELF3_START] = MapType.ROMANCE;
+            this.display[BOOKSHELF_ROW1][i + BOOKSHELF1_START] = MapType.FANTASY_SECTION;
+            this.display[BOOKSHELF_ROW1][i + BOOKSHELF2_START] = MapType.YOUNG_ADULT_SECTION;
+            this.display[BOOKSHELF_ROW1][i + BOOKSHELF3_START] = MapType.ROMANCE_SECTION;
 
             // Second row of bookshelves
-            this.display[BOOKSHELF_ROW2][i + BOOKSHELF1_START] = MapType.SCIENCE_FICTION;
-            this.display[BOOKSHELF_ROW2][i + BOOKSHELF2_START] = MapType.CHILDREN;
-            this.display[BOOKSHELF_ROW2][i + BOOKSHELF3_START] = MapType.HISTORICAL_FICTION;
+            this.display[BOOKSHELF_ROW2][i + BOOKSHELF1_START] = MapType.SCIENCE_FICTION_SECTION;
+            this.display[BOOKSHELF_ROW2][i + BOOKSHELF2_START] = MapType.CHILDREN_SECTION;
+            this.display[BOOKSHELF_ROW2][i + BOOKSHELF3_START] = MapType.HISTORICAL_FICTION_SECTION;
 
             // Third row of bookshelves
-            this.display[BOOKSHELF_ROW3][i + BOOKSHELF1_START] = MapType.NON_FICTION;
-            this.display[BOOKSHELF_ROW3][i + BOOKSHELF2_START] = MapType.MYSTERY;
-            this.display[BOOKSHELF_ROW3][i + BOOKSHELF3_START] = MapType.HORROR;
+            this.display[BOOKSHELF_ROW3][i + BOOKSHELF1_START] = MapType.NON_FICTION_SECTION;
+            this.display[BOOKSHELF_ROW3][i + BOOKSHELF2_START] = MapType.MYSTERY_SECTION;
+            this.display[BOOKSHELF_ROW3][i + BOOKSHELF3_START] = MapType.HORROR_SECTION;
         }
         
         // Computers

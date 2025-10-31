@@ -1,6 +1,5 @@
 package ca.umanitoba.cs.egilsons.output;
 
-import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.Member;
 
 /**

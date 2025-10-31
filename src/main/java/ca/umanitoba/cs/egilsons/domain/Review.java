@@ -19,7 +19,7 @@ public record Review(Member member, Media media, String text, int stars) {
     private void checkReview() {
         Preconditions.checkNotNull(member, "Member should never be null.");
         Preconditions.checkNotNull(media, "Media should never be null.");
-        Preconditions.checkNotNull(text, "Review should never be null.");
+        Preconditions.checkNotNull(text, "Review text should never be null.");
         Preconditions.checkState(stars > 0 && stars <= 5, "Review should be between 1 and 5 stars");
     }
 

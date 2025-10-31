@@ -285,6 +285,7 @@ public class Main {
                 System.out.println("Please choose a piece of media to show:");
                 int mediaChoice = chooseMedia(media, keyboard);
 
+                // There are only 2 options for media
                 if (media.get(mediaChoice) instanceof Book) {
                     BookPrinter bookPrinter = new BookPrinter((Book) media.get(mediaChoice));
                     bookPrinter.print();
@@ -378,7 +379,7 @@ public class Main {
                 System.out.println("Please choose the resource to show: ");
                 int resourceChoice = chooseResource(resources, keyboard);
 
-                // .getClass().getName().equals(ROOM)
+                // There are only 2 options for resources
                 if (resources.get(resourceChoice) instanceof Room) {
                     RoomPrinter roomPrinter = new RoomPrinter((Room) resources.get(resourceChoice));
                     roomPrinter.print();
@@ -386,9 +387,6 @@ public class Main {
                     ComputerPrinter computerPrinter = new ComputerPrinter((Computer) resources.get(resourceChoice));
                     computerPrinter.print();
                 }
-
-//                ResourcePrinter resourcePrinter = new ResourcePrinter(resources.get(resourceChoice));
-//                resourcePrinter.print();
             } else {
                 System.out.println("Please add a resource first.");
             }

@@ -39,8 +39,8 @@ classDiagram
         %% Collection of members with no duplicate members
         -TreeSet~Member~ members
         
-        +addLibrary(String name) void
-        +addMember(String name) void
+        +addLibrary(Library library) void
+        +addMember(Member member) void
         +removeMember(Member member) boolean
     }
     LibrarySystem --* Library
@@ -123,7 +123,7 @@ classDiagram
         %% Collection of reviews about the book
         -List~Reviews~ reviews
 
-        +equals(Book other) boolean
+        +equals(Media other) boolean
         +addCopy() void
         +addReview(Review review) void
     }
@@ -157,7 +157,7 @@ classDiagram
         %% Collection of reviews about the DVD
         -List~Reviews~ reviews
 
-        +equals(DVD other) boolean
+        +equals(Media other) boolean
         +addCopy() void
         +addReview(Review review) void
     }
