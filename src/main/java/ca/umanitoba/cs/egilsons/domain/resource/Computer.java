@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions;
  */
 public class Computer implements Resource {
     private final int number;
+    private Booking weekBookings;
     private static int count = 0;
 
     /**
@@ -24,6 +25,7 @@ public class Computer implements Resource {
     public Computer() {
         count++;
         this.number = count;
+        this.weekBookings = new Booking();
         checkComputer();
     }
 

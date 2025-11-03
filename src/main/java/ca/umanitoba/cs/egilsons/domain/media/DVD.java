@@ -1,6 +1,9 @@
 package ca.umanitoba.cs.egilsons.domain.media;
 
 import ca.umanitoba.cs.egilsons.domain.Review;
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidDVDRunTimeException;
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidDirectorException;
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidTitleException;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -44,7 +47,7 @@ public class DVD implements Media {
      * @param runTime the run time of the DVD
      * @param category the category or genre of the DVD
      */
-    public DVD(String title, String director, int runTime, MediaCategory category) {
+    private DVD(String title, String director, int runTime, MediaCategory category) {
         this.title = title;
         this.director = director;
         this.runTime = runTime;
@@ -52,6 +55,55 @@ public class DVD implements Media {
         this.reviews = new ArrayList<>();
         this.copies++;
         checkDVD();
+    }
+
+    public static class DVDBuilder {
+        private String title;
+        private String director;
+        private int runTime; // in minutes
+        private MediaCategory category;
+
+        public DVDBuilder title(String title) throws InvalidTitleException {
+            Preconditions.checkNotNull(title, "Title should not be null.");
+
+            if (title.isEmpty()) {
+                throw new InvalidTitleException();
+            }
+
+            this.title = title;
+            return this;
+        }
+
+        public DVDBuilder director(String director) throws InvalidDirectorException {
+            Preconditions.checkNotNull(director, "Director should not be null.");
+
+            if (director.isEmpty()) {
+                throw new InvalidDirectorException();
+            }
+
+            this.director = director;
+            return this;
+        }
+
+        public DVDBuilder runTime(int runTime) throws InvalidDVDRunTimeException {
+            if (runTime < 1) {
+                throw new InvalidDVDRunTimeException();
+            }
+
+            this.runTime = runTime;
+            return this;
+        }
+
+        public DVDBuilder category(MediaCategory category) {
+            Preconditions.checkNotNull(category, "Category should not be null.");
+
+            this.category = category;
+            return this;
+        }
+
+        public DVD build() {
+            return new DVD(this.title, this.director, this.runTime, this.category);
+        }
     }
 
     public String getTitle() {

@@ -1,7 +1,12 @@
 package ca.umanitoba.cs.egilsons.domain;
 
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidNameException;
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidPasswordException;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import com.google.common.base.Preconditions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A member. Members belong to the {@link LibrarySystem} and can interact with {@link Media} and
@@ -9,6 +14,11 @@ import com.google.common.base.Preconditions;
  */
 public class Member implements Comparable<Member> {
     private final String name;
+    private final String password;
+    private List<Media> takenOut;
+    // private List<Resources> bookings;
+    // private List<String> constraints;
+    // contact info?
 
     /**
      * Invariant properties for Member
@@ -23,13 +33,51 @@ public class Member implements Comparable<Member> {
      *
      * @param name the name of the member
      */
-    public Member(String name) {
+    private Member(String name, String password) {
         this.name = name;
+        this.password = password;
+        this.takenOut = new ArrayList<>();
         checkMember();
+    }
+
+    public static class MemberBuilder {
+        private String name;
+        private String password;
+        private List<Media> takenOut;
+
+        public MemberBuilder name(String name) throws InvalidNameException {
+            Preconditions.checkNotNull(name, "Name should not be null.");
+
+            if (name.isEmpty()) {
+                throw new InvalidNameException();
+            }
+
+            this.name = name;
+            return this;
+        }
+
+        public MemberBuilder password(String password) throws InvalidPasswordException {
+            Preconditions.checkNotNull(password, "Password should not be null.");
+
+            if (password.isEmpty()) {
+                throw new InvalidPasswordException();
+            }
+
+            this.password = password;
+            return this;
+        }
+
+        public Member build() {
+            return new Member(this.name, this.password);
+        }
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 
     /**

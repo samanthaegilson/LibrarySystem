@@ -53,9 +53,9 @@ public class LibrarySystem {
      */
     public void addLibrary(Library library) {
         // Only allowing 1 library to exist at a time
-        if (!this.libraries.isEmpty()) {
-            this.libraries.remove(0);
-        }
+//        if (!this.libraries.isEmpty()) {
+//            this.libraries.remove(0);
+//        }
         this.libraries.add(library);
     }
 

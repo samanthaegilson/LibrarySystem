@@ -318,7 +318,7 @@ public class Main {
                 int mediaChoice = chooseMedia(media, keyboard);
 
                 librarySystem.getLibraries().get(libraryChoice).removeMedia(media.get(mediaChoice));
-                System.out.println(media + " removed from "
+                System.out.println("Media removed from "
                         + librarySystem.getLibraries().get(libraryChoice).getName());
             } else {
                 System.out.println("Please add media first.");

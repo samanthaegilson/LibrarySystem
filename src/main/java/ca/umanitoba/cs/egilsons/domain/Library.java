@@ -48,12 +48,31 @@ public class Library {
      *
      * @param name the name of the library
      */
-    public Library(String name) {
+    private Library(String name) {
         this.name = name;
         this.media = new ArrayList<>();
         this.resources = new ArrayList<>();
         updateMap();
         checkLibrary();
+    }
+
+    public static class LibraryBuilder {
+        private String name;
+
+        public LibraryBuilder name(String name) {
+            Preconditions.checkNotNull(name, "Name should not be null.");
+
+            if (name.isEmpty()) {
+                // throw exception
+            }
+
+            this.name = name;
+            return this;
+        }
+
+        public Library build() {
+            return new Library(this.name);
+        }
     }
 
     public String getName() {
