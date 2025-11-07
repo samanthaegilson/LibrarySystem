@@ -51,6 +51,7 @@ flowchart
         checkUser{Check User}
         enterAccount[[Enter Account]]
         
+        loginToAccount ==Make new account==> chooseCredentials
         loginToAccount ==Name, Password==> checkUser
         checkUser -.No Such User Exists.->loginToAccount
         checkUser -.Credentials Match Account.->enterAccount
@@ -226,8 +227,12 @@ classDiagram
         %% Text for the name of the member
         -String name
         -String password
+        -List~Media~ media
+        -List~TimeSlot~ bookings
 
         +compareTo(Member other) int
+        +borrowMedia(Media media) boolean
+        +returnMedia(Media media) void
     }
     Member --o Media
     Member --o Resource
@@ -244,6 +249,9 @@ classDiagram
         <<interface>>
         +equals(Media other) boolean
         +addCopy() void
+        +takeOutCopy() Media
+        +returnCopy() void
+        +addToWaitlist(Member member) void
         +addReview(Review review) void
     }
     Media --* Review
@@ -265,6 +273,9 @@ classDiagram
 
         +equals(Media other) boolean
         +addCopy() void
+        +takeOutCopy() Media
+        +returnCopy() void
+        +addToWaitlist(Member member) void
         +addReview(Review review) void
     }
     Book ..|> Media
@@ -299,6 +310,9 @@ classDiagram
 
         +equals(Media other) boolean
         +addCopy() void
+        +takeOutCopy() Media
+        +returnCopy() void
+        +addToWaitlist(Member member) void
         +addReview(Review review) void
     }
     DVD ..|> Media

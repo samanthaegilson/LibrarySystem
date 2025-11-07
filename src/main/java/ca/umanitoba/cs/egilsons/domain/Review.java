@@ -38,4 +38,11 @@ public record Review(Member member, Media media, String text, int stars) {
         this.stars = stars;
         checkReview();
     }
+
+//    public static class ReviewBuilder {
+//        private Member member;
+//        private Media media;
+//        private String text;
+//        private String stars;
+//    }
 }

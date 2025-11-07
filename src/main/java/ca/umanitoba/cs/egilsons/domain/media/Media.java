@@ -1,5 +1,6 @@
 package ca.umanitoba.cs.egilsons.domain.media;
 
+import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.Review;
 
 import java.util.List;
@@ -25,6 +26,26 @@ public interface Media {
      * Adds a copy of this media
      */
     void addCopy();
+
+    /**
+     * Removes a copy of this media if a copy is available
+     *
+     * @return a copy of the media
+     */
+    Media takeOutCopy();
+
+    /**
+     * Returns a copy of this media
+     */
+    void returnCopy();
+
+    /**
+     * Adds a member to the waitlist
+     *
+     * @param member the member to be added
+     * @return the spot in the waitlist
+     */
+    int addToWaitlist(Member member);
 
     /**
      * Adds a review to the media

@@ -2,26 +2,42 @@ package ca.umanitoba.cs.egilsons;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.LibrarySystem;
+import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.exceptions.*;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
 import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.domain.media.MediaCategory;
 import ca.umanitoba.cs.egilsons.domain.resource.Computer;
 import ca.umanitoba.cs.egilsons.domain.resource.Room;
+import ca.umanitoba.cs.egilsons.ui.AccountCentre;
 import ca.umanitoba.cs.egilsons.ui.SignInDisplay;
+
+import java.util.Scanner;
 
 public class SignInMain {
     private static LibrarySystem librarySystem;
 
     public static void main(String[] args) {
         setUpLibrarySystem();
+        Library library = librarySystem.getLibraries().get(0);
+        boolean running = true;
 
-        // our entry point is really only responsible for initializing our display class.
-        SignInDisplay display = new SignInDisplay(librarySystem);
-        display.startSignIn();
+        while (running) {
+            System.out.println("Welcome to " + library.getName() + " Library");
+
+            // our entry point is really only responsible for initializing our display class.
+            SignInDisplay display = new SignInDisplay(librarySystem);
+            Member account = display.startSignIn();
+
+            // Add AccountCentre code to main instead?
+            AccountCentre accountCentre = new AccountCentre(library, account);
+            accountCentre.menu();
+
+            running = exitChoice();
+        }
     }
 
-    public static void setUpLibrarySystem() {
+    private static void setUpLibrarySystem() {
         // Library System
         librarySystem = new LibrarySystem();
         // Libraries
@@ -46,10 +62,30 @@ public class SignInMain {
             DVD dvd4 = new DVD.DVDBuilder().title("The Red Road").director("Steven Anderson").runTime(114).category(MediaCategory.HISTORICAL_FICTION).build();
             DVD dvd5 = new DVD.DVDBuilder().title("Starship").director("Jamie Jones").runTime(200).category(MediaCategory.SCIENCE_FICTION).build();
 
+            library1.addMedia(book1);
             for (int i = 0; i < 6; i++) {
                 library1.addMedia(book2);
-//                library2.addMedia(book3);
-//                library2.addMedia(dvd4);
+                library1.addMedia(book3);
+                library1.addMedia(dvd4);
+                library1.addMedia(book5);
+                library1.addMedia(book6);
+                library1.addMedia(dvd1);
+                library1.addMedia(dvd2);
+                library1.addMedia(dvd2);
+                library1.addMedia(dvd5);
+                library1.addMedia(dvd5);
+                library1.addMedia(dvd5);
+            }
+            for (int i = 0; i < 5; i++) {
+                library1.addMedia(book4);
+                library1.addMedia(book2);
+                library1.addMedia(book5);
+                library1.addMedia(book2);
+                library1.addMedia(book6);
+                library1.addMedia(dvd1);
+                library1.addMedia(dvd3);
+                library1.addMedia(dvd3);
+                library1.addMedia(book6);
             }
         } catch (InvalidTitleException | InvalidAuthorException | InvalidBookPagesException | InvalidDirectorException |
                  InvalidDVDRunTimeException e) {
@@ -57,30 +93,43 @@ public class SignInMain {
         }
 
         // Resources
-        library1.addResource(new Room());
-        library1.addResource(new Room());
-//        library2.addResource(new Room());
-//        library3.addResource(new Room());
-//        library3.addResource(new Room());
-//        library3.addResource(new Room());
-
-        for (int i = 0; i < 8; i++) {
-            library1.addResource(new Computer());
-//            library2.addResource(new Computer());
-//            library3.addResource(new Computer());
-//            library4.addResource(new Computer());
-//            library4.addResource(new Computer());
+        for (int i = 0; i < 3; i++) {
+            library1.addResource(new Room());
         }
-//        library2.addResource(new Computer());
-//        library3.addResource(new Computer());
-//        library3.addResource(new Computer());
-//        library3.addResource(new Computer());
-        // Add together
 
+
+        for (int i = 0; i < 9; i++) {
+            library1.addResource(new Computer());
+        }
 
         librarySystem.addLibrary(library1);
-//        librarySystem.addLibrary(library2);
-//        librarySystem.addLibrary(library3);
-//        librarySystem.addLibrary(library4);
+    }
+
+    private static boolean exitChoice() {
+        Scanner keyboard = new Scanner(System.in);
+        boolean running = true;
+        boolean validInput = false;
+        while (!validInput) {
+            System.out.println("""
+                    Would you like to exit?
+                    YES
+                    NO
+                    """);
+            String input = keyboard.nextLine().toLowerCase();
+            switch (input) {
+                case "yes":
+                    validInput = true;
+                    running = false;
+                    break;
+                case "no":
+                    validInput = true;
+                    break;
+                default:
+                    System.out.println("Not an option.");
+                    break;
+            }
+        }
+        // keyboard.close();
+        return running;
     }
 }

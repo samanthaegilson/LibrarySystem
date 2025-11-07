@@ -3,6 +3,7 @@ package ca.umanitoba.cs.egilsons.domain;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidNameException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidPasswordException;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
+import ca.umanitoba.cs.egilsons.domain.resource.TimeSlot;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Member implements Comparable<Member> {
     private final String name;
     private final String password;
     private List<Media> takenOut;
-    // private List<Resources> bookings;
+    private List<TimeSlot> bookings;
     // private List<String> constraints;
     // contact info?
 
@@ -80,6 +81,10 @@ public class Member implements Comparable<Member> {
         return this.password;
     }
 
+    public List<Media> getTakenOut() {
+        return this.takenOut;
+    }
+
     /**
      * Compares a member to another member
      *
@@ -92,5 +97,23 @@ public class Member implements Comparable<Member> {
             equal = 0;
         }
         return equal;
+    }
+
+    public boolean borrowMedia(Media media) {
+        checkMember();
+        boolean borrowed = false;
+        if (media.takeOutCopy() != null) {
+            this.takenOut.add(media);
+            borrowed = true;
+        }
+        checkMember();
+        return borrowed;
+    }
+
+    public void returnMedia(Media media) {
+        checkMember();
+        media.returnCopy();
+        this.takenOut.remove(media); // Should i check this media is in takenOut???
+        checkMember();
     }
 }

@@ -1,5 +1,6 @@
 package ca.umanitoba.cs.egilsons.domain.media;
 
+import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidDVDRunTimeException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidDirectorException;
@@ -7,7 +8,9 @@ import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidTitleException;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * A DVD. DVDs are a type of {@link Media} stored in a {@link ca.umanitoba.cs.egilsons.domain.Library}.
@@ -19,6 +22,7 @@ public class DVD implements Media {
     private final MediaCategory category;
     private List<Review> reviews;
     private int copies;
+    private Queue<Member> waitlist;
 
     /**
      * Invariant properties for DVD.
@@ -54,6 +58,7 @@ public class DVD implements Media {
         this.category = category;
         this.reviews = new ArrayList<>();
         this.copies++;
+        this.waitlist = new LinkedList<>();
         checkDVD();
     }
 
@@ -157,6 +162,49 @@ public class DVD implements Media {
         checkDVD();
         this.copies++;
         checkDVD();
+    }
+
+    /**
+     * Removes a copy of this media if a copy is available
+     *
+     * @return a copy of the media
+     */
+    public Media takeOutCopy() {
+        checkDVD();
+        Media copy = null;
+        if (this.copies > 0) {
+            this.copies--;
+            copy = this;
+        }
+        checkDVD();
+        return copy;
+    }
+
+    /**
+     * Returns a copy of this media
+     */
+    public void returnCopy() {
+        checkDVD();
+        addCopy();
+        if (!waitlist.isEmpty()) {
+            // NOTIFY USER
+//            Member member = waitlist.remove();
+//            member.borrowMedia(this);
+        }
+        checkDVD();
+    }
+
+    /**
+     * Adds a member to the waitlist
+     *
+     * @param member the member to be added
+     * @return the spot in the waitlist
+     */
+    public int addToWaitlist(Member member) {
+        checkDVD();
+        this.waitlist.add(member);
+        checkDVD();
+        return this.waitlist.size();
     }
 
     /**

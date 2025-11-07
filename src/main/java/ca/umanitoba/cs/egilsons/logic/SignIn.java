@@ -12,20 +12,24 @@ public class SignIn {
         this.librarySystem = librarySystem;
     }
 
-    public boolean checkUser(String name, String password) {
+    public Member checkUser(String name, String password) {
+        Member member = null;
         boolean userExists = false;
         int index = 0;
         while (!userExists && index < this.librarySystem.getMembers().size()) {
-            if (this.librarySystem.getMember(index).getName().equals(name)) {
+            if (this.librarySystem.getMember(index).getName().equals(name)
+                    && this.librarySystem.getMember(index).getPassword().equals(password)) {
+                member = this.librarySystem.getMember(index);
                 userExists = true;
             }
             index++;
         }
-        return userExists;
+        return member;
     }
 
     public Member makeAccount(String name, String password) throws InvalidNameException, InvalidPasswordException {
         Member newAccount = new Member.MemberBuilder().name(name).password(password).build();
+        this.librarySystem.addMember(newAccount);
         return newAccount;
     }
 }

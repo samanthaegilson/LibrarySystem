@@ -1,5 +1,6 @@
 package ca.umanitoba.cs.egilsons.domain.media;
 
+import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidAuthorException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidBookPagesException;
@@ -7,7 +8,9 @@ import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidTitleException;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * A book. Books are a type of {@link Media} stored in a {@link ca.umanitoba.cs.egilsons.domain.Library}.
@@ -19,6 +22,7 @@ public class Book implements Media {
     private final MediaCategory category;
     private List<Review> reviews;
     private int copies;
+    private Queue<Member> waitlist;
 
     /**
      * Invariant properties for Book.
@@ -53,6 +57,7 @@ public class Book implements Media {
         this.category = category;
         this.reviews = new ArrayList<>();
         this.copies++;
+        this.waitlist = new LinkedList<>();
         checkBook();
     }
 
@@ -156,6 +161,49 @@ public class Book implements Media {
         checkBook();
         this.copies++;
         checkBook();
+    }
+
+    /**
+     * Removes a copy of this media if a copy is available
+     *
+     * @return a copy of the media
+     */
+    public Media takeOutCopy() {
+        checkBook();
+        Media copy = null;
+        if (this.copies > 0) {
+            this.copies--;
+            copy = this;
+        }
+        checkBook();
+        return copy;
+    }
+
+    /**
+     * Returns a copy of this media
+     */
+    public void returnCopy() {
+        checkBook();
+        addCopy();
+        if (!waitlist.isEmpty()) {
+            // NOTIFY USER
+//            Member member = waitlist.remove();
+//            member.borrowMedia(this);
+        }
+        checkBook();
+    }
+
+    /**
+     * Adds a member to the waitlist
+     *
+     * @param member the member to be added
+     * @return the spot in the waitlist
+     */
+    public int addToWaitlist(Member member) {
+        checkBook();
+        this.waitlist.add(member);
+        checkBook();
+        return this.waitlist.size();
     }
 
     /**
