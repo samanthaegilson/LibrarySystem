@@ -17,6 +17,7 @@ public class MapPrinter implements Printer {
         final char WALL = '*';
         final char EXIT = 'E';
         final char MAIN_DESK = 'D';
+        final char KIOSK = 'K';
         final char FANTASY = 'F';
         final char YOUNG_ADULT = 'Y';
         final char ROMANCE = 'R';
@@ -26,16 +27,17 @@ public class MapPrinter implements Printer {
         final char NON_FICTION = 'N';
         final char MYSTERY = 'M';
         final char HORROR = 'H';
-        final char COMPUTERS = 'C';
+        final char COMPUTERS = 'P';
         final char ROOM_DOOR = 'O';
+        final char PATH = '^';
 
         System.out.println("Legend: ");
         System.out.println("WALLS: " + WALL + "\nENTRANCES/EXITS: " + EXIT + "\nMAIN DESK: " + MAIN_DESK
-                + "\nFANTASY SECTION: " + FANTASY + "\nYOUNG ADULT SECTION: " + YOUNG_ADULT + "\nROMANCE SECTION: "
-                + ROMANCE + "\nSCIENCE FICTION SECTION: " + SCIENCE_FICTION + "\nCHILDREN'S SECTION: " + CHILDREN
-                + "\nHISTORICAL FICTION SECTION: " + HISTORICAL_FICTION + "\nNON-FICTION: " + NON_FICTION
-                + "\nMYSTERY SECTION: " + MYSTERY + "\nHORROR SECTION: " + HORROR + "\nCOMPUTERS: " + COMPUTERS
-                + "\nROOM DOOR: " + ROOM_DOOR);
+                + "\nKIOSK: " + KIOSK + "\nFANTASY SECTION: " + FANTASY + "\nYOUNG ADULT SECTION: " + YOUNG_ADULT
+                + "\nROMANCE SECTION: " + ROMANCE + "\nSCIENCE FICTION SECTION: " + SCIENCE_FICTION
+                + "\nCHILDREN'S SECTION: " + CHILDREN + "\nHISTORICAL FICTION SECTION: " + HISTORICAL_FICTION
+                + "\nNON-FICTION: " + NON_FICTION + "\nMYSTERY SECTION: " + MYSTERY + "\nHORROR SECTION: " + HORROR
+                + "\nCOMPUTERS: " + COMPUTERS + "\nROOM DOOR: " + ROOM_DOOR + "\nITEM PATH: " + PATH);
 
         System.out.println("Map: ");
         for (int i = 0; i < this.map.getDisplay().length; i++) {
@@ -46,8 +48,10 @@ public class MapPrinter implements Printer {
                     System.out.print(WALL);
                 } else if (this.map.getDisplay()[i][j] == MapType.EXIT) {
                     System.out.print(EXIT);
-                } else if (this.map.getDisplay()[i][j] == MapType.DESK){
+                }else if (this.map.getDisplay()[i][j] == MapType.DESK){
                     System.out.print(MAIN_DESK);
+                } else if (this.map.getDisplay()[i][j] == MapType.KIOSK){
+                    System.out.print(KIOSK);
                 } else if (this.map.getDisplay()[i][j] == MapType.FANTASY_SECTION) {
                     System.out.print(FANTASY);
                 } else if (this.map.getDisplay()[i][j] == MapType.YOUNG_ADULT_SECTION) {
@@ -68,8 +72,10 @@ public class MapPrinter implements Printer {
                     System.out.print(HORROR);
                 } else if (this.map.getDisplay()[i][j] == MapType.COMPUTER) {
                     System.out.print(COMPUTERS);
-                } else {
+                } else if (this.map.getDisplay()[i][j] == MapType.ROOM_DOOR) {
                     System.out.print(ROOM_DOOR);
+                } else {
+                    System.out.print(PATH);
                 }
             }
             System.out.println();

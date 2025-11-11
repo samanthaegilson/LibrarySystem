@@ -7,6 +7,7 @@ public enum MapType {
     WALL,
     EXIT,
     DESK,
+    KIOSK,
     ROOM_DOOR,
     COMPUTER,
     FANTASY_SECTION,
@@ -17,5 +18,6 @@ public enum MapType {
     HISTORICAL_FICTION_SECTION,
     NON_FICTION_SECTION,
     MYSTERY_SECTION,
-    HORROR_SECTION
+    HORROR_SECTION,
+    PATH
 }

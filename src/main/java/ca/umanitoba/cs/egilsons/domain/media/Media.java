@@ -2,8 +2,10 @@ package ca.umanitoba.cs.egilsons.domain.media;
 
 import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.Review;
+import ca.umanitoba.cs.egilsons.domain.map.Coordinates;
 
 import java.util.List;
+import java.util.Queue;
 
 /**
  * A piece of media. Media are part of a {@link ca.umanitoba.cs.egilsons.domain.Library}.
@@ -13,6 +15,8 @@ public interface Media {
     MediaCategory getCategory();
     List<Review> getReviews();
     int getCopies();
+    Coordinates getCoordinates();
+    Queue<Member> getWaitlist();
 
     /**
      * Checks if another media is equal to this media

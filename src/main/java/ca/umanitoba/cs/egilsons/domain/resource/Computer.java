@@ -1,5 +1,7 @@
 package ca.umanitoba.cs.egilsons.domain.resource;
 
+import ca.umanitoba.cs.egilsons.domain.map.Coordinates;
+import ca.umanitoba.cs.egilsons.domain.map.Map;
 import com.google.common.base.Preconditions;
 
 /**
@@ -7,8 +9,9 @@ import com.google.common.base.Preconditions;
  */
 public class Computer implements Resource {
     private final int number;
-    private Booking weekBookings;
+    private Booking monthBookings;
     private static int count = 0;
+    private Coordinates coordinates;
 
     /**
      * Invariant properties for Computer
@@ -25,11 +28,20 @@ public class Computer implements Resource {
     public Computer() {
         count++;
         this.number = count;
-        this.weekBookings = new Booking();
+        this.monthBookings = new Booking();
+        this.coordinates = Map.setResourceCoordinates(this);
         checkComputer();
     }
 
     public int getNumber() {
         return this.number;
+    }
+
+    public Coordinates getCoordinates() {
+        return this.coordinates;
+    }
+
+    public Booking getMonthBookings() {
+        return this.monthBookings;
     }
 }

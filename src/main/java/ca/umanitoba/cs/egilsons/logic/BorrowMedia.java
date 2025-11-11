@@ -43,4 +43,6 @@ public class BorrowMedia {
     public boolean borrowMedia(Media media) {
         return this.member.borrowMedia(media);
     }
+
+    // Need some type of time system for overdue media
 }

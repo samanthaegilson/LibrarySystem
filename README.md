@@ -383,6 +383,7 @@ classDiagram
         <li>member != null
         <li>media != null
         <li>text != null
+        <li>text.length() >= 1
         <li>stars > 0 && stars <= 5
     </ul>"
     

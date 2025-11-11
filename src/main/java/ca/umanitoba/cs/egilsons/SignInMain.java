@@ -113,8 +113,7 @@ public class SignInMain {
             System.out.println("""
                     Would you like to exit?
                     YES
-                    NO
-                    """);
+                    NO""");
             String input = keyboard.nextLine().toLowerCase();
             switch (input) {
                 case "yes":

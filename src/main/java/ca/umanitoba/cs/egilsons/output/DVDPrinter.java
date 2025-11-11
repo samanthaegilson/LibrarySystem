@@ -22,7 +22,7 @@ public class DVDPrinter implements Printer {
 
         System.out.println("Reviews: ");
         for (Review review : this.dvd.getReviews()) {
-            System.out.println(review.stars() + " stars by " + review.member());
+            System.out.println(review.getStars() + " stars by " + review.getMember());
         }
     }
 }

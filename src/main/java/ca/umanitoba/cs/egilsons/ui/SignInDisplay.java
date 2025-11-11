@@ -33,26 +33,21 @@ public class SignInDisplay {
         return account;
     }
 
+    public void printAnnouncements(Member member) {
+        System.out.println("Announcements: ");
+        for (String announcement : member.getAnnouncements()) {
+            System.out.println(announcement + " is available to take out!");
+        }
+    }
+
     private boolean yesNo() {
         boolean isYes = false;
-        boolean validInput = false;
-        while (!validInput) {
-            System.out.println("""
-                YES
-                NO
-                """);
-            String yesNo = this.keyboard.nextLine().toLowerCase();
-            switch (yesNo) {
-                case "yes":
-                    validInput = true;
-                    isYes = true;
-                    break;
-                case "no":
-                    validInput = true;
-                    break;
-                default:
-                    System.out.println("Not an option.");
-            }
+        System.out.println("""
+            1. YES
+            2. NO""");
+        int yesNo = getChoice(2);
+        if (yesNo == 1) {
+            isYes = true;
         }
         return isYes;
     }
@@ -96,5 +91,31 @@ public class SignInDisplay {
             }
         }
         return account;
+    }
+
+    /**
+     * Gets an integer from the user between 1 and a high bound.
+     *
+     * @param high the highest the choice can be
+     * @return the integer representing the choice of the user
+     */
+    private int getChoice(int high) {
+        boolean valid = false;
+        int choice = -1;
+        while (!valid) {
+            String input = this.keyboard.nextLine();
+            try {
+                choice = Integer.parseInt(input);
+                // The choice is only valid if it is an integer between the high and low bounds
+                if (choice >= 1 && choice <= high) {
+                    valid = true;
+                } else {
+                    System.out.println("Not a valid choice, please try again.");
+                }
+            } catch (NumberFormatException nfe) {
+                System.out.println("Not a number, please try again.");
+            }
+        }
+        return choice;
     }
 }

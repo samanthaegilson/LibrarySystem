@@ -22,7 +22,7 @@ public class BookPrinter implements Printer {
 
         System.out.println("Reviews: ");
         for (Review review : this.book.getReviews()) {
-            System.out.println(review.stars() + " stars by " + review.member());
+            System.out.println(review.getStars() + " stars by " + review.getMember());
         }
     }
 }

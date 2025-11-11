@@ -5,6 +5,8 @@ import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidAuthorException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidBookPagesException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidTitleException;
+import ca.umanitoba.cs.egilsons.domain.map.Coordinates;
+import ca.umanitoba.cs.egilsons.domain.map.Map;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class Book implements Media {
     private List<Review> reviews;
     private int copies;
     private Queue<Member> waitlist;
+    private Coordinates coordinates;
 
     /**
      * Invariant properties for Book.
@@ -58,6 +61,7 @@ public class Book implements Media {
         this.reviews = new ArrayList<>();
         this.copies++;
         this.waitlist = new LinkedList<>();
+        this.coordinates = Map.setMediaCoordinates(this);
         checkBook();
     }
 
@@ -132,6 +136,14 @@ public class Book implements Media {
 
     public int getCopies() {
         return this.copies;
+    }
+
+    public Coordinates getCoordinates() {
+        return this.coordinates;
+    }
+
+    public Queue<Member> getWaitlist() {
+        return this.waitlist;
     }
 
     /**

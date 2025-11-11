@@ -18,6 +18,7 @@ public class Member implements Comparable<Member> {
     private final String password;
     private List<Media> takenOut;
     private List<TimeSlot> bookings;
+    private List<String> announcements; // Add to class invariants!!!
     // private List<String> constraints;
     // contact info?
 
@@ -38,6 +39,7 @@ public class Member implements Comparable<Member> {
         this.name = name;
         this.password = password;
         this.takenOut = new ArrayList<>();
+        this.announcements = new ArrayList<>();
         checkMember();
     }
 
@@ -85,6 +87,10 @@ public class Member implements Comparable<Member> {
         return this.takenOut;
     }
 
+    public List<String> getAnnouncements() {
+        return this.announcements;
+    }
+
     /**
      * Compares a member to another member
      *
@@ -115,5 +121,9 @@ public class Member implements Comparable<Member> {
         media.returnCopy();
         this.takenOut.remove(media); // Should i check this media is in takenOut???
         checkMember();
+    }
+
+    public void addAnnouncement(String title) {
+        this.announcements.add(title);
     }
 }

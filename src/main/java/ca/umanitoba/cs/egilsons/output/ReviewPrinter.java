@@ -13,9 +13,9 @@ public class ReviewPrinter implements Printer {
     }
 
     public void print() {
-        System.out.println("Media: " + this.review.media().getTitle());
-        System.out.println("Author: " + this.review.member().getName());
-        System.out.println(this.review.stars() + " stars");
-        System.out.println(this.review.text());
+        System.out.println("Media: " + this.review.getMedia().getTitle());
+        System.out.println("Author: " + this.review.getMember().getName());
+        System.out.println(this.review.getStars() + " stars");
+        System.out.println(this.review.getText());
     }
 }

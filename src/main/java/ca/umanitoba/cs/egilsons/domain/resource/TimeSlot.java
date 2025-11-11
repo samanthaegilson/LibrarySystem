@@ -11,4 +11,16 @@ public class TimeSlot {
         this.endHour = endHour;
         this.booked = false;
     }
+
+    public int getStartHour() {
+        return this.startHour;
+    }
+
+    public int getEndHour() {
+        return this.endHour;
+    }
+
+    public boolean isBooked() {
+        return this.booked;
+    }
 }

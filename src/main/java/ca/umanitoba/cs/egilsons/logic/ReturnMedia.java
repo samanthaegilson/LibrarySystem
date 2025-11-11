@@ -16,10 +16,13 @@ public class ReturnMedia {
 
     public void returnMedia(Media media) {
         this.member.returnMedia(media);
+        if (!media.getWaitlist().isEmpty()) {
+            Member front = media.getWaitlist().remove();
+            front.addAnnouncement(media.getTitle());
+        }
     }
 
-    public void writeReview(Media media, String text, String stars) {
-        // Review review = new ReviewBuilder
-        //media.addReview(review);
+    public void writeReview(Media media, Review review) {
+        media.addReview(review);
     }
 }

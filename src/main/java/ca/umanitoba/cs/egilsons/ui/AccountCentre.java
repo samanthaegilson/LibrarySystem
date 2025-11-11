@@ -38,7 +38,6 @@ public class AccountCentre {
                     break;
                 case "log out":
                     running = false;
-//                    this.keyboard.close();
                     break;
                 default:
                     System.out.println("Not an option.");
@@ -54,8 +53,7 @@ public class AccountCentre {
                 RETURN MEDIA
                 BOOK RESOURCE
                 FIND ITEM
-                LOG OUT
-                """);
+                LOG OUT""");
         choice = keyboard.nextLine().toLowerCase();
         return choice;
     }
@@ -66,7 +64,12 @@ public class AccountCentre {
     }
 
     private void returnMedia() {
-
+        if (!this.member.getTakenOut().isEmpty()) {
+            ReturnMediaDisplay returnMediaDisplay = new ReturnMediaDisplay(this.library, this.member);
+            returnMediaDisplay.startReturnMedia();
+        } else {
+            System.out.println("You have no media to return.");
+        }
     }
 
     private void bookResource() {
@@ -74,6 +77,7 @@ public class AccountCentre {
     }
 
     private void findItem() {
-
+        FindItemDisplay findItemDisplay = new FindItemDisplay(this.library);
+        findItemDisplay.enterItem();
     }
 }

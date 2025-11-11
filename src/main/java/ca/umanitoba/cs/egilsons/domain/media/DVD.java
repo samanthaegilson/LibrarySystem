@@ -5,6 +5,8 @@ import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidDVDRunTimeException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidDirectorException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidTitleException;
+import ca.umanitoba.cs.egilsons.domain.map.Coordinates;
+import ca.umanitoba.cs.egilsons.domain.map.Map;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class DVD implements Media {
     private List<Review> reviews;
     private int copies;
     private Queue<Member> waitlist;
+    private Coordinates coordinates;
 
     /**
      * Invariant properties for DVD.
@@ -59,6 +62,7 @@ public class DVD implements Media {
         this.reviews = new ArrayList<>();
         this.copies++;
         this.waitlist = new LinkedList<>();
+        this.coordinates = Map.setMediaCoordinates(this);
         checkDVD();
     }
 
@@ -133,6 +137,14 @@ public class DVD implements Media {
 
     public int getCopies() {
         return this.copies;
+    }
+
+    public Coordinates getCoordinates() {
+        return this.coordinates;
+    }
+
+    public Queue<Member> getWaitlist() {
+        return this.waitlist;
     }
 
     /**

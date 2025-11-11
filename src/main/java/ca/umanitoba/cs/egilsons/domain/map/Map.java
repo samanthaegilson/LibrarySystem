@@ -1,7 +1,10 @@
 package ca.umanitoba.cs.egilsons.domain.map;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
+import ca.umanitoba.cs.egilsons.domain.media.Media;
+import ca.umanitoba.cs.egilsons.domain.media.MediaCategory;
 import ca.umanitoba.cs.egilsons.domain.resource.Computer;
+import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import ca.umanitoba.cs.egilsons.domain.resource.Room;
 import com.google.common.base.Preconditions;
 
@@ -10,12 +13,29 @@ import com.google.common.base.Preconditions;
  */
 public class Map {
     private MapType[][] display;
+    private Coordinates kiosk;
 
     /**
      * Invariant properties for Map
      */
     private void checkMap() {
         Preconditions.checkNotNull(display, "Display should never be null.");
+    }
+
+    private int pickBookshelfNum(Media media) {
+        int bookshelf = -1;
+        final int FIRST_LETTER = media.getTitle().toUpperCase().charAt(0);
+        final int A = 65;
+        final int D = 68;
+        if (FIRST_LETTER >= A && FIRST_LETTER < D) {
+            bookshelf = 1;
+        }
+        // FINISH LATER
+        return bookshelf;
+    }
+
+    public Map(MapType[][] display) {
+        this.display = display;
     }
 
     /**
@@ -49,6 +69,7 @@ public class Map {
         final int VERTICAL_ROOM_WALL2 = 2;
         final int HORIZONTAL_ROOM_WALL = 3;
         final int DOOR_SPOT = 3;
+        final int KIOSK_SPOT = 28;
 
         int roomCount = 0;
         int computerCount = 0;
@@ -81,6 +102,10 @@ public class Map {
         // Exits
         this.display[0][HORIZONTAL_EXIT] = MapType.EXIT;
         this.display[VERTICAL_EXIT][HORIZONTAL - 1] = MapType.EXIT;
+
+        // Kiosk
+        this.display[1][KIOSK_SPOT] = MapType.KIOSK;
+        this.kiosk = new Coordinates(1, KIOSK_SPOT);
         
         // Main desk
         for (int i = 0; i < DESK_LENGTH; i++) {
@@ -137,5 +162,71 @@ public class Map {
 
     public MapType[][] getDisplay() {
         return this.display;
+    }
+
+    public Coordinates getKiosk() {
+        return this.kiosk;
+    }
+
+    public static Coordinates setMediaCoordinates(Media media) {
+        final int BOOKSHELF1_ROW = 3;
+        final int BOOKSHELF2_ROW = 5;
+        final int BOOKSHELF3_ROW = 7;
+        final int FANTASY_START = 2;
+        final int YOUNG_ADULT_START = 13;
+        final int ROMANCE_START = 24;
+        final int SCIENCE_FICTION_START = 2;
+        final int CHILDREN_START = 13;
+        final int HISTORICAL_FICTION_START = 24;
+        final int NON_FICTION_START = 2;
+        final int MYSTERY_START = 13;
+        final int HORROR_START = 24;
+        Coordinates coordinates = null;
+        int bookshelfNum = 0;
+
+        if (media.getCategory() == MediaCategory.FANTASY) {
+            coordinates = new Coordinates(BOOKSHELF1_ROW, FANTASY_START + bookshelfNum);
+        } else if (media.getCategory() == MediaCategory.YOUNG_ADULT) {
+            coordinates = new Coordinates(BOOKSHELF1_ROW, YOUNG_ADULT_START + bookshelfNum);
+        } else if (media.getCategory() == MediaCategory.ROMANCE) {
+            coordinates = new Coordinates(BOOKSHELF1_ROW, ROMANCE_START + bookshelfNum);
+        } else if (media.getCategory() == MediaCategory.SCIENCE_FICTION) {
+            coordinates = new Coordinates(BOOKSHELF2_ROW, SCIENCE_FICTION_START + bookshelfNum);
+        } else if (media.getCategory() == MediaCategory.CHILDREN) {
+            coordinates = new Coordinates(BOOKSHELF2_ROW, CHILDREN_START + bookshelfNum);
+        } else if (media.getCategory() == MediaCategory.HISTORICAL_FICTION) {
+            coordinates = new Coordinates(BOOKSHELF2_ROW, HISTORICAL_FICTION_START + bookshelfNum);
+        } else if (media.getCategory() == MediaCategory.NON_FICTION) {
+            coordinates = new Coordinates(BOOKSHELF3_ROW, NON_FICTION_START + bookshelfNum);
+        } else if (media.getCategory() == MediaCategory.MYSTERY) {
+            coordinates = new Coordinates(BOOKSHELF3_ROW, MYSTERY_START + bookshelfNum);
+        } else if (media.getCategory() == MediaCategory.HORROR) {
+            coordinates = new Coordinates(BOOKSHELF3_ROW, HORROR_START + bookshelfNum);
+        }
+
+        return coordinates;
+    }
+
+    public static Coordinates setResourceCoordinates(Resource resource) {
+        final int ROOM_START = 38;
+        final int ROOM_SPACE = 7;
+        final int ROOM_ROW = 3;
+        final int COMPUTER_ROW_1 = 6;
+        final int COMPUTER_ROW_2 = 8;
+        final int COMPUTER_START = 35;
+        final int RESOURCE_NUM = resource.getNumber();
+        Coordinates coordinates;
+
+        if (resource instanceof Room) {
+            coordinates = new Coordinates(ROOM_ROW, ROOM_START + ((RESOURCE_NUM - 1) * ROOM_SPACE));
+        } else {
+            if (RESOURCE_NUM % 2 == 1) {
+                coordinates = new Coordinates(COMPUTER_ROW_1, COMPUTER_START + (RESOURCE_NUM - 1));
+            } else {
+                coordinates = new Coordinates(COMPUTER_ROW_2, COMPUTER_START + (RESOURCE_NUM/2 - 1));
+            }
+        }
+
+        return coordinates;
     }
 }

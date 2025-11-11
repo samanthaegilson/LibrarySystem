@@ -1,5 +1,6 @@
 package ca.umanitoba.cs.egilsons.domain;
 
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidNameException;
 import ca.umanitoba.cs.egilsons.domain.map.Map;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
@@ -59,11 +60,11 @@ public class Library {
     public static class LibraryBuilder {
         private String name;
 
-        public LibraryBuilder name(String name) {
+        public LibraryBuilder name(String name)  {
             Preconditions.checkNotNull(name, "Name should not be null.");
 
             if (name.isEmpty()) {
-                // throw exception
+                // throw new InvalidNameException();
             }
 
             this.name = name;

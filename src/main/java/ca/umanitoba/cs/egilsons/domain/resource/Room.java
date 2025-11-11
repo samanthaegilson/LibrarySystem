@@ -1,5 +1,7 @@
 package ca.umanitoba.cs.egilsons.domain.resource;
 
+import ca.umanitoba.cs.egilsons.domain.map.Coordinates;
+import ca.umanitoba.cs.egilsons.domain.map.Map;
 import com.google.common.base.Preconditions;
 
 /**
@@ -9,6 +11,7 @@ public class Room implements Resource {
     private final int number;
     private Booking weekBookings;
     private static int count = 0;
+    private Coordinates coordinates;
 
     /**
      * Invariant properties for Room
@@ -26,10 +29,15 @@ public class Room implements Resource {
         count++;
         this.number = count;
         this.weekBookings = new Booking();
+        this.coordinates = Map.setResourceCoordinates(this);
         checkRoom();
     }
 
     public int getNumber() {
         return this.number;
+    }
+
+    public Coordinates getCoordinates() {
+        return this.coordinates;
     }
 }
