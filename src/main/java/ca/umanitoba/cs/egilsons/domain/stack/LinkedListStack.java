@@ -1,4 +1,4 @@
-package ca.umanitoba.cs.egilsons.logic.stack;
+package ca.umanitoba.cs.egilsons.domain.stack;
 
 public class LinkedListStack<T> implements Stack<T> {
     private Node<T> top;

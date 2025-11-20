@@ -19,5 +19,6 @@ public enum MapType {
     NON_FICTION_SECTION,
     MYSTERY_SECTION,
     HORROR_SECTION,
-    PATH
+    PATH,
+    DESTINATION
 }

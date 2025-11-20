@@ -1,5 +1,6 @@
 package ca.umanitoba.cs.egilsons.output;
 
+import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
 
@@ -22,7 +23,18 @@ public class BookPrinter implements Printer {
 
         System.out.println("Reviews: ");
         for (Review review : this.book.getReviews()) {
-            System.out.println(review.getStars() + " stars by " + review.getMember());
+            System.out.println(review.getStars() + " stars by " + review.getMember().getName());
         }
+
+        System.out.print("Waitlist: ");
+        int counter = 1;
+        for (Member member : this.book.getWaitlist()) {
+            System.out.print(member.getName());
+            if (counter < this.book.getWaitlist().size()) {
+                System.out.print(", ");
+            }
+            counter++;
+        }
+        System.out.println();
     }
 }

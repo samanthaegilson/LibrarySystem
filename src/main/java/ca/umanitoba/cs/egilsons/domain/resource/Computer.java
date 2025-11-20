@@ -11,14 +11,16 @@ public class Computer implements Resource {
     private final int number;
     private Booking monthBookings;
     private static int count = 0;
-    private Coordinates coordinates;
+    private final Coordinates coordinates;
 
     /**
      * Invariant properties for Computer
      */
     private void checkComputer() {
         Preconditions.checkState(number > 0, "Number should be bigger than 0.");
+        Preconditions.checkNotNull(monthBookings, "Month bookings should never be null.");
         Preconditions.checkState(count >= 0, "Count should never be below 0.");
+        Preconditions.checkNotNull(coordinates, "Coordinates should never be null.");
     }
 
     /**

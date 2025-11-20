@@ -8,4 +8,5 @@ import ca.umanitoba.cs.egilsons.domain.map.Coordinates;
 public interface Resource {
     int getNumber();
     Coordinates getCoordinates();
+    Booking getMonthBookings();
 }

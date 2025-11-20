@@ -38,14 +38,10 @@ public class SignInMain {
     }
 
     private static void setUpLibrarySystem() {
-        // Library System
+        // Library System and library
         librarySystem = new LibrarySystem();
-        // Libraries
+        Library library1 = new Library("Shakespeare");
 
-        Library library1 = new Library.LibraryBuilder().name("Westwood").build();
-//        Library library2 = new Library.LibraryBuilder().name("Bedson").build();
-//        Library library3 = new Library.LibraryBuilder().name("Shakespeare").build();
-//        Library library4 = new Library.LibraryBuilder().name("Elaine").build();
         // Media
         try {
             Book book1 = new Book.BookBuilder().title("Harry Potter").author("J.K. Rowling").pages(560).category(MediaCategory.FANTASY).build();
@@ -106,29 +102,42 @@ public class SignInMain {
     }
 
     private static boolean exitChoice() {
-        Scanner keyboard = new Scanner(System.in);
         boolean running = true;
-        boolean validInput = false;
-        while (!validInput) {
-            System.out.println("""
-                    Would you like to exit?
-                    YES
-                    NO""");
-            String input = keyboard.nextLine().toLowerCase();
-            switch (input) {
-                case "yes":
-                    validInput = true;
-                    running = false;
-                    break;
-                case "no":
-                    validInput = true;
-                    break;
-                default:
-                    System.out.println("Not an option.");
-                    break;
+        System.out.println("""
+            Would you like to exit?
+            1. YES
+            2. NO""");
+        int choice = getChoice(2); // There are only two options
+        if (choice == 1) {
+            running = false;
+        }
+        return running;
+    }
+
+    /**
+     * Gets an integer from the user between 1 and a high bound.
+     *
+     * @param high the highest the choice can be
+     * @return the integer representing the choice of the user
+     */
+    public static int getChoice(int high) {
+        Scanner keyboard = new Scanner(System.in);
+        boolean valid = false;
+        int choice = -1;
+        while (!valid) {
+            String input = keyboard.nextLine();
+            try {
+                choice = Integer.parseInt(input);
+                // The choice is only valid if it is an integer between the high and low bounds
+                if (choice >= 1 && choice <= high) {
+                    valid = true;
+                } else {
+                    System.out.println("Not a valid choice, please try again.");
+                }
+            } catch (NumberFormatException nfe) {
+                System.out.println("Not a number, please try again.");
             }
         }
-        // keyboard.close();
-        return running;
+        return choice;
     }
 }

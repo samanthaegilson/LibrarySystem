@@ -20,17 +20,52 @@ public class Map {
      */
     private void checkMap() {
         Preconditions.checkNotNull(display, "Display should never be null.");
+        Preconditions.checkNotNull(kiosk, "The kiosk coordinates should never be null.");
     }
 
-    private int pickBookshelfNum(Media media) {
-        int bookshelf = -1;
+    /**
+     * Picks a bookshelf for the media based on the first letter of the title
+     *
+     * @param media the media to find a bookshelf for
+     * @return the bookshelf number
+     */
+    private static int pickBookshelfNum(Media media) {
         final int FIRST_LETTER = media.getTitle().toUpperCase().charAt(0);
+        // Constants for the bookshelf separation
         final int A = 65;
         final int D = 68;
+        final int G = 71;
+        final int J = 74;
+        final int M = 77;
+        final int P = 80;
+        final int S = 83;
+        final int V = 86;
+        final int Y = 89;
+        final int Z = 90;
+        int bookshelf = -1;
+
         if (FIRST_LETTER >= A && FIRST_LETTER < D) {
+            bookshelf = 0;
+        } else if (FIRST_LETTER >= D && FIRST_LETTER < G) {
             bookshelf = 1;
+        } else if (FIRST_LETTER >= G && FIRST_LETTER < J) {
+            bookshelf = 2;
+        } else if (FIRST_LETTER >= J && FIRST_LETTER < M) {
+            bookshelf = 3;
+        } else if (FIRST_LETTER >= M && FIRST_LETTER < P) {
+            bookshelf = 4;
+        } else if (FIRST_LETTER >= P && FIRST_LETTER < S) {
+            bookshelf = 5;
+        } else if (FIRST_LETTER >= S && FIRST_LETTER < V) {
+            bookshelf = 6;
+        } else if (FIRST_LETTER >= V && FIRST_LETTER < Y) {
+            bookshelf = 7;
+        } else if (FIRST_LETTER >= Y && FIRST_LETTER < Z) {
+            bookshelf = 8;
+        } else {
+            bookshelf = 9;
         }
-        // FINISH LATER
+
         return bookshelf;
     }
 
@@ -168,6 +203,12 @@ public class Map {
         return this.kiosk;
     }
 
+    /**
+     * Sets the coordinate of a media
+     *
+     * @param media the media to find the coordinate of
+     * @return the coordinates of the media
+     */
     public static Coordinates setMediaCoordinates(Media media) {
         final int BOOKSHELF1_ROW = 3;
         final int BOOKSHELF2_ROW = 5;
@@ -182,8 +223,9 @@ public class Map {
         final int MYSTERY_START = 13;
         final int HORROR_START = 24;
         Coordinates coordinates = null;
-        int bookshelfNum = 0;
+        int bookshelfNum = pickBookshelfNum(media);
 
+        // Sets the coordinates by media category
         if (media.getCategory() == MediaCategory.FANTASY) {
             coordinates = new Coordinates(BOOKSHELF1_ROW, FANTASY_START + bookshelfNum);
         } else if (media.getCategory() == MediaCategory.YOUNG_ADULT) {
@@ -207,6 +249,12 @@ public class Map {
         return coordinates;
     }
 
+    /**
+     * Sets the coordinate of a resource
+     *
+     * @param resource the resource to find the coordinate of
+     * @return the coordinates of the resource
+     */
     public static Coordinates setResourceCoordinates(Resource resource) {
         final int ROOM_START = 38;
         final int ROOM_SPACE = 7;
@@ -221,8 +269,10 @@ public class Map {
             coordinates = new Coordinates(ROOM_ROW, ROOM_START + ((RESOURCE_NUM - 1) * ROOM_SPACE));
         } else {
             if (RESOURCE_NUM % 2 == 1) {
+                // First row of computers
                 coordinates = new Coordinates(COMPUTER_ROW_1, COMPUTER_START + (RESOURCE_NUM - 1));
             } else {
+                // Second row of computers
                 coordinates = new Coordinates(COMPUTER_ROW_2, COMPUTER_START + (RESOURCE_NUM/2 - 1));
             }
         }

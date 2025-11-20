@@ -29,6 +29,7 @@ ways to run it:
 
 ## Flow of interaction
 
+### Sign in
 Here is the flowchart for the "Enter account" task...
 
 ```mermaid
@@ -45,20 +46,22 @@ flowchart
         
         %% Enter name and other information too?
         chooseCredentials ==Name, Password==> makeAccount
-        makeAccount -.Account Created.-> enterAccount
+        makeAccount -.Account Created.-> homeScreen
         
         loginToAccount[Login To Account]
         checkUser{Check User}
-        enterAccount[[Enter Account]]
+        homeScreen[[Home Screen]]
         
         loginToAccount ==Make new account==> chooseCredentials
         loginToAccount ==Name, Password==> checkUser
         checkUser -.No Such User Exists.->loginToAccount
-        checkUser -.Credentials Match Account.->enterAccount
+        checkUser -.Credentials Match Account.->homeScreen
+        homeScreen -.Log out.->signInScreen
             
     end
 ```
 
+### Borrow Media
 Here is the flowchart for the "Borrow Media" task
 
 ```mermaid
@@ -92,6 +95,7 @@ flowchart
     end
 ```
 
+### Book Resource
 Here is the flowchart for the "Book Resource" task
 
 ```mermaid
@@ -116,11 +120,12 @@ flowchart
     end
 ```
 
-Here is the flowchart for the "Map Path" task
+### Find Item
+Here is the flowchart for the "Find Item" task
 
 ```mermaid
 flowchart
-    subgraph MAP PATH 
+    subgraph FIND ITEM
         enterItem[[Enter Item]]
         
         findItemLocation{Find Item Location}
@@ -134,6 +139,7 @@ flowchart
     end
 ```
 
+### Return Media
 Here is the flowchart for the "Return Media" task
 
 ```mermaid
@@ -167,6 +173,13 @@ flowchart
 
 # Domain model
 
+## Changes
+
+* I realized when implementing my flow of interaction that
+  `CoolObject` really should have a `decreaseCoolness` method
+* 
+
+## Diagram
 Here's my domain model:
 
 ```mermaid
@@ -226,16 +239,26 @@ classDiagram
     class Member {
         %% Text for the name of the member
         -String name
+        %% Text for the password of the member
         -String password
-        -List~Media~ media
+        %% Collection of loans taken out of the library
+        -List~Loan~ takenOut
+        %% Collection of reserved slots at a resource
+        %% in the library
         -List~TimeSlot~ bookings
+        %% Collection of titles that have become available
+        -List~String~ announcements
 
+        +hasOverdueMedia() boolean
         +compareTo(Member other) int
         +borrowMedia(Media media) boolean
         +returnMedia(Media media) void
+        +bookResource(TimeSlot slot, Resource resource) void
+        +addAnnouncement(String title) void
+        +removeAnnouncement(String title) void
     }
-    Member --o Media
-    Member --o Resource
+    Member --o Loan
+    Member --o TimeSlot
 
     note for Member "Invariant properties:
     <ul>
@@ -243,19 +266,27 @@ classDiagram
         <li>name.length() >= 1
         <li>password != null
         <li>password.length() >= 1
+        <li>takenOut != null
+        <li>bookings != null
+        <li>announcements != null
+        <li>loop: no loans are null in takenOut.
+        <li>loop: no time slots are null in bookings.
+        <li>loop: no strings are null in announcements.
     </ul>"
     
     class Media {
         <<interface>>
+        +frontOfWaitlist(Member member) boolean
         +equals(Media other) boolean
         +addCopy() void
         +takeOutCopy() Media
-        +returnCopy() void
         +addToWaitlist(Member member) void
         +addReview(Review review) void
     }
     Media --* Review
     Media --* MediaCategory
+    Media --o Coordinates
+    Media --o Member
 
     class Book {
         %% Text for the title of the book
@@ -270,11 +301,15 @@ classDiagram
         -int copies
         %% Collection of reviews about the book
         -List~Reviews~ reviews
+        %% Collection of members waiting to take out the book
+        -Queue~Member~ waitlist
+        %% Coordinates on the library map
+        -Coordinates coordinates
 
+        +frontOfWaitlist(Member member) boolean
         +equals(Media other) boolean
         +addCopy() void
         +takeOutCopy() Media
-        +returnCopy() void
         +addToWaitlist(Member member) void
         +addReview(Review review) void
     }
@@ -290,7 +325,10 @@ classDiagram
         <li>category != null
         <li>copies >= 0
         <li>reviews != null
+        <li>waitlist != null
+        <li>coordinates != null
         <li>loop: no reviews are null in reviews.
+        <li>loop: no members are null in waitlist.
     </ul>"
 
     class DVD {
@@ -307,11 +345,15 @@ classDiagram
         -int copies
         %% Collection of reviews about the DVD
         -List~Reviews~ reviews
+        %% Collection of members waiting to take out the DVD
+        -Queue~Member~ waitlist
+        %% Coordinates on the library map
+        -Coordinates coordinates
 
+        +frontOfWaitlist(Member member) boolean
         +equals(Media other) boolean
         +addCopy() void
         +takeOutCopy() Media
-        +returnCopy() void
         +addToWaitlist(Member member) void
         +addReview(Review review) void
     }
@@ -327,45 +369,118 @@ classDiagram
         <li>category != null
         <li>copies >= 0
         <li>reviews != null
+        <li>waitlist != null
+        <li>coordinates != null
         <li>loop: no reviews are null in reviews.
+        <li>loop: no members are null in waitlist.
+    </ul>"
+    
+    class Loan {
+        %% The media the loan is for
+        -Media media
+        %% The time starting when the media was borrowed
+        -LocalDateTime borrowDate
+        %% The time the media needs to be returned by
+        -LocalDateTime returnDate
+        
+        +isOverdue() boolean
+    }
+    Loan --o Media
+
+    note for Loan "Invariant properties:
+    <ul>
+        <li>media != null
+        <li>borrowDate != null
+        <li>returnDate != null
     </ul>"
     
     class Resource {
         <<interface>>
     }
+    Resource --* Booking
+    Resource --o Coordinates
     
     class Computer {
         %% A positive number representing the
         %% amount in a library
         -int number
+        %% Time slots for the month that can
+        %% be booked
+        -Booking monthBookings
         %% Has to be a positive number or zero
         -static int count
+        %% Coordinates on the library map
+        -Coordinates coordinates
     }
     Computer ..|> Resource
 
     note for Computer "Invariant properties:
     <ul>
         <li>number > 0
+        <li>monthBookings != null
         <li>count >= 0
+        <li>coordinates != null
     </ul>"
     
     class Room {
         %% A positive number representing the
         %% amount in a library
         -int number
+        %% Time slots for the month that can
+        %% be booked
+        -Booking monthBookings
         %% Has to be a positive number or zero
         -static int count
+        %% Coordinates on the library map
+        -Coordinates coordinates
     }
     Room ..|> Resource
 
     note for Room "Invariant properties:
     <ul>
         <li>number > 0
+        <li>monthBookings != null
         <li>count >= 0
+        <li>coordinates != null
+    </ul>"
+    
+    class Booking {
+        -TimeSlot[][][] monthBookings
+        
+        +book(int week, int day, int startTime) void
+    }
+    Booking --* TimeSlot
+
+    note for Booking "Invariant properties:
+    <ul>
+        <li>monthBookings != null
+        <li>loop: no time slots are null in monthBookings.
+    </ul>"
+    
+    class TimeSlot {
+        %% Has to be between 8am and 7pm
+        -int startHour;
+        %% Has to be between 9am and 8pm
+        -int endHour;
+        %% Has to be between 1 and 7
+        -int day;
+        %% Has to be between 1 and 4
+        -int week;
+        %% Shows if the time slot has been reserved
+        -boolean booked;
+        
+        +book() boolean
+    }
+
+    note for TimeSlot "Invariant properties:
+    <ul>
+        <li>startHour >= 8 && startHour < 20
+        <li>endHour > 8 && endHour <= 20
+        <li>day >= 1 && day <= 7
+        <li>week >= 1 && week <= 4
     </ul>"
 
     class Review {
-        <<record>>
         %% The member who made the review
         -Member member
         %% The media the review is about
@@ -390,32 +505,68 @@ classDiagram
     class Map {
         %% An overhead visual representation of the map
         -MapType[][] display
+        %% Coordinates for the kiosk on the map
+        -Coordinates kiosk
     }
     Map --* MapType
+    Map --* Coordinates
     Map --o Media
     Map --o Resource
 
     note for Map "Invariant properties:
     <ul>
         <li>display != null
+        <li>kiosk != null
     </ul>"
+    
+    class Coordinates {
+        <<record>>
+        -int row
+        -int column
+    }
+    
+    class Stack {
+        <<interface>>
+        +push(T item) void
+        +pop() T
+        +size() int
+        +isEmpty() boolean
+        +peek() T
+    }
+    
+    class LinkedListStack {
+        %% The top of the stack
+        -Node~T~ top
+        %% The amount of entries in the stack
+        -int nodeCount
+
+        +push(T item) void
+        +pop() T
+        +size() int
+        +isEmpty() boolean
+        +peek() T
+    }
+    LinkedListStack ..|> Stack
     
     class MapType {
         <<enumeration>>
         WALL,
         EXIT,
         DESK,
+        KIOSK,
         ROOM_DOOR,
         COMPUTER,
-        FANTASY,
-        YOUNG_ADULT,
-        ROMANCE,
-        SCIENCE_FICTION,
-        CHILDREN,
-        HISTORICAL_FICTION,
-        NON_FICTION,
-        MYSTERY,
-        HORROR
+        FANTASY_SECTION,
+        YOUNG_ADULT_SECTION,
+        ROMANCE_SECTION,
+        SCIENCE_FICTION_SECTION,
+        CHILDREN_SECTION,
+        HISTORICAL_FICTION_SECTION,
+        NON_FICTION_SECTION,
+        MYSTERY_SECTION,
+        HORROR_SECTION,
+        PATH,
+        DESTINATION
     }
     
     class MediaCategory {

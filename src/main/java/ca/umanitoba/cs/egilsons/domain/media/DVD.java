@@ -39,9 +39,15 @@ public class DVD implements Media {
         Preconditions.checkNotNull(category, "Category should never be null.");
         Preconditions.checkNotNull(reviews, "Reviews should never be null.");
         Preconditions.checkState(copies >= 0, "Copies should never go below 0.");
+        Preconditions.checkNotNull(waitlist, "Waitlist should never be null.");
+        Preconditions.checkNotNull(coordinates, "Coordinates should never be null.");
 
         for (Review review : reviews) {
             Preconditions.checkNotNull(review, "Reviews in reviews should never be null.");
+        }
+
+        for (Member member : waitlist) {
+            Preconditions.checkNotNull(member, "Members in waitlist should never be null.");
         }
     }
 
@@ -66,6 +72,9 @@ public class DVD implements Media {
         checkDVD();
     }
 
+    /**
+     * A builder class for a dvd
+     */
     public static class DVDBuilder {
         private String title;
         private String director;
@@ -148,6 +157,20 @@ public class DVD implements Media {
     }
 
     /**
+     * Checks if a member is at the front of the waitlist
+     *
+     * @param member the member being checked
+     * @return if the member is at the front or not
+     */
+    public boolean frontOfWaitlist(Member member) {
+        boolean isFront = false;
+        if (this.waitlist.isEmpty() || this.waitlist.element().compareTo(member) == 0) {
+            isFront = true;
+        }
+        return isFront;
+    }
+
+    /**
      * Checks if another media is equal to this DVD
      *
      * @param other the media being compared
@@ -190,20 +213,6 @@ public class DVD implements Media {
         }
         checkDVD();
         return copy;
-    }
-
-    /**
-     * Returns a copy of this media
-     */
-    public void returnCopy() {
-        checkDVD();
-        addCopy();
-        if (!waitlist.isEmpty()) {
-            // NOTIFY USER
-//            Member member = waitlist.remove();
-//            member.borrowMedia(this);
-        }
-        checkDVD();
     }
 
     /**

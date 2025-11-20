@@ -5,20 +5,34 @@ import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidNameException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidPasswordException;
 import ca.umanitoba.cs.egilsons.logic.SignIn;
+import com.google.common.base.Preconditions;
 
 import java.util.Scanner;
 
+/**
+ * Signs a user into a {@link Member} account.
+ */
 public class SignInDisplay {
     private final SignIn signIn;
     private final Scanner keyboard;
 
+    /**
+     * A constructor for SignInDisplay. Receives the library system
+     *
+     * @param librarySystem the library system of the members
+     */
     public SignInDisplay(LibrarySystem librarySystem) {
         this.signIn = new SignIn(librarySystem);
         this.keyboard = new Scanner(System.in);
     }
 
+    /**
+     * Gets the user the sign in or make a new account
+     *
+     * @return the account of the member
+     */
     public Member startSignIn() {
-        Member account = null;
+        Member account;
         System.out.println("Do you have an account?");
         boolean haveAccount = yesNo();
         if (haveAccount) {
@@ -26,20 +40,14 @@ public class SignInDisplay {
         } else {
             account = makeAccount();
         }
-
-        // go to AccountCentre
-        // through main?
-        // this.keyboard.close();
         return account;
     }
 
-    public void printAnnouncements(Member member) {
-        System.out.println("Announcements: ");
-        for (String announcement : member.getAnnouncements()) {
-            System.out.println(announcement + " is available to take out!");
-        }
-    }
-
+    /**
+     * Gets the user's choice of yes or no
+     *
+     * @return if the user chose yes or not
+     */
     private boolean yesNo() {
         boolean isYes = false;
         System.out.println("""
@@ -52,6 +60,11 @@ public class SignInDisplay {
         return isYes;
     }
 
+    /**
+     * Checks if a given name and password match a current member
+     *
+     * @return the member account
+     */
     private Member loginToAccount() {
         Member account = null;
         while (account == null) {
@@ -71,26 +84,70 @@ public class SignInDisplay {
         return account;
     }
 
+    /**
+     * Creates a member account
+     *
+     * @return the created account
+     */
     private Member makeAccount() {
+        boolean added = false;
         Member account = null;
-        String name = null;
-        String password = null;
-        while (name == null || password == null) {
+        while (!added) {
+            Member.MemberBuilder memberBuilder = new Member.MemberBuilder();
+            getNameInput(memberBuilder);
+            getPasswordInput(memberBuilder);
+            account = memberBuilder.build();
+            added = this.signIn.makeAccount(account);
+            if (!added) {
+                System.out.println("Member already exists. Please choose a different name.");
+                account = null;
+            }
+        }
+        return account;
+    }
+
+    /**
+     * Receives the name for the account from the user
+     *
+     * @param memberBuilder the builder for the member
+     */
+    private void getNameInput(Member.MemberBuilder memberBuilder) {
+        String name;
+        Preconditions.checkNotNull(memberBuilder, "Builder should not be null");
+        do {
             System.out.println("Please enter a name for your account: ");
-            name = keyboard.nextLine();
-            System.out.println("Please enter a password for your account: ");
-            password = keyboard.nextLine();
+            name = this.keyboard.nextLine();
+
             try {
-                account = signIn.makeAccount(name, password);
+                memberBuilder.name(name);
             } catch (InvalidNameException e) {
                 System.out.println("Name should have at least one letter, e.g., bob");
                 name = null;
+            }
+        } while (name == null);
+        Preconditions.checkNotNull(name, "Name should not be null after it's been set.");
+    }
+
+    /**
+     * Receives the password for the account from the user
+     *
+     * @param memberBuilder the builder for the member
+     */
+    private void getPasswordInput(Member.MemberBuilder memberBuilder) {
+        String password;
+        Preconditions.checkNotNull(memberBuilder, "Builder should not be null");
+        do {
+            System.out.println("Please enter a password for your account: ");
+            password = this.keyboard.nextLine();
+
+            try {
+                memberBuilder.password(password);
             } catch (InvalidPasswordException e) {
                 System.out.println("Password should have at least one letter, e.g., nu3586l");
                 password = null;
             }
-        }
-        return account;
+        } while (password == null);
+        Preconditions.checkNotNull(password, "Name should not be null after it's been set.");
     }
 
     /**

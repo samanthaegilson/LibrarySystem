@@ -19,6 +19,14 @@ public interface Media {
     Queue<Member> getWaitlist();
 
     /**
+     * Checks if a member is at the front of the waitlist
+     *
+     * @param member the member being checked
+     * @return if the member is at the front or not
+     */
+    boolean frontOfWaitlist(Member member);
+
+    /**
      * Checks if another media is equal to this media
      *
      * @param other the media being compared
@@ -37,11 +45,6 @@ public interface Media {
      * @return a copy of the media
      */
     Media takeOutCopy();
-
-    /**
-     * Returns a copy of this media
-     */
-    void returnCopy();
 
     /**
      * Adds a member to the waitlist

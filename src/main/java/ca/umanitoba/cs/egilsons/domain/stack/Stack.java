@@ -1,4 +1,4 @@
-package ca.umanitoba.cs.egilsons.logic.stack;
+package ca.umanitoba.cs.egilsons.domain.stack;
 
 /**
  * This is a generic interface for a stack.

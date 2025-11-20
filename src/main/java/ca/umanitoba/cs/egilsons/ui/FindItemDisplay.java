@@ -2,7 +2,6 @@ package ca.umanitoba.cs.egilsons.ui;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.map.Map;
-import ca.umanitoba.cs.egilsons.domain.map.MapType;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
 import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
@@ -14,23 +13,30 @@ import ca.umanitoba.cs.egilsons.output.MapPrinter;
 
 import java.util.Scanner;
 
+/**
+ * Finds a path to an item in the {@link Library} on a {@link Map}.
+ */
 public class FindItemDisplay {
     private final FindItem findItem;
     private final Library library;
     private final Scanner keyboard;
 
+    /**
+     * A constructor for FindItemDisplay. Receives the library
+     *
+     * @param library the library with the items
+     */
     public FindItemDisplay(Library library) {
-        this.findItem = new FindItem(library.getMap());
+        this.findItem = new FindItem(library);
         this.library = library;
         this.keyboard = new Scanner(System.in);
     }
 
+    /**
+     * Gets the choice of item to find
+     */
     public void enterItem() {
-        // Will take out later
-//        MapPrinter mapPrinter = new MapPrinter(this.library.getMap());
-//        mapPrinter.print();
-        /////////////
-        MapType[][] path;
+        Map path;
 
         boolean isMedia = findItemType();
         if (isMedia) {
@@ -41,10 +47,15 @@ public class FindItemDisplay {
             path = findItem.findItemPath(resource.getCoordinates());
         }
 
-        MapPrinter mapPrinter = new MapPrinter(new Map(path));
+        MapPrinter mapPrinter = new MapPrinter(path);
         mapPrinter.print();
     }
 
+    /**
+     * Gets the user's choice between media or resource
+     *
+     * @return if the user is looking for media or not
+     */
     private boolean findItemType() {
         boolean isMedia = false;
         System.out.println("""
@@ -58,6 +69,11 @@ public class FindItemDisplay {
         return isMedia;
     }
 
+    /**
+     * Chooses which media to find
+     *
+     * @return the media to find
+     */
     private Media chooseMedia() {
         Media chosenMedia;
         printMediaOptions();
@@ -68,23 +84,34 @@ public class FindItemDisplay {
 
         // DO I NEED TO PRINT THE FULL INFO????
         // There are only two types of media
-        if (chosenMedia instanceof Book) {
-            BookPrinter bookPrinter = new BookPrinter((Book) chosenMedia);
-            bookPrinter.print();
-        } else {
-            DVDPrinter dvdPrinter = new DVDPrinter((DVD) chosenMedia);
-            dvdPrinter.print();
-        }
+//        if (chosenMedia instanceof Book) {
+//            BookPrinter bookPrinter = new BookPrinter((Book) chosenMedia);
+//            bookPrinter.print();
+//        } else {
+//            DVDPrinter dvdPrinter = new DVDPrinter((DVD) chosenMedia);
+//            dvdPrinter.print();
+//        }
 
         return chosenMedia;
     }
 
+    /**
+     * Chooses which resource to find
+     *
+     * @return the resource to find
+     */
     private Resource chooseResource() {
         printResourceOptions();
         int choice = getChoice(this.library.getResources().size()) - 1;
         return this.library.getResources().get(choice);
     }
 
+    /**
+     * Gets an integer from the user between 1 and a high bound.
+     *
+     * @param high the highest the choice can be
+     * @return the integer representing the choice of the user
+     */
     private int getChoice(int high) {
         boolean valid = false;
         int choice = -1;
@@ -105,6 +132,9 @@ public class FindItemDisplay {
         return choice;
     }
 
+    /**
+     * Prints all media in the library
+     */
     private void printMediaOptions() {
         int index = 1;
         System.out.println("Media: ");
@@ -114,6 +144,9 @@ public class FindItemDisplay {
         }
     }
 
+    /**
+     * Prints all the resources in the library
+     */
     private void printResourceOptions() {
         int index = 1;
         System.out.println("Resources: ");

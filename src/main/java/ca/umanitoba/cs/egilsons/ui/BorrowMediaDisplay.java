@@ -12,12 +12,21 @@ import ca.umanitoba.cs.egilsons.output.DVDPrinter;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Borrows a {@link Media} from the {@link Library}.
+ */
 public class BorrowMediaDisplay {
     private final BorrowMedia borrowMedia;
     private final Library library;
     private final Scanner keyboard;
     private final Member member;
 
+    /**
+     * A constructor for BorrowMediaDisplay. Receives the library and the member
+     *
+     * @param library the library of the media
+     * @param member the member borrowing media
+     */
     public BorrowMediaDisplay(Library library, Member member) {
         this.library = library;
         this.member = member;
@@ -25,9 +34,10 @@ public class BorrowMediaDisplay {
         this.keyboard = new Scanner(System.in);
     }
 
+    /**
+     * Prints media options until a media is borrowed
+     */
     public void browseMedia() {
-        // print all media then ask to filter
-        // should pass the library and member
         printMediaOptions(this.library.getMedia());
 
         boolean borrowed = false;
@@ -41,10 +51,14 @@ public class BorrowMediaDisplay {
         }
     }
 
+    /**
+     * Gets the user's choice of to choose a media or filter
+     *
+     * @return if the user will choose a media or not
+     */
     private boolean browseOptions() {
         boolean chooseMedia = false;
         System.out.println("""
-                
                 Would you like to:
                 1. CHOOSE MEDIA
                 2. FILTER CHOICES""");
@@ -55,6 +69,11 @@ public class BorrowMediaDisplay {
         return chooseMedia;
     }
 
+    /**
+     * Prints the media choices
+     *
+     * @param mediaList the media to choose from
+     */
     private void printMediaOptions(List<Media> mediaList) {
         int index = 1;
         System.out.println("Media: ");
@@ -64,6 +83,11 @@ public class BorrowMediaDisplay {
         }
     }
 
+    /**
+     * Chooses the media to borrow and borrows it if available
+     *
+     * @return if the media was borrowed or not
+     */
     private boolean chooseMedia() {
         // moves on to borrowing
         // print full media info before choosing
@@ -89,15 +113,20 @@ public class BorrowMediaDisplay {
         if (borrow) {
             if (borrowMedia.borrowMedia(chosenMedia)) {
                 System.out.println(chosenMedia.getTitle() + " has been taken out.");
-                borrowed = true;
             } else {
                 waitlist(chosenMedia);
             }
+            borrowed = true;
         }
 
         return borrowed;
     }
 
+    /**
+     * Gets the user's choice of a book or dvd
+     *
+     * @return if the user chose a book or not
+     */
     private boolean formatChoice() {
         boolean isBook = false;
         System.out.println("""
@@ -110,6 +139,11 @@ public class BorrowMediaDisplay {
         return isBook;
     }
 
+    /**
+     * Gets the user's choice of yes or no
+     *
+     * @return if the user chose yes or not
+     */
     private boolean yesNo() {
         boolean isYes = false;
         System.out.println("""
@@ -122,9 +156,10 @@ public class BorrowMediaDisplay {
         return isYes;
     }
 
+    /**
+     * Filters media by name and format
+     */
     private void filterChoices() {
-        // applies filter and prints new choices before going back
-        // choices for filter by: name, type (is type category or book/dvd??)
         System.out.println("Please enter the name to filter by: ");
         String name = this.keyboard.nextLine().toLowerCase();
 
@@ -135,16 +170,22 @@ public class BorrowMediaDisplay {
         printMediaOptions(filtered);
     }
 
+    /**
+     * Adds member to waitlist if wanted
+     *
+     * @param media the media of the waitlist
+     */
     private void waitlist(Media media) {
         System.out.println(media.getTitle() + " has no available copies.\nWould you like to be added to the waitlist?");
         boolean joinWaitlist = yesNo();
         if (joinWaitlist) {
-            int spot = media.addToWaitlist(this.member);
-            System.out.println(this.member.getName() + " is at spot " + spot + " in the waitlist for " + media.getTitle());
-            System.out.println("You will be notified when " + media.getTitle() + " is available.");
-            // NEED TO NOTIFY MEMBER WHEN THEY SIGN IN
-            // Make a new instance variable in Member called announcements
-            // Print all announcements when a user signs in
+            int spot = this.borrowMedia.addToWaitlist(media);
+            if (spot > 0) {
+                System.out.println(this.member.getName() + " is at spot " + spot + " in the waitlist for " + media.getTitle());
+                System.out.println("You will be notified when " + media.getTitle() + " is available.");
+            } else {
+                System.out.println("You are already in the waitlist.");
+            }
         }
     }
 

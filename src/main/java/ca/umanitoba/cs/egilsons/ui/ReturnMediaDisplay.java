@@ -5,8 +5,7 @@ import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidReviewStarsException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidReviewTextException;
-import ca.umanitoba.cs.egilsons.domain.media.Book;
-import ca.umanitoba.cs.egilsons.domain.media.DVD;
+import ca.umanitoba.cs.egilsons.domain.media.Loan;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import ca.umanitoba.cs.egilsons.logic.ReturnMedia;
 import ca.umanitoba.cs.egilsons.output.ReviewPrinter;
@@ -16,63 +15,78 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Returns a {@link Media} to the {@link Library}.
+ */
 public class ReturnMediaDisplay {
     private final ReturnMedia returnMedia;
     private final Library library;
     private final Scanner keyboard;
     private final Member member;
 
+    /**
+     * A constructor for ReturnMediaDisplay. Receives the library and the member
+     *
+     * @param library the library to return the media to
+     * @param member the member returning the media
+     */
     public ReturnMediaDisplay(Library library, Member member) {
         this.library = library;
         this.member = member;
-        this.returnMedia = new ReturnMedia(library, member);
+        this.returnMedia = new ReturnMedia(member);
         this.keyboard = new Scanner(System.in);
     }
 
+    /**
+     * Runs the return options until the media is returned
+     */
     public void startReturnMedia() {
-        Media returning;
-        printMediaOptions(member.getTakenOut());
+        if (!member.getTakenOut().isEmpty()) {
+            Media returning;
+            printMediaOptions(member.getTakenOut());
 
-        System.out.println("Please select the media to return: ");
-        int mediaChoice = getChoice(member.getTakenOut().size()) - 1;
-        returning = member.getTakenOut().get(mediaChoice);
+            System.out.println("Please select the media to return: ");
+            int mediaChoice = getChoice(member.getTakenOut().size()) - 1;
+            returning = member.getTakenOut().get(mediaChoice).getMedia();
 
-        // Choice of return or write or read review
-        boolean doneReturn = false;
-        while (!doneReturn) {
-            int choice = returnOptions();
-            if (choice == 1) {
-                doneReturn = true;
-                returnMedia(returning);
-            } else if (choice == 2) {
-                readReview(returning);
-            } else {
-                writeReview(returning);
+            // Choice of return or write or read review
+            boolean doneReturn = false;
+            while (!doneReturn) {
+                int choice = returnOptions();
+                if (choice == 1) {
+                    doneReturn = true;
+                    returnMedia(returning);
+                } else if (choice == 2) {
+                    readReview(returning);
+                } else {
+                    writeReview(returning);
+                }
             }
+        } else {
+            System.out.println("You do not have any media taken out.");
         }
     }
 
-    private void printMediaOptions(List<Media> mediaList) {
+    /**
+     * Prints the media currently taken out
+     *
+     * @param loanList the media currently taken out
+     */
+    private void printMediaOptions(List<Loan> loanList) {
         int index = 1;
         System.out.println("Current media: ");
-        for (Media media : mediaList) {
-            System.out.println(index + ". " + media.getTitle() + ", " + media.getClass().getSimpleName());
+        for (Loan loan : loanList) {
+            System.out.println(index + ". " + loan.getMedia().getTitle() + ", "
+                    + loan.getMedia().getClass().getSimpleName());
             index++;
         }
     }
 
-    private boolean formatChoice() {
-        boolean isBook = false;
-        System.out.println("""
-            1. BOOK
-            2. DVD""");
-        int format = getChoice(2); // There are only two format options
-        if (format == 1) {
-            isBook = true;
-        }
-        return isBook;
-    }
-
+    /**
+     * Gets the user's choice on return option
+     *
+     * @return 1 to return media, 2 to read reviews or 3 to write a review
+     */
     private int returnOptions() {
         System.out.println("""
                 Would you like to:
@@ -82,11 +96,21 @@ public class ReturnMediaDisplay {
         return getChoice(3); // There are three options to choose from
     }
 
+    /**
+     * Returns the media to the library
+     *
+     * @param media the media to return
+     */
     private void returnMedia(Media media) {
         this.returnMedia.returnMedia(media);
         System.out.println(media.getTitle() + " has been returned to " + this.library.getName() + " Library.");
     }
 
+    /**
+     * Writes a review about the media
+     *
+     * @param media the media to write a review about
+     */
     private void writeReview(Media media) {
         Review.ReviewBuilder reviewBuilder = new Review.ReviewBuilder();
         // We already have the member making the review and the media the review is about
@@ -100,6 +124,11 @@ public class ReturnMediaDisplay {
         System.out.println("Review for " + media.getTitle() + " has been created.");
     }
 
+    /**
+     * Receives the text for the review from the user
+     *
+     * @param reviewBuilder the builder for the review
+     */
     private void getTextInput(Review.ReviewBuilder reviewBuilder) {
         String text;
         Preconditions.checkNotNull(reviewBuilder, "Builder should not be null");
@@ -117,6 +146,11 @@ public class ReturnMediaDisplay {
         Preconditions.checkNotNull(text, "Text should not be null after it's been set.");
     }
 
+    /**
+     * Receives the stars for the review from the user
+     *
+     * @param reviewBuilder the builder for the review
+     */
     private void getStarsInput(Review.ReviewBuilder reviewBuilder) {
         int stars = -1;
         Preconditions.checkNotNull(reviewBuilder, "Builder should not be null");
@@ -139,21 +173,34 @@ public class ReturnMediaDisplay {
         Preconditions.checkState(stars != -1, "Stars should not be negative if it's been set.");
     }
 
+    /**
+     * Prints a review about the media
+     *
+     * @param media the media of the reviews
+     */
     private void readReview(Media media) {
-        // cycle through the media's reviews and choose 1 to show
-        // numbered list?
-        System.out.println("Current reviews:");
-        for (int i = 0; i < media.getReviews().size(); i++) {
-            System.out.println(i + ". " + media.getReviews().get(i).getMember() + ", "
-                    + media.getReviews().get(i).getStars() + " stars");
-        }
-        System.out.println("Please select a review to view");
-        int reviewChoice = getChoice(media.getReviews().size()) - 1;
+        if (!media.getReviews().isEmpty()) {
+            System.out.println("Current reviews:");
+            for (int i = 0; i < media.getReviews().size(); i++) {
+                System.out.println((i + 1) + ". " + media.getReviews().get(i).getMember().getName() + ", "
+                        + media.getReviews().get(i).getStars() + " stars");
+            }
+            System.out.println("Please select a review to view");
+            int reviewChoice = getChoice(media.getReviews().size()) - 1;
 
-        ReviewPrinter reviewPrinter = new ReviewPrinter(media.getReviews().get(reviewChoice));
-        reviewPrinter.print();
+            ReviewPrinter reviewPrinter = new ReviewPrinter(media.getReviews().get(reviewChoice));
+            reviewPrinter.print();
+        } else {
+            System.out.println("There are currently no reviews for " + media.getTitle());
+        }
     }
 
+    /**
+     * Gets an integer from the user between 1 and a high bound.
+     *
+     * @param high the highest the choice can be
+     * @return the integer representing the choice of the user
+     */
     private int getChoice(int high) {
         boolean valid = false;
         int choice = -1;

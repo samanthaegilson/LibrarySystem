@@ -29,7 +29,8 @@ public class MapPrinter implements Printer {
         final char HORROR = 'H';
         final char COMPUTERS = 'P';
         final char ROOM_DOOR = 'O';
-        final char PATH = '^';
+        final char PATH = '.';
+        final char DESTINATION = '#';
 
         System.out.println("Legend: ");
         System.out.println("WALLS: " + WALL + "\nENTRANCES/EXITS: " + EXIT + "\nMAIN DESK: " + MAIN_DESK
@@ -37,7 +38,8 @@ public class MapPrinter implements Printer {
                 + "\nROMANCE SECTION: " + ROMANCE + "\nSCIENCE FICTION SECTION: " + SCIENCE_FICTION
                 + "\nCHILDREN'S SECTION: " + CHILDREN + "\nHISTORICAL FICTION SECTION: " + HISTORICAL_FICTION
                 + "\nNON-FICTION: " + NON_FICTION + "\nMYSTERY SECTION: " + MYSTERY + "\nHORROR SECTION: " + HORROR
-                + "\nCOMPUTERS: " + COMPUTERS + "\nROOM DOOR: " + ROOM_DOOR + "\nITEM PATH: " + PATH);
+                + "\nCOMPUTERS: " + COMPUTERS + "\nROOM DOOR: " + ROOM_DOOR + "\nITEM PATH: " + PATH
+                + "\nITEM DESTINATION: " + DESTINATION);
 
         System.out.println("Map: ");
         for (int i = 0; i < this.map.getDisplay().length; i++) {
@@ -74,8 +76,10 @@ public class MapPrinter implements Printer {
                     System.out.print(COMPUTERS);
                 } else if (this.map.getDisplay()[i][j] == MapType.ROOM_DOOR) {
                     System.out.print(ROOM_DOOR);
-                } else {
+                } else if (this.map.getDisplay()[i][j] == MapType.PATH) {
                     System.out.print(PATH);
+                } else {
+                    System.out.print(DESTINATION);
                 }
             }
             System.out.println();

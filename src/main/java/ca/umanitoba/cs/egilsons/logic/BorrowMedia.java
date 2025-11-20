@@ -2,26 +2,39 @@ package ca.umanitoba.cs.egilsons.logic;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.Member;
-import ca.umanitoba.cs.egilsons.domain.Review;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
 import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
-import ca.umanitoba.cs.egilsons.domain.media.MediaCategory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Logic for borrowing {@link Media}.
+ */
 public class BorrowMedia {
     private final Library library;
     private final Member member;
 
+    /**
+     * A constructor for BorrowMedina. Receives the library and the member
+     *
+     * @param library the library of the media
+     * @param member the member borrowing the media
+     */
     public BorrowMedia(Library library, Member member) {
         this.library = library;
         this.member = member;
     }
 
+    /**
+     * Filters media by name and type
+     *
+     * @param name the name to filter by
+     * @param isBook if the desired media is a book or dvd
+     * @return a list of media
+     */
     public List<Media> filterMedia(String name, boolean isBook) {
-        // Should i check name and category are not null??
         List<Media> filtered = new ArrayList<>();
         if (isBook) {
             for (Media media : this.library.getMedia()) {
@@ -40,9 +53,38 @@ public class BorrowMedia {
         return filtered;
     }
 
+    /**
+     * Borrows a media
+     *
+     * @param media the media to borrow
+     * @return if the media was successfully borrowed or not
+     */
     public boolean borrowMedia(Media media) {
-        return this.member.borrowMedia(media);
+        boolean borrowed = false;
+        // Checks there's no one on the waitlist before them
+        if (media.getWaitlist().isEmpty() || media.frontOfWaitlist(this.member)) {
+            borrowed = this.member.borrowMedia(media);
+        }
+
+        // Removes the member from the waitlist if they borrowed the media
+        if (borrowed && media.frontOfWaitlist(this.member)) {
+            media.getWaitlist().remove(this.member);
+            this.member.removeAnnouncement(media.getTitle());
+        }
+        return borrowed;
     }
 
-    // Need some type of time system for overdue media
+    /**
+     * Adds the member to a media waitlist
+     *
+     * @param media the media who's waitlist to add to
+     * @return the member's spot in the waitlist
+     */
+    public int addToWaitlist(Media media) {
+        int spot = -1;
+        if (!media.getWaitlist().contains(this.member)) {
+            spot = media.addToWaitlist(this.member);
+        }
+        return spot;
+    }
 }
