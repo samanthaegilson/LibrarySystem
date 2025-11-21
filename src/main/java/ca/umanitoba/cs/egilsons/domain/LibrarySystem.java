@@ -66,16 +66,6 @@ public class LibrarySystem {
     }
 
     /**
-     * Removes a member from the library system's members
-     *
-     * @param member the member being removed
-     * @return if the member has been removed or not
-     */
-    public boolean removeMember(Member member) {
-        return this.members.remove(member);
-    }
-
-    /**
      * Gets a member from the library system's members
      *
      * @param index the index of the member

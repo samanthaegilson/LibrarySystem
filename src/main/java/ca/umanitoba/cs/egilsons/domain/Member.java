@@ -130,6 +130,11 @@ public class Member implements Comparable<Member> {
         return this.announcements;
     }
 
+    /**
+     * Checks if the member has overdue media
+     *
+     * @return if the member has overdue media or not
+     */
     public boolean hasOverdueMedia() {
         checkMember();
         boolean overdueMedia = false;
@@ -158,6 +163,12 @@ public class Member implements Comparable<Member> {
         return equal;
     }
 
+    /**
+     * Borrows media from the library
+     *
+     * @param media the media to borrow
+     * @return if the media is available or not
+     */
     public boolean borrowMedia(Media media) {
         checkMember();
         boolean borrowed = false;
@@ -169,6 +180,11 @@ public class Member implements Comparable<Member> {
         return borrowed;
     }
 
+    /**
+     * Returns media to the library
+     *
+     * @param media the media to return
+     */
     public void returnMedia(Media media) {
         checkMember();
         boolean found = false;
@@ -184,6 +200,12 @@ public class Member implements Comparable<Member> {
         checkMember();
     }
 
+    /**
+     * Books a time slot of a resource
+     *
+     * @param slot the time slot to book
+     * @param resource the resource to book
+     */
     public void bookResource(TimeSlot slot, Resource resource) {
         checkMember();
         final int START_HOUR = resource.getMonthBookings().getStartHour();
@@ -193,12 +215,22 @@ public class Member implements Comparable<Member> {
         checkMember();
     }
 
+    /**
+     * Adds a title to announcements
+     *
+     * @param title the title to add
+     */
     public void addAnnouncement(String title) {
         checkMember();
         this.announcements.add(title);
         checkMember();
     }
 
+    /**
+     * Removes a title from announcements
+     *
+     * @param title the title to remove
+     */
     public void removeAnnouncement(String title) {
         checkMember();
         this.announcements.remove(title);

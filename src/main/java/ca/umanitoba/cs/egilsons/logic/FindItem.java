@@ -5,6 +5,7 @@ import ca.umanitoba.cs.egilsons.domain.map.Coordinates;
 import ca.umanitoba.cs.egilsons.domain.map.Map;
 import ca.umanitoba.cs.egilsons.domain.map.MapType;
 import ca.umanitoba.cs.egilsons.domain.stack.LinkedListStack;
+import com.google.common.base.Preconditions;
 
 /**
  * Logic for finding an item on a {@link Map}.
@@ -13,12 +14,20 @@ public class FindItem {
     private final Library library;
 
     /**
+     * Checks that FindItem is in a valid state
+     */
+    private void checkFindItem() {
+        Preconditions.checkNotNull(library, "Library should not be null");
+    }
+
+    /**
      * A constructor for FindItem
      *
      * @param library the library with the map
      */
     public FindItem(Library library) {
         this.library = library;
+        checkFindItem();
     }
 
     /**
@@ -28,6 +37,9 @@ public class FindItem {
      * @return a map marked with the path to the item
      */
     public Map findItemPath(Coordinates itemCoordinates) {
+        checkFindItem();
+        Preconditions.checkNotNull(itemCoordinates, "Item coordinates should not be null");
+
         boolean found = false;
         Map path = new Map(this.library);
         Coordinates startCoordinates = path.getKiosk();
@@ -63,6 +75,8 @@ public class FindItem {
                 addToStack(left, itemCoordinates, visited, stack, path);
             }
         }
+
+        checkFindItem();
         return path;
     }
 

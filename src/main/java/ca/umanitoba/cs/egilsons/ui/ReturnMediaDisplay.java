@@ -41,29 +41,25 @@ public class ReturnMediaDisplay {
      * Runs the return options until the media is returned
      */
     public void startReturnMedia() {
-        if (!member.getTakenOut().isEmpty()) {
-            Media returning;
-            printMediaOptions(member.getTakenOut());
+        Media returning;
+        printMediaOptions(member.getTakenOut());
 
-            System.out.println("Please select the media to return: ");
-            int mediaChoice = getChoice(member.getTakenOut().size()) - 1;
-            returning = member.getTakenOut().get(mediaChoice).getMedia();
+        System.out.println("Please select the media to return: ");
+        int mediaChoice = getChoice(member.getTakenOut().size()) - 1;
+        returning = member.getTakenOut().get(mediaChoice).getMedia();
 
-            // Choice of return or write or read review
-            boolean doneReturn = false;
-            while (!doneReturn) {
-                int choice = returnOptions();
-                if (choice == 1) {
-                    doneReturn = true;
-                    returnMedia(returning);
-                } else if (choice == 2) {
-                    readReview(returning);
-                } else {
-                    writeReview(returning);
-                }
+        // Choice of return or write or read review
+        boolean doneReturn = false;
+        while (!doneReturn) {
+            int choice = returnOptions();
+            if (choice == 1) {
+                doneReturn = true;
+                returnMedia(returning);
+            } else if (choice == 2) {
+                readReview(returning);
+            } else {
+                writeReview(returning);
             }
-        } else {
-            System.out.println("You do not have any media taken out.");
         }
     }
 
@@ -212,10 +208,10 @@ public class ReturnMediaDisplay {
                 if (choice >= 1 && choice <= high) {
                     valid = true;
                 } else {
-                    System.out.println("Not a valid choice, please try again.");
+                    System.out.println("Must be a number between 1 and " + high + ", e.g., 1.");
                 }
             } catch (NumberFormatException nfe) {
-                System.out.println("Not a number, please try again.");
+                System.out.println("Not a number, please enter a number between 1 and " + high + ", e.g., 1.");
             }
         }
         return choice;

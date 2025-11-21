@@ -2,14 +2,12 @@ package ca.umanitoba.cs.egilsons;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.LibrarySystem;
-import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.exceptions.*;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
 import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.domain.media.MediaCategory;
 import ca.umanitoba.cs.egilsons.domain.resource.Computer;
 import ca.umanitoba.cs.egilsons.domain.resource.Room;
-import ca.umanitoba.cs.egilsons.ui.AccountCentre;
 import ca.umanitoba.cs.egilsons.ui.SignInDisplay;
 
 import java.util.Scanner;
@@ -27,11 +25,7 @@ public class SignInMain {
 
             // our entry point is really only responsible for initializing our display class.
             SignInDisplay display = new SignInDisplay(librarySystem);
-            Member account = display.startSignIn();
-
-            // Add AccountCentre code to main instead?
-            AccountCentre accountCentre = new AccountCentre(library, account);
-            accountCentre.menu();
+            display.signInScreen();
 
             running = exitChoice();
         }
@@ -43,49 +37,44 @@ public class SignInMain {
         Library library1 = new Library("Shakespeare");
 
         // Media
-        try {
-            Book book1 = new Book.BookBuilder().title("Harry Potter").author("J.K. Rowling").pages(560).category(MediaCategory.FANTASY).build();
-            Book book2 = new Book.BookBuilder().title("The Hunger Games").author("Suzanne Collins").pages(384).category(MediaCategory.YOUNG_ADULT).build();
-            Book book3 = new Book.BookBuilder().title("The Missing Page").author("HTTP").pages(404).category(MediaCategory.MYSTERY).build();
-            Book book4 = new Book.BookBuilder().title("Gardening 101").author("Mikayla Goncalves").pages(403).category(MediaCategory.NON_FICTION).build();
-            Book book5 = new Book.BookBuilder().title("Hollow Echoes").author("Kristine Fisher").pages(963).category(MediaCategory.HORROR).build();
-            Book book6 = new Book.BookBuilder().title("Alien Invasion").author("Oliver White").pages(668).category(MediaCategory.SCIENCE_FICTION).build();
+        Book book1 = new Book("Harry Potter", "J.K. Rowling", 560, MediaCategory.FANTASY);
+        Book book2 = new Book("The Hunger Games", "Suzanne Collins", 384, MediaCategory.YOUNG_ADULT);
+        Book book3 = new Book("The Missing Page", "HTTP", 404, MediaCategory.MYSTERY);
+        Book book4 = new Book("Gardening 101", "Mikayla Goncalves", 403, MediaCategory.NON_FICTION);
+        Book book5 = new Book("Hollow Echoes", "Kristine Fisher", 963, MediaCategory.HORROR);
+        Book book6 = new Book("Alien Invasion", "Oliver White", 668, MediaCategory.SCIENCE_FICTION);
 
 
-            DVD dvd1 = new DVD.DVDBuilder().title("How to Train Your Cat").director("Cat Sanders").runTime(98).category(MediaCategory.CHILDREN).build();
-            DVD dvd2 = new DVD.DVDBuilder().title("Fading Colours").director("Julia Winters").runTime(82).category(MediaCategory.ROMANCE).build();
-            DVD dvd3 = new DVD.DVDBuilder().title("The Wishing Well").director("Peter Callow").runTime(103).category(MediaCategory.FANTASY).build();
-            DVD dvd4 = new DVD.DVDBuilder().title("The Red Road").director("Steven Anderson").runTime(114).category(MediaCategory.HISTORICAL_FICTION).build();
-            DVD dvd5 = new DVD.DVDBuilder().title("Starship").director("Jamie Jones").runTime(200).category(MediaCategory.SCIENCE_FICTION).build();
+        DVD dvd1 = new DVD("How to Train Your Cat", "Cat Sanders", 98, MediaCategory.CHILDREN);
+        DVD dvd2 = new DVD("Fading Colours", "Julia Winters", 82, MediaCategory.ROMANCE);
+        DVD dvd3 = new DVD("The Wishing Well", "Peter Callow", 103, MediaCategory.FANTASY);
+        DVD dvd4 = new DVD("The Red Road", "Steven Anderson", 114, MediaCategory.HISTORICAL_FICTION);
+        DVD dvd5 = new DVD("Starship", "Jamie Jones", 200, MediaCategory.SCIENCE_FICTION);
 
-            library1.addMedia(book1);
-            for (int i = 0; i < 6; i++) {
-                library1.addMedia(book2);
-                library1.addMedia(book3);
-                library1.addMedia(dvd4);
-                library1.addMedia(book5);
-                library1.addMedia(book6);
-                library1.addMedia(dvd1);
-                library1.addMedia(dvd2);
-                library1.addMedia(dvd2);
-                library1.addMedia(dvd5);
-                library1.addMedia(dvd5);
-                library1.addMedia(dvd5);
-            }
-            for (int i = 0; i < 5; i++) {
-                library1.addMedia(book4);
-                library1.addMedia(book2);
-                library1.addMedia(book5);
-                library1.addMedia(book2);
-                library1.addMedia(book6);
-                library1.addMedia(dvd1);
-                library1.addMedia(dvd3);
-                library1.addMedia(dvd3);
-                library1.addMedia(book6);
-            }
-        } catch (InvalidTitleException | InvalidAuthorException | InvalidBookPagesException | InvalidDirectorException |
-                 InvalidDVDRunTimeException e) {
-            throw new RuntimeException(e);
+        library1.addMedia(book1);
+        for (int i = 0; i < 6; i++) {
+            library1.addMedia(book2);
+            library1.addMedia(book3);
+            library1.addMedia(dvd4);
+            library1.addMedia(book5);
+            library1.addMedia(book6);
+            library1.addMedia(dvd1);
+            library1.addMedia(dvd2);
+            library1.addMedia(dvd2);
+            library1.addMedia(dvd5);
+            library1.addMedia(dvd5);
+            library1.addMedia(dvd5);
+        }
+        for (int i = 0; i < 5; i++) {
+            library1.addMedia(book4);
+            library1.addMedia(book2);
+            library1.addMedia(book5);
+            library1.addMedia(book2);
+            library1.addMedia(book6);
+            library1.addMedia(dvd1);
+            library1.addMedia(dvd3);
+            library1.addMedia(dvd3);
+            library1.addMedia(book6);
         }
 
         // Resources
@@ -132,10 +121,10 @@ public class SignInMain {
                 if (choice >= 1 && choice <= high) {
                     valid = true;
                 } else {
-                    System.out.println("Not a valid choice, please try again.");
+                    System.out.println("Must be a number between 1 and " + high + ", e.g., 1.");
                 }
             } catch (NumberFormatException nfe) {
-                System.out.println("Not a number, please try again.");
+                System.out.println("Not a number, please enter a number between 1 and " + high + ", e.g., 1.");
             }
         }
         return choice;

@@ -30,143 +30,198 @@ ways to run it:
 ## Flow of interaction
 
 ### Sign in
-Here is the flowchart for the "Enter account" task...
+Here is the flowchart for the "Sign In" task:
 
 ```mermaid
 flowchart
-    subgraph ENTER ACCOUNT
-        %% Should logout be apart of this??
+    subgraph SIGN IN
         signInScreen[[Sign In Screen]]
 
-        signInScreen ==No Account==> chooseCredentials
-        signInScreen ==Have An Account==> loginToAccount
+        signInScreen ==No account==> chooseCredentials
+        signInScreen ==Have an account==> loginToAccount
 
         chooseCredentials[Choose Credentials]
         makeAccount{Make Account}
         
-        %% Enter name and other information too?
-        chooseCredentials ==Name, Password==> makeAccount
-        makeAccount -.Account Created.-> homeScreen
+        chooseCredentials ==Name==> makeAccount
+        chooseCredentials ==Password==> makeAccount
+        makeAccount -.Name already exists.-> chooseCredentials
+        makeAccount -.Account created.-> accountCentre
         
         loginToAccount[Login To Account]
         checkUser{Check User}
-        homeScreen[[Home Screen]]
+        accountCentre[[Account Centre]]
         
         loginToAccount ==Make new account==> chooseCredentials
-        loginToAccount ==Name, Password==> checkUser
-        checkUser -.No Such User Exists.->loginToAccount
-        checkUser -.Credentials Match Account.->homeScreen
-        homeScreen -.Log out.->signInScreen
+        loginToAccount ==Name==> checkUser
+        loginToAccount ==Password==> checkUser
+        checkUser -.No such user exists.-> loginToAccount
+        checkUser -.Credentials match account.-> accountCentre
+        accountCentre ==Log out==> signInScreen
             
     end
 ```
 
 ### Borrow Media
-Here is the flowchart for the "Borrow Media" task
+Here is the flowchart for the "Borrow Media" task:
 
 ```mermaid
 flowchart
     subgraph BORROW MEDIA
+        accountCentre[[Account Centre]]
         %% Account for constraints?
-        browseMedia[[Browse Media]]
+        browseMedia[Browse Media]
+        
+        accountCentre ==Borrow media==> browseMedia
         
         filterSelection[Filter Selection]
         filterMedia{Filter Media}
         
         browseMedia ==Filter==> filterSelection
-        filterSelection==Selected Filter==> filterMedia
-        filterMedia-.Filter Applied.->browseMedia
-        browseMedia ==Chosen Media==> mediaInfo
+        browseMedia -.Invalid media.-> browseMedia
+        filterSelection ==Name==> filterMedia
+        filterSelection ==Format==> filterMedia
+        filterMedia -.Filter applied.-> browseMedia
+        browseMedia ==Chosen media==> mediaInfo
         
         mediaInfo[Media Info]
         borrowMedia{Borrow Media}
-        mediaBorrowed[[Media Borrowed]]
+        returnAccountCentre[[Return to account centre]]
         
-        mediaInfo-.Cancel.->browseMedia
-        mediaInfo-.Selected Media.->borrowMedia
-        borrowMedia-.No Copies Available.->waitlistInformation
-        borrowMedia-.Media borrowed.-> mediaBorrowed
+        mediaInfo -.Cancel.-> browseMedia
+        mediaInfo ==Selected media==> borrowMedia
+        borrowMedia -.No copies available.-> waitlistInformation
+        borrowMedia -.Media borrowed.-> returnAccountCentre
 
         waitlistInformation[Waitlist Information]
         addToWaitlist{Add to Waitlist}
         
-        waitlistInformation-.Join Waitlist.-> addToWaitlist
+        waitlistInformation -.Join waitlist.-> addToWaitlist
+        waitlistInformation -.Do not join waitlist.-> returnAccountCentre
+        addToWaitlist -.Waitlist position.-> returnAccountCentre
         
     end
 ```
 
 ### Book Resource
-Here is the flowchart for the "Book Resource" task
+Here is the flowchart for the "Book Resource" task:
 
 ```mermaid
 flowchart
     subgraph BOOK RESOURCE
-        %% Divide by hours
-        availableTimes[[Available Timeslots Screen]]
+        accountCentre[[Account Centre]]
+        chooseResource[Choose resource]
         
-        filterChoice[Filter Choice]
-        filterTimes{Filter Times}
+        availableTimes[Available timeslots screen]
         
-        availableTimes==Filter==>filterChoice
-        filterChoice==Selected filter==>filterTimes
-        filterTimes-.Filter applied.->availableTimes
+        accountCentre ==Book resource==> chooseResource
+        chooseResource ==Resource==> availableTimes
+        chooseResource -.Invalid resource.-> chooseResource
+
+        selectWeek[Select week]
+        filterWeek{Filter week}
+        
+        availableTimes ==Filter==> selectWeek
+        selectWeek ==Selected week==> filterWeek
+        filterWeek -.Week filtered.-> selectDay
+        filterWeek -.Show full week.-> availableTimes
+        filterWeek -.Invalid week.-> selectWeek
+
+        selectDay[Select day]
+        filterDay{Filter day}
+        
+        selectDay ==Selected day==> filterDay
+        filterDay -.Week filtered.-> selectStartTime
+        filterDay -.Show full day.-> availableTimes
+        filterDay -.Invalid day.-> selectDay
+
+        selectStartTime[Select start time]
+        filterAmount{Filter Amount}
+        
+        selectStartTime ==Selected start time==> filterAmount
+        selectStartTime ==Selected amount==> filterAmount
+        filterAmount -.Filtered amount.-> availableTimes
+        filterAmount -.Invalid start time.-> selectStartTime
+        filterAmount -.Invalid amount.-> selectStartTime
         
         bookTime{bookTime}
-        resourceBooked[[Resource Booked]]
+        returnAccountCentre[[Return to account centre]]
         
-        availableTimes==Book time==>bookTime
-        bookTime-.Time booked.->resourceBooked
+        availableTimes ==Book time==> bookTime
+        bookTime -.Time booked.-> returnAccountCentre
         
     end
 ```
 
 ### Find Item
-Here is the flowchart for the "Find Item" task
+Here is the flowchart for the "Find Item" task:
 
 ```mermaid
 flowchart
     subgraph FIND ITEM
-        enterItem[[Enter Item]]
+        accountCentre[[Account Centre]]
+        enterItem[Enter Item]
         
-        findItemLocation{Find Item Location}
+        accountCentre== Find item==> enterItem
+        
+        mediaOptions[Media Options]
+        resourceOptions[Resource Options]
+        
+        enterItem ==Media==> mediaOptions
+        enterItem ==Resource==> resourceOptions
+        enterItem -.Invalid item type.-> enterItem
+        
         findItemPath{Find Item Path}
-        showItemPath[[Show Item Path]]
+        showItemPath[Show Item Path]
+        returnAccountCentre[[Return to account centre]]
         
-        enterItem==Chosen item==>findItemLocation
-        findItemLocation-.Item location.->findItemPath
-        findItemPath-.Path to item.->showItemPath
+        mediaOptions ==Chosen media==> findItemPath
+        mediaOptions -.Invalid media.-> mediaOptions
+        resourceOptions ==Chosen resource==> findItemPath
+        resourceOptions -.Invalid resource.-> resourceOptions
+        findItemPath -.Path to item.-> showItemPath
+        showItemPath -.Item path shown.-> returnAccountCentre
         
     end
 ```
 
 ### Return Media
-Here is the flowchart for the "Return Media" task
+Here is the flowchart for the "Return Media" task:
 
 ```mermaid
 flowchart
     subgraph RETURN MEDIA 
-        returnScreen[[Return Screen]]
+        accountCentre[[Account Centre]]
+        chooseMedia[Choose Media]
+        
+        accountCentre ==Return media==> chooseMedia
+        
+        returnOptions[Return Options]
+        
+        chooseMedia ==Selected media==> returnOptions
+        chooseMedia -.Invalid media.-> chooseMedia
         
         makeReview[Make Review]
         addReview{Add Review}
-        
-        returnScreen==Review==>makeReview
-        %% Need to make more specific input??
-        makeReview==Review information==>addReview
-        addReview-.Review added.->returnScreen
+
+        returnOptions ==Write review==> makeReview
+        makeReview ==Text==> addReview
+        makeReview ==Stars==> addReview
+        addReview -.Review added.-> returnOptions
         
         selectReview[Review Selection]
         reviewInformation[Review Information]
-        
-        returnScreen==Read review==>selectReview
-        selectReview==Chosen review==>reviewInformation
-        reviewInformation-.Review read.->returnScreen
+
+        returnOptions ==Read review==> selectReview
+        selectReview ==Chosen review==> reviewInformation
+        selectReview -.Invalid review.-> selectReview
+        reviewInformation -.Review read.-> returnOptions
         
         returnMedia{Return Media}
-        mediaReturned[[Media Returned]]
-        
-        returnScreen==Return media==>returnMedia
-        returnMedia-.Returned.->mediaReturned
+        returnAccountCentre[[Return to account centre]]
+
+        returnOptions ==Return media==> returnMedia
+        returnMedia -.Returned media.-> returnAccountCentre
         
     end
 ```
@@ -175,9 +230,36 @@ flowchart
 
 ## Changes
 
-* I realized when implementing my flow of interaction that
-  `CoolObject` really should have a `decreaseCoolness` method
-* 
+* I created a Loan class for members to take out media from the library
+* I created a Time Slot class that represents an hour block of time
+  in a resource that can be booked
+* I created a Booking class that stores a month's worth of time slots
+* I added attributes for a password, a list of loans called takenOut, 
+  a list of time slots called bookings and a list of strings called
+  announcements to the Member class
+* I added the methods hasOverdueMedia, borrowMedia, returnMedia,
+  bookResource, addAnnouncement and removeAnnouncement to the 
+  Member class
+* I added queue of members as a waitlist to both the Book class and
+  the DVD class and the methods frontOfWaitlist and addToWaitlist
+  to the Media interface
+* I created a Coordinates class to represent coordinates for objects
+  on the library map
+* I added coordinates as an instance variable to the Book, DVD, 
+  Computer and Room classes
+* I added a booking object called monthBookings to the Computer and
+  Room classes as an attribute
+* I added an attribute to the Map class of the coordinates of the kiosk
+  for access to the starting point when finding an item path
+* I added static methods setMediaCoordinates and setResourceCoordinates 
+  that set the coordinates of media and resources based on the map
+* I added the Stack interface and LinkedListStack class to help with
+  path finding
+* I added values for the kiosk, path and destination to the MapType enum
+  to mark them on the map
+* I removed the removeMedia method from the Library class as it was not used
+* I removed the removeMember method from the LibrarySystem class as it was
+  not used
 
 ## Diagram
 Here's my domain model:
@@ -192,7 +274,6 @@ classDiagram
         
         +addLibrary(Library library) void
         +addMember(Member member) void
-        +removeMember(Member member) boolean
     }
     LibrarySystem --* Library
     LibrarySystem --* Member
@@ -218,7 +299,6 @@ classDiagram
         
         +addResource(Resource resource) void
         +addMedia(Media media) void
-        +removeMedia(Media media) void
         -updateMap() void
     }
     Library --* Media
@@ -507,6 +587,10 @@ classDiagram
         -MapType[][] display
         %% Coordinates for the kiosk on the map
         -Coordinates kiosk
+        
+        -pickBookshelfNum(Media media) int
+        +static setMediaCoordinates(Media media) Coordinates
+        +static setResourceCoordinates(Resource resource) Coordinates
     }
     Map --* MapType
     Map --* Coordinates

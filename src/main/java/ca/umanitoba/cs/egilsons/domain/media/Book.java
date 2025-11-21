@@ -2,9 +2,6 @@ package ca.umanitoba.cs.egilsons.domain.media;
 
 import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.Review;
-import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidAuthorException;
-import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidBookPagesException;
-import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidTitleException;
 import ca.umanitoba.cs.egilsons.domain.map.Coordinates;
 import ca.umanitoba.cs.egilsons.domain.map.Map;
 import com.google.common.base.Preconditions;
@@ -59,7 +56,7 @@ public class Book implements Media {
      * @param pages the amount of pages in the book
      * @param category the category or genre of the book
      */
-    private Book(String title, String author, int pages, MediaCategory category) {
+    public Book(String title, String author, int pages, MediaCategory category) {
         this.title = title;
         this.author = author;
         this.pages = pages;
@@ -69,58 +66,6 @@ public class Book implements Media {
         this.waitlist = new LinkedList<>();
         this.coordinates = Map.setMediaCoordinates(this);
         checkBook();
-    }
-
-    /**
-     * A builder class for a book
-     */
-    public static class BookBuilder {
-        private String title;
-        private String author;
-        private int pages;
-        private MediaCategory category;
-
-        public BookBuilder title(String title) throws InvalidTitleException {
-            Preconditions.checkNotNull(title, "Title should not be null.");
-
-            if (title.isEmpty()) {
-                throw new InvalidTitleException();
-            }
-
-            this.title = title;
-            return this;
-        }
-
-        public BookBuilder author(String author) throws InvalidAuthorException {
-            Preconditions.checkNotNull(author, "Author should not be null.");
-
-            if (author.isEmpty()) {
-                throw new InvalidAuthorException();
-            }
-
-            this.author = author;
-            return this;
-        }
-
-        public BookBuilder pages(int pages) throws InvalidBookPagesException {
-            if (pages < 1) {
-                throw new InvalidBookPagesException();
-            }
-
-            this.pages = pages;
-            return this;
-        }
-
-        public BookBuilder category(MediaCategory category) {
-            Preconditions.checkNotNull(category, "Category should not be null.");
-
-            this.category = category;
-            return this;
-        }
-
-        public Book build() {
-            return new Book(this.title, this.author, this.pages, this.category);
-        }
     }
 
     public String getTitle() {

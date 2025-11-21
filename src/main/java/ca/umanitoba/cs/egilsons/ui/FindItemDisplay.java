@@ -2,13 +2,9 @@ package ca.umanitoba.cs.egilsons.ui;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.map.Map;
-import ca.umanitoba.cs.egilsons.domain.media.Book;
-import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import ca.umanitoba.cs.egilsons.logic.FindItem;
-import ca.umanitoba.cs.egilsons.output.BookPrinter;
-import ca.umanitoba.cs.egilsons.output.DVDPrinter;
 import ca.umanitoba.cs.egilsons.output.MapPrinter;
 
 import java.util.Scanner;
@@ -81,17 +77,6 @@ public class FindItemDisplay {
         System.out.println("Please select the media you are looking for: ");
         int mediaChoice = getChoice(this.library.getMedia().size()) - 1;
         chosenMedia = this.library.getMedia().get(mediaChoice);
-
-        // DO I NEED TO PRINT THE FULL INFO????
-        // There are only two types of media
-//        if (chosenMedia instanceof Book) {
-//            BookPrinter bookPrinter = new BookPrinter((Book) chosenMedia);
-//            bookPrinter.print();
-//        } else {
-//            DVDPrinter dvdPrinter = new DVDPrinter((DVD) chosenMedia);
-//            dvdPrinter.print();
-//        }
-
         return chosenMedia;
     }
 
@@ -123,10 +108,10 @@ public class FindItemDisplay {
                 if (choice >= 1 && choice <= high) {
                     valid = true;
                 } else {
-                    System.out.println("Not a valid choice, please try again.");
+                    System.out.println("Must be a number between 1 and " + high + ", e.g., 1.");
                 }
             } catch (NumberFormatException nfe) {
-                System.out.println("Not a number, please try again.");
+                System.out.println("Not a number, please enter a number between 1 and " + high + ", e.g., 1.");
             }
         }
         return choice;

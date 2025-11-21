@@ -14,6 +14,7 @@ import java.util.Scanner;
  */
 public class SignInDisplay {
     private final SignIn signIn;
+    private final LibrarySystem librarySystem;
     private final Scanner keyboard;
 
     /**
@@ -23,15 +24,15 @@ public class SignInDisplay {
      */
     public SignInDisplay(LibrarySystem librarySystem) {
         this.signIn = new SignIn(librarySystem);
+        this.librarySystem = librarySystem;
         this.keyboard = new Scanner(System.in);
     }
 
     /**
      * Gets the user the sign in or make a new account
      *
-     * @return the account of the member
      */
-    public Member startSignIn() {
+    public void signInScreen() {
         Member account;
         System.out.println("Do you have an account?");
         boolean haveAccount = yesNo();
@@ -40,7 +41,8 @@ public class SignInDisplay {
         } else {
             account = makeAccount();
         }
-        return account;
+
+        accountCentre(account);
     }
 
     /**
@@ -74,7 +76,7 @@ public class SignInDisplay {
             String password = keyboard.nextLine();
             account = signIn.checkUser(name, password);
             if (account == null) {
-                System.out.println("Account name or password incorrect. Would you like to make a new account?");
+                System.out.println("Account name and password do not match any current members. Would you like to make a new account?");
                 boolean makeNewAccount = yesNo();
                 if (makeNewAccount) {
                     account = makeAccount();
@@ -167,12 +169,22 @@ public class SignInDisplay {
                 if (choice >= 1 && choice <= high) {
                     valid = true;
                 } else {
-                    System.out.println("Not a valid choice, please try again.");
+                    System.out.println("Must be a number between 1 and " + high + ", e.g., 1.");
                 }
             } catch (NumberFormatException nfe) {
-                System.out.println("Not a number, please try again.");
+                System.out.println("Not a number, please enter a number between 1 and " + high + ", e.g., 1.");
             }
         }
         return choice;
+    }
+
+    /**
+     * Starts the main menu
+     *
+     * @param account the member logged in
+     */
+    private void accountCentre(Member account) {
+        AccountCentre accountCentre = new AccountCentre(this.librarySystem.getLibraries().get(0), account);
+        accountCentre.menu();
     }
 }

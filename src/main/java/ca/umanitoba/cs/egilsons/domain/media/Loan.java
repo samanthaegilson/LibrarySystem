@@ -12,6 +12,9 @@ public class Loan {
     private LocalDateTime borrowDate;
     private final LocalDateTime returnDate;
 
+    /**
+     * Invariant properties for Loan
+     */
     private void checkLoan() {
         Preconditions.checkNotNull(media, "Media should never be null.");
         Preconditions.checkNotNull(borrowDate, "Borrow date should never be null.");

@@ -2,9 +2,14 @@ package ca.umanitoba.cs.egilsons.ui;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.Member;
+import ca.umanitoba.cs.egilsons.domain.resource.Booking;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import ca.umanitoba.cs.egilsons.domain.resource.TimeSlot;
 import ca.umanitoba.cs.egilsons.logic.BookResource;
+import ca.umanitoba.cs.egilsons.logic.exceptions.InvalidDayException;
+import ca.umanitoba.cs.egilsons.logic.exceptions.InvalidHourException;
+import ca.umanitoba.cs.egilsons.logic.exceptions.InvalidSlotAmountException;
+import ca.umanitoba.cs.egilsons.logic.exceptions.InvalidWeekException;
 
 import java.util.List;
 import java.util.Scanner;
@@ -45,7 +50,7 @@ public class BookResourceDisplay {
             if (willChoose) {
                 running = false;
                 System.out.println("Please select a time slot: ");
-                int slotChoice = getChoice(1, options.size()) - 1;
+                int slotChoice = getChoice(options.size()) - 1;
                 this.bookResource.bookResource(options.get(slotChoice), chosenResource);
                 System.out.println(chosenResource.getClass().getSimpleName() + " " + chosenResource.getNumber()
                         + " booked week " + options.get(slotChoice).getWeek() + ", day "
@@ -62,42 +67,75 @@ public class BookResourceDisplay {
      * @return a list of filtered time slots
      */
     private List<TimeSlot> filterOptions(Resource resource) {
-        List<TimeSlot> options;
+        List<TimeSlot> options = null;
+        int week = -1;
+        while (week == -1) {
+            // Pick a week
+            week = selectWeek();
+            try {
+                // Filter the week
+                options = this.bookResource.filterWeek(week, resource);
+            } catch (InvalidWeekException e) {
+                System.out.println(week + " is not a valid week; select from 1-" + Booking.getEndWeek());
+                week = -1;
+            }
+        }
 
-        // Pick a week
-        System.out.println("Please enter the week of time slots you would like to view (1-4): ");
-        int week = getChoice(resource.getMonthBookings().getStartWeek(), resource.getMonthBookings().getEndWeek());
         System.out.println("""
                 Would you like to view the full week or filter the day?
                 1. VIEW FULL WEEK
                 2. FILTER DAY""");
-        int filterChoice = getChoice(1, 2); // There are only two options
-        if (filterChoice == 1) {
-            // Shows the full week
-            options = this.bookResource.filterWeek(week, resource);
-        } else {
-            // Pick a day
-            System.out.println("Please enter the day of time slots you would like to view (1-7): ");
-            int day = getChoice(resource.getMonthBookings().getStartDay(), resource.getMonthBookings().getEndDay());
+        int filterChoice = getChoice(2); // There are only two options
+
+        if (filterChoice == 2) {
+            int day = -1;
+            while (day == -1) {
+                // Pick a day
+                day = selectDay();
+                try {
+                    // Filter day
+                    options = this.bookResource.filterDay(week, day, resource);
+                } catch (InvalidWeekException e) {
+                    System.out.println(week + " is not a valid week; select from 1-" + Booking.getEndWeek());
+                } catch (InvalidDayException e) {
+                    System.out.println(day + " is not a valid day; select from 1-" + Booking.getEndDay());
+                    day = -1;
+                }
+            }
+
             System.out.println("""
                     Would you like to view the full day or filter the time?
                     1. VIEW FULL DAY
                     2. FILTER TIME""");
-            filterChoice = getChoice(1, 2); // There are only two options
-            if (filterChoice == 1) {
-                // Shows the full day
-                options = this.bookResource.filterDay(week, day, resource);
-            } else {
-                // Pick a starting time
-                final int MAX_SLOTS = 336; // The total amount of time slots in the month
-                System.out.println("Please enter the start time of time slots you would like to view (8-19): ");
-                int startTime = getChoice(resource.getMonthBookings().getStartHour(), resource.getMonthBookings().getEndHour() - 1);
+            filterChoice = getChoice(2); // There are only two options
 
-                // Pick the amount of slots to show after the starting time
-                System.out.println("Please enter the amount of time slots you would like to view after " + startTime
-                        + ": ");
-                int amount = getChoice(1, MAX_SLOTS);
-                options = this.bookResource.filterAmount(week, day, startTime, amount, resource);
+            if (filterChoice == 2) {
+                // The total amount of time slots in the month
+                final int MAX_SLOTS = Booking.getEndWeek() * Booking.getEndDay() * (Booking.getEndHour() - Booking.getStartHour());
+
+                int startTime = -1;
+                int amount = -1;
+                while (startTime == -1 || amount == -1) {
+                    // Pick a starting time
+                    startTime = selectStartTime();
+                    // Pick the amount of slots to show after the starting time
+                    amount = selectSlotAmount();
+                    try {
+                        // Filter by amount after starting time
+                        options = this.bookResource.filterAmount(week, day, startTime, amount, resource);
+                    } catch (InvalidWeekException e) {
+                        System.out.println(week + " is not a valid week; select from 1-" + Booking.getEndWeek());
+                    } catch (InvalidDayException e) {
+                        System.out.println(day + " is not a valid day; select from 1-" + Booking.getEndDay());
+                    } catch (InvalidHourException e) {
+                        System.out.println(startTime + " is not a valid day; select from " + Booking.getStartHour()
+                                + "-" + (Booking.getEndHour() - 1));
+                        startTime = -1;
+                    } catch (InvalidSlotAmountException e) {
+                        System.out.println(amount + " is not a valid amount; select from 1-" + MAX_SLOTS);
+                        amount = -1;
+                    }
+                }
                 if (options.size() < amount) {
                     System.out.println("We are unable to show you the amount of time slots you requested as they go "
                             + " past the current month.");
@@ -105,6 +143,94 @@ public class BookResourceDisplay {
             }
         }
         return options;
+    }
+
+    /**
+     * Gets the user's choice of a week
+     *
+     * @return the selected week
+     */
+    private int selectWeek() {
+        boolean valid = false;
+        int week = -1;
+        System.out.println("Please enter the week of time slots you would like to view (1-" + Booking.getEndWeek()
+                + "): ");
+        while (!valid) {
+            String input = this.keyboard.nextLine();
+            try {
+                week = Integer.parseInt(input);
+                valid = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Selected week must be a positive whole number, e.g., 1");
+            }
+        }
+        return week;
+    }
+
+    /**
+     * Gets the user's choice of a day
+     *
+     * @return the selected day
+     */
+    private int selectDay() {
+        boolean valid = false;
+        int day = -1;
+        System.out.println("Please enter the day of time slots you would like to view (1-" + Booking.getEndDay()
+                + "): ");
+        while (!valid) {
+            String input = this.keyboard.nextLine();
+            try {
+                day = Integer.parseInt(input);
+                valid = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Selected day must be a positive whole number, e.g., 1");
+            }
+        }
+        return day;
+    }
+
+    /**
+     * Gets the user's choice of a starting time
+     *
+     * @return the selected start time
+     */
+    private int selectStartTime() {
+        boolean valid = false;
+        int startTime = -1;
+        System.out.println("Please enter the start time of time slots you would like to view ("
+                + Booking.getStartHour() + "-" + (Booking.getEndHour() - 1) + "): ");
+        while (!valid) {
+            String input = this.keyboard.nextLine();
+            try {
+                startTime = Integer.parseInt(input);
+                valid = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Selected start time must be a positive whole number, e.g., 8");
+            }
+        }
+        return startTime;
+    }
+
+    /**
+     * Gets the user's choice for an amount of time slots
+     *
+     * @return the chosen amount of time slots
+     */
+    private int selectSlotAmount() {
+        boolean valid = false;
+        int amount = -1;
+        System.out.println("Please enter the amount of time slots you would like to view after the start"
+                + " time: ");
+        while (!valid) {
+            String input = this.keyboard.nextLine();
+            try {
+                amount = Integer.parseInt(input);
+                valid = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Time slot amount must be a positive whole number, e.g., 8");
+            }
+        }
+        return amount;
     }
 
     /**
@@ -118,7 +244,7 @@ public class BookResourceDisplay {
                 Would you like to choose a time slot or reset the filters:
                 1. CHOOSE TIME SLOT
                 2. RESET FILTERS""");
-        int choice = getChoice(1, 2); // There are only two options
+        int choice = getChoice(2); // There are only two options
         if (choice == 1) {
             willChoose = true;
         }
@@ -168,7 +294,7 @@ public class BookResourceDisplay {
      */
     private Resource chooseResource() {
         printResourceOptions();
-        int choice = getChoice(1, this.library.getResources().size()) - 1;
+        int choice = getChoice(this.library.getResources().size()) - 1;
         return this.library.getResources().get(choice);
     }
 
@@ -178,7 +304,7 @@ public class BookResourceDisplay {
      * @param high the highest the choice can be
      * @return the integer representing the choice of the user
      */
-    private int getChoice(int low, int high) {
+    private int getChoice(int high) {
         boolean valid = false;
         int choice = -1;
         while (!valid) {
@@ -186,13 +312,14 @@ public class BookResourceDisplay {
             try {
                 choice = Integer.parseInt(input);
                 // The choice is only valid if it is an integer between the high and low bounds
-                if (choice >= low && choice <= high) {
+                if (choice >= 1 && choice <= high) {
                     valid = true;
                 } else {
-                    System.out.println("Not a valid choice, please try again.");
+                    System.out.println("Not a valid choice. Must be a number between 1 and " + high
+                            + ", e.g., 1.");
                 }
             } catch (NumberFormatException nfe) {
-                System.out.println("Not a number, please try again.");
+                System.out.println("Not a number, please enter a number between 1 and " + high  + ", e.g., 1.");
             }
         }
         return choice;

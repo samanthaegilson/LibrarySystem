@@ -146,10 +146,10 @@ public class AccountCentre {
                 if (choice >= 1 && choice <= high) {
                     valid = true;
                 } else {
-                    System.out.println("Not a valid choice, please try again.");
+                    System.out.println("Must be a number between 1 and " + high + ", e.g., 1.");
                 }
             } catch (NumberFormatException nfe) {
-                System.out.println("Not a number, please try again.");
+                System.out.println("Not a number, please enter a number between 1 and " + high + ", e.g., 1.");
             }
         }
         return choice;

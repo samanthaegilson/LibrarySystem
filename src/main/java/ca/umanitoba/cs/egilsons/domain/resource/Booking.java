@@ -7,9 +7,7 @@ import com.google.common.base.Preconditions;
  */
 public class Booking {
     private TimeSlot[][][] monthBookings;
-    private final static int START_WEEK = 1;
     private final static int END_WEEK = 4;
-    private final static int START_DAY = 1;
     private final static int END_DAY = 7;
     private final static int START_HOUR = 8;
     private final static int END_HOUR = 20;
@@ -50,27 +48,19 @@ public class Booking {
         return this.monthBookings;
     }
 
-    public int getStartWeek() {
-        return START_WEEK;
-    }
-
-    public int getEndWeek() {
+    public static int getEndWeek() {
         return END_WEEK;
     }
 
-    public int getStartDay() {
-        return START_DAY;
-    }
-
-    public int getEndDay() {
+    public static int getEndDay() {
         return END_DAY;
     }
 
-    public int getStartHour() {
+    public static int getStartHour() {
         return START_HOUR;
     }
 
-    public int getEndHour() {
+    public static int getEndHour() {
         return END_HOUR;
     }
 
@@ -85,8 +75,8 @@ public class Booking {
     public TimeSlot getTimeSlot(int week, int day, int startTime) {
         checkBooking();
         TimeSlot selected = null;
-        if (week >= START_WEEK && week <= END_WEEK) {
-            if (day >= START_DAY && day <= END_DAY) {
+        if (week >= 1 && week <= END_WEEK) {
+            if (day >= 1 && day <= END_DAY) {
                 if (startTime >= START_HOUR && startTime < END_HOUR) {
                     selected = this.monthBookings[week - 1][day - 1][startTime - START_HOUR];
                 }
@@ -105,8 +95,8 @@ public class Booking {
      */
     public void book(int week, int day, int startTime) {
         checkBooking();
-        if (week >= START_WEEK && week <= END_WEEK) {
-            if (day >= START_DAY && day <= END_DAY) {
+        if (week >= 1 && week <= END_WEEK) {
+            if (day >= 1 && day <= END_DAY) {
                 if (startTime >= START_HOUR && startTime < END_HOUR) {
                     this.monthBookings[week - 1][day - 1][startTime - START_HOUR].book();
                 }

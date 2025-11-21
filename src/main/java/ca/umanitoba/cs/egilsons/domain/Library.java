@@ -105,13 +105,4 @@ public class Library {
             this.media.add(newMedia);
         }
     }
-
-    /**
-     * Removes media from the library's media
-     *
-     * @param media the media to be removed
-     */
-    public void removeMedia(Media media) {
-        this.media.remove(media);
-    }
 }

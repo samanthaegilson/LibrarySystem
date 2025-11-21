@@ -42,7 +42,7 @@ public class Map {
         final int V = 86;
         final int Y = 89;
         final int Z = 90;
-        int bookshelf = -1;
+        int bookshelf;
 
         if (FIRST_LETTER >= A && FIRST_LETTER < D) {
             bookshelf = 0;

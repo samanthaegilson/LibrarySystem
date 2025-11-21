@@ -7,7 +7,6 @@ import com.google.common.base.Preconditions;
  * can book.
  */
 public class TimeSlot {
-    // 8am - 8pm, 12 1 hour time slots
     private final int startHour;
     private final int endHour;
     private final int day;

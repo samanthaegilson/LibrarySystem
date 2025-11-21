@@ -5,6 +5,7 @@ import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
 import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
+import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,14 @@ public class BorrowMedia {
     private final Member member;
 
     /**
+     * Checking that BorrowMedia is in a valid state
+     */
+    private void checkBorrowMedia() {
+        Preconditions.checkNotNull(library, "Library should never be null.");
+        Preconditions.checkNotNull(member, "Member should never be null.");
+    }
+
+    /**
      * A constructor for BorrowMedina. Receives the library and the member
      *
      * @param library the library of the media
@@ -25,6 +34,7 @@ public class BorrowMedia {
     public BorrowMedia(Library library, Member member) {
         this.library = library;
         this.member = member;
+        checkBorrowMedia();
     }
 
     /**
@@ -35,6 +45,8 @@ public class BorrowMedia {
      * @return a list of media
      */
     public List<Media> filterMedia(String name, boolean isBook) {
+        checkBorrowMedia();
+        Preconditions.checkNotNull(name, "Filter name should not be null.");
         List<Media> filtered = new ArrayList<>();
         if (isBook) {
             for (Media media : this.library.getMedia()) {
@@ -50,6 +62,7 @@ public class BorrowMedia {
             }
         }
 
+        checkBorrowMedia();
         return filtered;
     }
 
@@ -60,6 +73,8 @@ public class BorrowMedia {
      * @return if the media was successfully borrowed or not
      */
     public boolean borrowMedia(Media media) {
+        checkBorrowMedia();
+        Preconditions.checkNotNull(media, "Media should not be null.");
         boolean borrowed = false;
         // Checks there's no one on the waitlist before them
         if (media.getWaitlist().isEmpty() || media.frontOfWaitlist(this.member)) {
@@ -71,20 +86,28 @@ public class BorrowMedia {
             media.getWaitlist().remove(this.member);
             this.member.removeAnnouncement(media.getTitle());
         }
+
+        checkBorrowMedia();
         return borrowed;
     }
 
     /**
      * Adds the member to a media waitlist
      *
-     * @param media the media who's waitlist to add to
+     * @param media the media of the waitlist
      * @return the member's spot in the waitlist
      */
     public int addToWaitlist(Media media) {
+        checkBorrowMedia();
+        Preconditions.checkNotNull(media, "Media should not be null.");
         int spot = -1;
+
+        // Will not add a member to the waitlist again
         if (!media.getWaitlist().contains(this.member)) {
             spot = media.addToWaitlist(this.member);
         }
+
+        checkBorrowMedia();
         return spot;
     }
 }
