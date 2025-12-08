@@ -14,25 +14,24 @@ import java.util.Scanner;
  */
 public class SignInDisplay {
     private final SignIn signIn;
-    private final LibrarySystem librarySystem;
     private final Scanner keyboard;
 
     /**
      * A constructor for SignInDisplay. Receives the library system
      *
-     * @param librarySystem the library system of the members
+     * @param signIn the sign in to display
      */
-    public SignInDisplay(LibrarySystem librarySystem) {
-        this.signIn = new SignIn(librarySystem);
-        this.librarySystem = librarySystem;
+    public SignInDisplay(SignIn signIn) {
+        this.signIn = signIn;
         this.keyboard = new Scanner(System.in);
     }
 
     /**
      * Gets the user the sign in or make a new account
      *
+     * @return the member signed in
      */
-    public void signInScreen() {
+    public Member signInScreen() {
         Member account;
         System.out.println("Do you have an account?");
         boolean haveAccount = yesNo();
@@ -42,7 +41,7 @@ public class SignInDisplay {
             account = makeAccount();
         }
 
-        accountCentre(account);
+        return account;
     }
 
     /**
@@ -176,15 +175,5 @@ public class SignInDisplay {
             }
         }
         return choice;
-    }
-
-    /**
-     * Starts the main menu
-     *
-     * @param account the member logged in
-     */
-    private void accountCentre(Member account) {
-        AccountCentre accountCentre = new AccountCentre(this.librarySystem.getLibraries().get(0), account);
-        accountCentre.menu();
     }
 }

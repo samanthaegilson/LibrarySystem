@@ -2,13 +2,15 @@ package ca.umanitoba.cs.egilsons.logic;
 
 import ca.umanitoba.cs.egilsons.domain.LibrarySystem;
 import ca.umanitoba.cs.egilsons.domain.Member;
+import ca.umanitoba.cs.egilsons.persistence.LibrarySystemPersistence;
 import com.google.common.base.Preconditions;
 
 /**
  * Logic for signing in to a {@link Member} account.
  */
 public class SignIn {
-    private final LibrarySystem librarySystem;
+    private LibrarySystem librarySystem;
+    private LibrarySystemPersistence persistence;
 
     /**
      * Checks that SignIn is in a valid state
@@ -21,9 +23,11 @@ public class SignIn {
      * A constructor for SignIn. Receives the library system
      *
      * @param librarySystem the library system
+     * @param persistence the persistence of the library system
      */
-    public SignIn(LibrarySystem librarySystem) {
+    public SignIn(LibrarySystem librarySystem, LibrarySystemPersistence persistence) {
         this.librarySystem = librarySystem;
+        this.persistence = persistence;
         checkSignIn();
     }
 
@@ -64,6 +68,9 @@ public class SignIn {
      */
     public boolean makeAccount(Member account) {
         checkSignIn();
-        return this.librarySystem.addMember(account);
+        boolean accountMade = this.librarySystem.addMember(account);
+        this.persistence.saveLibrarySystem(this.librarySystem);
+        checkSignIn();
+        return accountMade;
     }
 }

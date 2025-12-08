@@ -27,7 +27,33 @@ ways to run it:
    mvn compile exec:java -Dexec.mainClass="ca.umanitoba.cs.egilsons.Main"
    ```
 
-## Flow of interaction
+# Testing a stack
+Please look at my test data for the stack in the file named
+`stack-test-data.xlsx`.
+
+## Why Franklin is a bad programmer
+
+* `BadStack1`
+    * My test cases said that the stack remained empty after pushing an
+      item onto the stack even though the size was updated.
+    * All other methods seemed to work correctly based on the tests I had.
+* `BadStack2`
+    * My test cases said that the stack had not changed after popping items
+      from the stack. So pop() was not removing items from stack.
+    * All other methods seemed to work correctly based on the tests I had.
+* `BadStack3`
+    * My test cases said that the stack was not incrementing the size for
+      first push. Therefore, the size was always n-1.
+    * All other methods seemed to work correctly based on the tests I had.
+* `BadStack4`
+    * My test cases said that the stack setting size to 0 every time pop()
+      was called, even though only one item is removed.
+    * All other methods seemed to work correctly based on the tests I had.
+* `BadStack5`
+    * My test cases said that all stack methods seemed to work correctly 
+      based on the tests I had.
+
+# Flow of interaction
 
 ### Sign in
 Here is the flowchart for the "Sign In" task:
@@ -337,7 +363,7 @@ classDiagram
         +addAnnouncement(String title) void
         +removeAnnouncement(String title) void
     }
-    Member --o Loan
+    Member --* Loan
     Member --o TimeSlot
 
     note for Member "Invariant properties:
@@ -525,6 +551,7 @@ classDiagram
     </ul>"
     
     class Booking {
+        %% Time slots for a month
         -TimeSlot[][][] monthBookings
         
         +book(int week, int day, int startTime) void
@@ -631,6 +658,11 @@ classDiagram
         +peek() T
     }
     LinkedListStack ..|> Stack
+
+    note for LinkedListStack "Invariant properties:
+    <ul>
+        <li>nodeCount >= 0
+    </ul>"
     
     class MapType {
         <<enumeration>>

@@ -4,6 +4,7 @@ import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidNameException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidPasswordException;
 import ca.umanitoba.cs.egilsons.domain.media.Loan;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
+import ca.umanitoba.cs.egilsons.domain.resource.Booking;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import ca.umanitoba.cs.egilsons.domain.resource.TimeSlot;
 import com.google.common.base.Preconditions;
@@ -126,6 +127,10 @@ public class Member implements Comparable<Member> {
         return this.takenOut;
     }
 
+    public List<TimeSlot> getBookings() {
+        return this.bookings;
+    }
+
     public List<String> getAnnouncements() {
         return this.announcements;
     }
@@ -173,7 +178,7 @@ public class Member implements Comparable<Member> {
         checkMember();
         boolean borrowed = false;
         if (media.takeOutCopy() != null) {
-            this.takenOut.add(new Loan(media));
+            this.takenOut.add(new Loan.LoanBuilder().media(media).build());
             borrowed = true;
         }
         checkMember();
@@ -208,7 +213,7 @@ public class Member implements Comparable<Member> {
      */
     public void bookResource(TimeSlot slot, Resource resource) {
         checkMember();
-        final int START_HOUR = resource.getMonthBookings().getStartHour();
+        final int START_HOUR = Booking.getStartHour();
         if (resource.getMonthBookings().getMonthBookings()[slot.getWeek() - 1][slot.getDay() - 1][slot.getStartHour() - START_HOUR].book()) {
             this.bookings.add(slot);
         }

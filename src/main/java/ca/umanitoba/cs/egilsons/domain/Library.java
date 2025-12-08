@@ -1,5 +1,6 @@
 package ca.umanitoba.cs.egilsons.domain;
 
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidNameException;
 import ca.umanitoba.cs.egilsons.domain.map.Map;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
@@ -48,12 +49,38 @@ public class Library {
      *
      * @param name the name of the library
      */
-    public Library(String name) {
+    private Library(String name) {
         this.name = name;
         this.media = new ArrayList<>();
         this.resources = new ArrayList<>();
         updateMap();
         checkLibrary();
+    }
+
+    public static class LibraryBuilder {
+        private String name;
+
+        /**
+         * Checks that a name for the library is valid
+         *
+         * @param name the name of the library
+         * @return the library builder
+         * @throws InvalidNameException if the name is empty
+         */
+        public LibraryBuilder name(String name) throws InvalidNameException {
+            Preconditions.checkNotNull(name, "Name should not be null.");
+
+            if (name.isEmpty()) {
+                throw new InvalidNameException();
+            }
+
+            this.name = name;
+            return this;
+        }
+
+        public Library build() {
+            return new Library(this.name);
+        }
     }
 
     public String getName() {

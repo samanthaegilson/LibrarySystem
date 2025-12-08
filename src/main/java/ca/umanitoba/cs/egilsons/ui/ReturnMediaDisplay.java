@@ -27,13 +27,14 @@ public class ReturnMediaDisplay {
     /**
      * A constructor for ReturnMediaDisplay. Receives the library and the member
      *
+     * @param returnMedia the media returning to display
      * @param library the library to return the media to
      * @param member the member returning the media
      */
-    public ReturnMediaDisplay(Library library, Member member) {
+    public ReturnMediaDisplay(ReturnMedia returnMedia, Library library, Member member) {
+        this.returnMedia = returnMedia;
         this.library = library;
         this.member = member;
-        this.returnMedia = new ReturnMedia(member);
         this.keyboard = new Scanner(System.in);
     }
 

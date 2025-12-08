@@ -63,7 +63,7 @@ public class DVD implements Media {
         this.runTime = runTime;
         this.category = category;
         this.reviews = new ArrayList<>();
-        this.copies++;
+        this.copies = 1;
         this.waitlist = new LinkedList<>();
         this.coordinates = Map.setMediaCoordinates(this);
         checkDVD();

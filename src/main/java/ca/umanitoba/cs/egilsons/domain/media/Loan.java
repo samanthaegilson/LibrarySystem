@@ -1,5 +1,6 @@
 package ca.umanitoba.cs.egilsons.domain.media;
 
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidReturnDateException;
 import com.google.common.base.Preconditions;
 
 import java.time.LocalDateTime;
@@ -26,20 +27,69 @@ public class Loan {
      *
      * @param media the media of the loan
      */
-    public Loan(Media media) {
-        final long SECONDS = 30;
+    private Loan(Media media, LocalDateTime returnDate) {
         this.media = media;
         this.borrowDate = LocalDateTime.now();
-        LocalDateTime returnAdjustment = borrowDate.plusSeconds(SECONDS); // for the purposes of testing is only 30
-                                                                          // seconds after taking out
-        this.returnDate = LocalDateTime.of(returnAdjustment.getYear(), returnAdjustment.getMonth(),
-                returnAdjustment.getDayOfMonth(), returnAdjustment.getHour(), returnAdjustment.getMinute(),
-                returnAdjustment.getSecond());
+        this.returnDate = returnDate;
         checkLoan();
     }
 
+    /**
+     * Builder class for a loan
+     */
+    public static class LoanBuilder {
+        private Media media;
+        private LocalDateTime returnDate;
+        private final long SECONDS = 30;
+
+        /**
+         * Checks that a media for a loan is valid
+         *
+         * @param media the media of the loan
+         * @return the loan builder
+         */
+        public LoanBuilder media(Media media) {
+            Preconditions.checkNotNull(media, "Media should not be null.");
+            this.media = media;
+            return this;
+        }
+
+        /**
+         * Checks that a return date for a loan is valid
+         *
+         * @param returnDate the return date of the loan
+         * @return the loan builder
+         * @throws InvalidReturnDateException if the return date is past 30 seconds from now
+         */
+        public LoanBuilder returnDate(LocalDateTime returnDate) throws InvalidReturnDateException {
+            Preconditions.checkNotNull(returnDate, "Return date should never be null.");
+            LocalDateTime latest = LocalDateTime.now().plusSeconds(SECONDS);
+            if (returnDate.isAfter(latest)) {
+                throw new InvalidReturnDateException();
+            }
+            this.returnDate = returnDate;
+            return this;
+        }
+
+        /**
+         * Creates a loan
+         *
+         * @return the loan
+         */
+        public Loan build() {
+            if (this.returnDate == null) {
+                this.returnDate = LocalDateTime.now().plusSeconds(SECONDS);
+            }
+            return new Loan(this.media, this.returnDate);
+        }
+    }
+
     public Media getMedia() {
-        return media;
+        return this.media;
+    }
+
+    public LocalDateTime getReturnDate() {
+        return this.returnDate;
     }
 
     /**

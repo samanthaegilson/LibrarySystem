@@ -25,11 +25,11 @@ public class BookResourceDisplay {
     /**
      * A constructor for BookResourceDisplay. Receives the library and the member
      *
+     * @param bookResource the resource booking to display
      * @param library the library of the resource
-     * @param member the member booking the resource
      */
-    public BookResourceDisplay(Library library, Member member) {
-        this.bookResource = new BookResource(member);
+    public BookResourceDisplay(BookResource bookResource, Library library) {
+        this.bookResource = bookResource;
         this.library = library;
         this.keyboard = new Scanner(System.in);
     }

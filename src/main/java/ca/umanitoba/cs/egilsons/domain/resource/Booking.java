@@ -1,5 +1,9 @@
 package ca.umanitoba.cs.egilsons.domain.resource;
 
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidDayException;
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidEndHourException;
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidStartHourException;
+import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidWeekException;
 import com.google.common.base.Preconditions;
 
 /**
@@ -36,8 +40,12 @@ public class Booking {
         for (int i = 0; i < monthBookings[0][0].length; i++) {
             for (int j = 0; j < monthBookings[0].length; j++) {
                 for (int k = 0; k < monthBookings.length; k++) {
-                    monthBookings[k][j][i] = new TimeSlot(i + START_HOUR, i + FIRST_END_TIME,
-                            j + 1, k + 1);
+                    try {
+                        monthBookings[k][j][i] = new TimeSlot.TimeSlotBuilder().startHour(i + START_HOUR)
+                                .endHour(i + FIRST_END_TIME).day(j + 1).week(k + 1).build();
+                    } catch (InvalidStartHourException | InvalidEndHourException | InvalidDayException | InvalidWeekException e) {
+                        throw new RuntimeException();
+                    }
                 }
             }
         }

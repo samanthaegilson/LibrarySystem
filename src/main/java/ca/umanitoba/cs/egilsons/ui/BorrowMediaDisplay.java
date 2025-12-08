@@ -24,13 +24,14 @@ public class BorrowMediaDisplay {
     /**
      * A constructor for BorrowMediaDisplay. Receives the library and the member
      *
+     * @param borrowMedia the media borrowing to display
      * @param library the library of the media
      * @param member the member borrowing media
      */
-    public BorrowMediaDisplay(Library library, Member member) {
+    public BorrowMediaDisplay(BorrowMedia borrowMedia, Library library, Member member) {
+        this.borrowMedia = borrowMedia;
         this.library = library;
         this.member = member;
-        this.borrowMedia = new BorrowMedia(library, member);
         this.keyboard = new Scanner(System.in);
     }
 
@@ -39,14 +40,15 @@ public class BorrowMediaDisplay {
      */
     public void browseMedia() {
         printMediaOptions(this.library.getMedia());
+        List<Media> options = this.library.getMedia();
 
         boolean borrowed = false;
         while (!borrowed) {
             boolean chooseMedia = browseOptions();
             if (chooseMedia) {
-                borrowed = chooseMedia();
+                borrowed = chooseMedia(options);
             } else {
-                filterChoices();
+                options = filterChoices();
             }
         }
     }
@@ -86,17 +88,18 @@ public class BorrowMediaDisplay {
     /**
      * Chooses the media to borrow and borrows it if available
      *
+     * @param options the list of media to choose from
      * @return if the media was borrowed or not
      */
-    private boolean chooseMedia() {
+    private boolean chooseMedia(List<Media> options) {
         // moves on to borrowing
         // print full media info before choosing
         boolean borrowed = false;
         Media chosenMedia;
         // Gets choice of media
         System.out.println("Please select a media: ");
-        int mediaChoice = getChoice(this.library.getMedia().size()) - 1;
-        chosenMedia = this.library.getMedia().get(mediaChoice);
+        int mediaChoice = getChoice(options.size()) - 1;
+        chosenMedia = options.get(mediaChoice);
 
         // There are only two types of media
         if (chosenMedia instanceof Book) {
@@ -158,8 +161,10 @@ public class BorrowMediaDisplay {
 
     /**
      * Filters media by name and format
+     *
+     * @return the filtered list of media
      */
-    private void filterChoices() {
+    private List<Media> filterChoices() {
         System.out.println("Please enter the name to filter by: ");
         String name = this.keyboard.nextLine().toLowerCase();
 
@@ -168,6 +173,7 @@ public class BorrowMediaDisplay {
 
         List<Media> filtered = this.borrowMedia.filterMedia(name, isBook);
         printMediaOptions(filtered);
+        return filtered;
     }
 
     /**

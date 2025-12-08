@@ -62,7 +62,7 @@ public class Book implements Media {
         this.pages = pages;
         this.category = category;
         this.reviews = new ArrayList<>();
-        this.copies++;
+        this.copies = 1;
         this.waitlist = new LinkedList<>();
         this.coordinates = Map.setMediaCoordinates(this);
         checkBook();

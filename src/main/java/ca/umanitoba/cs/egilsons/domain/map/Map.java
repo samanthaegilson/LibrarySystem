@@ -118,7 +118,7 @@ public class Map {
         }
 
         // Getting the dimensions for the display based on the amount of each resource
-        final int ROOM_LENGTH = roomCount* ROOM_HORIZONTAL;
+        final int ROOM_LENGTH = roomCount * ROOM_HORIZONTAL;
         final int COMPUTER_LENGTH = Math.round((float) computerCount / 2);
         final int HORIZONTAL = REGULAR_HORIZONTAL + (Math.max(ROOM_LENGTH, COMPUTER_LENGTH));
         this.display = new MapType[VERTICAL][HORIZONTAL];

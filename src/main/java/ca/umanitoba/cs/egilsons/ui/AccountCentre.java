@@ -1,8 +1,14 @@
 package ca.umanitoba.cs.egilsons.ui;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
+import ca.umanitoba.cs.egilsons.domain.LibrarySystem;
 import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.media.Loan;
+import ca.umanitoba.cs.egilsons.logic.BookResource;
+import ca.umanitoba.cs.egilsons.logic.BorrowMedia;
+import ca.umanitoba.cs.egilsons.logic.FindItem;
+import ca.umanitoba.cs.egilsons.logic.ReturnMedia;
+import ca.umanitoba.cs.egilsons.persistence.LibrarySystemPersistence;
 
 import java.util.Scanner;
 
@@ -10,19 +16,24 @@ import java.util.Scanner;
  * UI for the account centre. Where the user decides what task to do
  */
 public class AccountCentre {
+    private final LibrarySystem librarySystem;
     private final Library library;
     private final Scanner keyboard;
     private final Member member;
+    private final LibrarySystemPersistence persistence;
 
     /**
      * A constructor for AccountCentre. Receives the library and member
      *
-     * @param library the library
+     * @param librarySystem the library system
      * @param member the member of the account
+     * @param persistence the persistence of the library system
      */
-    public AccountCentre(Library library, Member member) {
-        this.library = library;
+    public AccountCentre(LibrarySystem librarySystem, Member member, LibrarySystemPersistence persistence) {
+        this.librarySystem = librarySystem;
+        this.library = librarySystem.getLibraries().get(0);
         this.member = member;
+        this.persistence = persistence;
         this.keyboard = new Scanner(System.in);
     }
 
@@ -94,7 +105,8 @@ public class AccountCentre {
      */
     private void borrowMedia() {
         if (!this.member.hasOverdueMedia()) {
-            BorrowMediaDisplay borrowMediaDisplay = new BorrowMediaDisplay(this.library, this.member);
+            BorrowMedia borrowMedia = new BorrowMedia(this.librarySystem, this.member, this.persistence);
+            BorrowMediaDisplay borrowMediaDisplay = new BorrowMediaDisplay(borrowMedia, this.library, this.member);
             borrowMediaDisplay.browseMedia();
         } else {
             System.out.println("You cannot borrow media until all overdue media is returned.");
@@ -106,7 +118,8 @@ public class AccountCentre {
      */
     private void returnMedia() {
         if (!this.member.getTakenOut().isEmpty()) {
-            ReturnMediaDisplay returnMediaDisplay = new ReturnMediaDisplay(this.library, this.member);
+            ReturnMedia returnMedia = new ReturnMedia(this.librarySystem, this.member, this.persistence);
+            ReturnMediaDisplay returnMediaDisplay = new ReturnMediaDisplay(returnMedia, this.library, this.member);
             returnMediaDisplay.startReturnMedia();
         } else {
             System.out.println("You have no media to return.");
@@ -117,7 +130,8 @@ public class AccountCentre {
      * Books a time slot of a resource
      */
     private void bookResource() {
-        BookResourceDisplay bookResourceDisplay = new BookResourceDisplay(this.library, this.member);
+        BookResource bookResource = new BookResource(this.librarySystem, this.member, this.persistence);
+        BookResourceDisplay bookResourceDisplay = new BookResourceDisplay(bookResource, this.library);
         bookResourceDisplay.bookResourceSlot();
     }
 
@@ -125,7 +139,8 @@ public class AccountCentre {
      * Finds a path from the library kiosk to an item in the library
      */
     private void findItem() {
-        FindItemDisplay findItemDisplay = new FindItemDisplay(this.library);
+        FindItem findItem = new FindItem(this.library);
+        FindItemDisplay findItemDisplay = new FindItemDisplay(findItem, this.library);
         findItemDisplay.enterItem();
     }
 

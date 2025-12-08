@@ -1,10 +1,12 @@
 package ca.umanitoba.cs.egilsons.logic;
 
+import ca.umanitoba.cs.egilsons.domain.LibrarySystem;
 import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.resource.Booking;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import ca.umanitoba.cs.egilsons.domain.resource.TimeSlot;
 import ca.umanitoba.cs.egilsons.logic.exceptions.*;
+import ca.umanitoba.cs.egilsons.persistence.LibrarySystemPersistence;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -14,7 +16,9 @@ import java.util.List;
  * Logic for booking a {@link Resource}.
  */
 public class BookResource {
+    private LibrarySystem librarySystem;
     private final Member member;
+    private LibrarySystemPersistence persistence;
 
     /**
      * Checking that BookResource is in a valid state
@@ -26,10 +30,14 @@ public class BookResource {
     /**
      * A constructor for BookResource. Receives the library and the member
      *
+     * @param librarySystem the library system of the resource
      * @param member the member booking the resource
+     * @param persistence the persistence of the library system
      */
-    public BookResource(Member member) {
+    public BookResource(LibrarySystem librarySystem, Member member, LibrarySystemPersistence persistence) {
+        this.librarySystem = librarySystem;
         this.member = member;
+        this.persistence = persistence;
         checkBookResource();
     }
 
@@ -182,6 +190,7 @@ public class BookResource {
         Preconditions.checkNotNull(slot, "Time slot should not be null.");
         Preconditions.checkNotNull(resource, "Resource should not be null.");
         this.member.bookResource(slot, resource);
+        this.persistence.saveLibrarySystem(this.librarySystem);
         checkBookResource();
         Preconditions.checkState(slot.isBooked(), "Resource slot should be booked.");
     }

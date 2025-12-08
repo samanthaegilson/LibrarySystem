@@ -1,10 +1,12 @@
 package ca.umanitoba.cs.egilsons.logic;
 
 import ca.umanitoba.cs.egilsons.domain.Library;
+import ca.umanitoba.cs.egilsons.domain.LibrarySystem;
 import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
 import ca.umanitoba.cs.egilsons.domain.media.DVD;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
+import ca.umanitoba.cs.egilsons.persistence.LibrarySystemPersistence;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -14,8 +16,10 @@ import java.util.List;
  * Logic for borrowing {@link Media}.
  */
 public class BorrowMedia {
+    private LibrarySystem librarySystem;
     private final Library library;
     private final Member member;
+    private LibrarySystemPersistence persistence;
 
     /**
      * Checking that BorrowMedia is in a valid state
@@ -28,12 +32,15 @@ public class BorrowMedia {
     /**
      * A constructor for BorrowMedina. Receives the library and the member
      *
-     * @param library the library of the media
+     * @param librarySystem the library system of the media
      * @param member the member borrowing the media
+     * @param persistence the persistence of the library system
      */
-    public BorrowMedia(Library library, Member member) {
-        this.library = library;
+    public BorrowMedia(LibrarySystem librarySystem, Member member, LibrarySystemPersistence persistence) {
+        this.librarySystem = librarySystem;
+        this.library = librarySystem.getLibraries().get(0);
         this.member = member;
+        this.persistence = persistence;
         checkBorrowMedia();
     }
 
@@ -50,13 +57,13 @@ public class BorrowMedia {
         List<Media> filtered = new ArrayList<>();
         if (isBook) {
             for (Media media : this.library.getMedia()) {
-                if (media.getTitle().toLowerCase().contains(name) && media instanceof Book) {
+                if (media.getTitle().toLowerCase().contains(name.toLowerCase()) && media instanceof Book) {
                     filtered.add(media);
                 }
             }
         } else {
             for (Media media : this.library.getMedia()) {
-                if (media.getTitle().toLowerCase().contains(name) && media instanceof DVD) {
+                if (media.getTitle().toLowerCase().contains(name.toLowerCase()) && media instanceof DVD) {
                     filtered.add(media);
                 }
             }
@@ -87,6 +94,7 @@ public class BorrowMedia {
             this.member.removeAnnouncement(media.getTitle());
         }
 
+        this.persistence.saveLibrarySystem(this.librarySystem);
         checkBorrowMedia();
         return borrowed;
     }
@@ -107,6 +115,7 @@ public class BorrowMedia {
             spot = media.addToWaitlist(this.member);
         }
 
+        this.persistence.saveLibrarySystem(this.librarySystem);
         checkBorrowMedia();
         return spot;
     }

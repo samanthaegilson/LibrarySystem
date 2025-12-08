@@ -20,10 +20,11 @@ public class FindItemDisplay {
     /**
      * A constructor for FindItemDisplay. Receives the library
      *
+     * @param findItem the item finding to display
      * @param library the library with the items
      */
-    public FindItemDisplay(Library library) {
-        this.findItem = new FindItem(library);
+    public FindItemDisplay(FindItem findItem, Library library) {
+        this.findItem = findItem;
         this.library = library;
         this.keyboard = new Scanner(System.in);
     }
