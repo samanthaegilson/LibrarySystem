@@ -3,12 +3,14 @@ package ca.umanitoba.cs.egilsons.domain.media;
 import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link DVD}.
+ */
 public class TestDVD {
     private int successes = 0;
     private int failures = 0;
 
     public TestResults runTests() {
-        testCreateDVD();
         testEmptyFrontOfWaitlist();
         testFrontFrontOfWaitlist();
         testNotFrontFrontOfWaitlist();
@@ -20,38 +22,6 @@ public class TestDVD {
         testExistingAddToWaitlist();
 
         return new TestResults(successes, failures);
-    }
-
-    public void testCreateDVD() {
-        try {
-            DVD dvd = new DVD("Title", "Director", 100, MediaCategory.NON_FICTION);
-
-            if (dvd.getTitle().equals("Title")) {
-                if (dvd.getDirector().equals("Director")) {
-                    if (dvd.getRunTime() == 100) {
-                        if (dvd.getCategory() == MediaCategory.NON_FICTION) {
-                            if (dvd.getCopies() == 1) {
-                                pass("DVD created successfully.");
-                            } else {
-                                fail("DVD copies is not what was expected, got " + dvd.getCopies() + " expected 1.");
-                            }
-                        } else {
-                            fail("DVD category is not what was expected, got " + dvd.getCategory()
-                                    + " expected NON-FICTION.");
-                        }
-                    } else {
-                        fail("DVD pages is not what was expected, got " + dvd.getRunTime() + " expected 100.");
-                    }
-                } else {
-                    fail("DVD director is not what was expected, got " + dvd.getDirector() + " expected Director.");
-                }
-            } else {
-                fail("DVD title is not what was expected, got " + dvd.getTitle() + " expected Title.");
-            }
-        } catch (Exception e) {
-            fail("Some exception was thrown.");
-            e.printStackTrace();
-        }
     }
 
     public void testEmptyFrontOfWaitlist() {

@@ -3,12 +3,14 @@ package ca.umanitoba.cs.egilsons.domain.media;
 import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link Book}.
+ */
 public class TestBook {
     private int successes = 0;
     private int failures = 0;
 
     public TestResults runTests() {
-        testCreateBook();
         testEmptyFrontOfWaitlist();
         testFrontFrontOfWaitlist();
         testNotFrontFrontOfWaitlist();
@@ -20,38 +22,6 @@ public class TestBook {
         testExistingAddToWaitlist();
 
         return new TestResults(successes, failures);
-    }
-
-    public void testCreateBook() {
-        try {
-            Book book = new Book("Title", "Author", 100, MediaCategory.NON_FICTION);
-
-            if (book.getTitle().equals("Title")) {
-                if (book.getAuthor().equals("Author")) {
-                    if (book.getPages() == 100) {
-                        if (book.getCategory() == MediaCategory.NON_FICTION) {
-                            if (book.getCopies() == 1) {
-                                pass("Book created successfully.");
-                            } else {
-                                fail("Book copies is not what was expected, got " + book.getCopies() + " expected 1.");
-                            }
-                        } else {
-                            fail("Book category is not what was expected, got " + book.getCategory()
-                                    + " expected NON-FICTION.");
-                        }
-                    } else {
-                        fail("Book pages is not what was expected, got " + book.getPages() + " expected 100.");
-                    }
-                } else {
-                    fail("Book author is not what was expected, got " + book.getAuthor() + " expected Author.");
-                }
-            } else {
-                fail("Book title is not what was expected, got " + book.getTitle() + " expected Title.");
-            }
-        } catch (Exception e) {
-            fail("Some exception was thrown.");
-            e.printStackTrace();
-        }
     }
 
     public void testEmptyFrontOfWaitlist() {

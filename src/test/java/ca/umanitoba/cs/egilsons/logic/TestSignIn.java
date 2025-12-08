@@ -5,6 +5,9 @@ import ca.umanitoba.cs.egilsons.domain.Member;
 import ca.umanitoba.cs.egilsons.persistence.LibrarySystemPersistence;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of {@link SignIn}.
+ */
 public class TestSignIn {
     private int successes = 0;
     private int failures = 0;

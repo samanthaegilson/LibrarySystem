@@ -1,12 +1,13 @@
 package ca.umanitoba.cs.egilsons.domain.media;
 
-import ca.umanitoba.cs.egilsons.domain.Member;
-import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidNameException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidReturnDateException;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
 import java.time.LocalDateTime;
 
+/**
+ * Testing of a {@link Loan}.
+ */
 public class TestLoan {
     private int successes = 0;
     private int failures = 0;
@@ -32,7 +33,7 @@ public class TestLoan {
                     pass("Loan created successfully.");
                 } else {
                     System.out.println(loan.getReturnDate());
-                    fail("Loan should return date should not be later than 30 seconds from now.");
+                    fail("Loan should return date should be 30 seconds from now.");
                 }
             } else {
                 fail("Loan media was not set as expected, got " + loan.getMedia().getTitle() + " expected Test.");

@@ -14,6 +14,9 @@ import ca.umanitoba.cs.egilsons.tests.TestResults;
 
 import java.util.List;
 
+/**
+ * Testing of {@link BookResource}.
+ */
 public class TestBookResource {
     private int successes = 0;
     private int failures = 0;

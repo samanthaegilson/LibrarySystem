@@ -3,16 +3,23 @@ package ca.umanitoba.cs.egilsons.domain.resource;
 import ca.umanitoba.cs.egilsons.domain.exceptions.*;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link TimeSlot}.
+ */
 public class TestTimeSlot {
     private int successes = 0;
     private int failures = 0;
 
     public TestResults runTests() {
         testCreateTimeSlot();
-        testInvalidStartHour();
-        testInvalidEndHour();
-        testInvalidDay();
-        testInvalidWeek();
+        testInvalidLowerBoundsStartHour();
+        testInvalidUpperBoundsStartHour();
+        testInvalidLowerBoundsEndHour();
+        testInvalidUpperBoundsEndHour();
+        testInvalidLowerBoundsDay();
+        testInvalidUpperBoundsDay();
+        testInvalidLowerBoundsWeek();
+        testInvalidUpperBoundsWeek();
         testBook();
 
         return new TestResults(successes, failures);
@@ -51,7 +58,7 @@ public class TestTimeSlot {
         }
     }
 
-    public void testInvalidStartHour() {
+    public void testInvalidLowerBoundsStartHour() {
         TimeSlot.TimeSlotBuilder builder = new TimeSlot.TimeSlotBuilder();
 
         try {
@@ -65,7 +72,21 @@ public class TestTimeSlot {
         }
     }
 
-    public void testInvalidEndHour() {
+    public void testInvalidUpperBoundsStartHour() {
+        TimeSlot.TimeSlotBuilder builder = new TimeSlot.TimeSlotBuilder();
+
+        try {
+            builder.startHour(20);
+            fail("Should not have succeeded in setting start hour bigger than 19.");
+        } catch (InvalidStartHourException e) {
+            pass("Successfully rejected start hour bigger than 19.");
+        } catch (Exception e) {
+            fail("Some other exception was thrown.");
+            e.printStackTrace();
+        }
+    }
+
+    public void testInvalidLowerBoundsEndHour() {
         TimeSlot.TimeSlotBuilder builder = new TimeSlot.TimeSlotBuilder();
 
         try {
@@ -79,7 +100,21 @@ public class TestTimeSlot {
         }
     }
 
-    public void testInvalidDay() {
+    public void testInvalidUpperBoundsEndHour() {
+        TimeSlot.TimeSlotBuilder builder = new TimeSlot.TimeSlotBuilder();
+
+        try {
+            builder.endHour(21);
+            fail("Should not have succeeded in setting end hour bigger than 20.");
+        } catch (InvalidEndHourException e) {
+            pass("Successfully rejected end hour bigger than 20.");
+        } catch (Exception e) {
+            fail("Some other exception was thrown.");
+            e.printStackTrace();
+        }
+    }
+
+    public void testInvalidLowerBoundsDay() {
         TimeSlot.TimeSlotBuilder builder = new TimeSlot.TimeSlotBuilder();
 
         try {
@@ -93,7 +128,21 @@ public class TestTimeSlot {
         }
     }
 
-    public void testInvalidWeek() {
+    public void testInvalidUpperBoundsDay() {
+        TimeSlot.TimeSlotBuilder builder = new TimeSlot.TimeSlotBuilder();
+
+        try {
+            builder.day(8);
+            fail("Should not have succeeded in setting day bigger than 7.");
+        } catch (InvalidDayException e) {
+            pass("Successfully rejected day bigger than 7.");
+        } catch (Exception e) {
+            fail("Some other exception was thrown.");
+            e.printStackTrace();
+        }
+    }
+
+    public void testInvalidLowerBoundsWeek() {
         TimeSlot.TimeSlotBuilder builder = new TimeSlot.TimeSlotBuilder();
 
         try {
@@ -101,6 +150,20 @@ public class TestTimeSlot {
             fail("Should not have succeeded in setting week smaller than 1.");
         } catch (InvalidWeekException e) {
             pass("Successfully rejected week smaller than 1.");
+        } catch (Exception e) {
+            fail("Some other exception was thrown.");
+            e.printStackTrace();
+        }
+    }
+
+    public void testInvalidUpperBoundsWeek() {
+        TimeSlot.TimeSlotBuilder builder = new TimeSlot.TimeSlotBuilder();
+
+        try {
+            builder.week(5);
+            fail("Should not have succeeded in setting week bigger than 4.");
+        } catch (InvalidWeekException e) {
+            pass("Successfully rejected week bigger than 4.");
         } catch (Exception e) {
             fail("Some other exception was thrown.");
             e.printStackTrace();

@@ -1,6 +1,5 @@
 package ca.umanitoba.cs.egilsons.domain;
 
-import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidNameException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidReviewStarsException;
 import ca.umanitoba.cs.egilsons.domain.exceptions.InvalidReviewTextException;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
@@ -8,6 +7,9 @@ import ca.umanitoba.cs.egilsons.domain.media.Media;
 import ca.umanitoba.cs.egilsons.domain.media.MediaCategory;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link Review}.
+ */
 public class TestReview {
     private int successes = 0;
     private int failures = 0;

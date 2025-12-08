@@ -9,6 +9,9 @@ import ca.umanitoba.cs.egilsons.domain.media.MediaCategory;
 import ca.umanitoba.cs.egilsons.persistence.LibrarySystemPersistence;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of {@link ReturnMedia}.
+ */
 public class TestReturnMedia {
     private int successes = 0;
     private int failures = 0;

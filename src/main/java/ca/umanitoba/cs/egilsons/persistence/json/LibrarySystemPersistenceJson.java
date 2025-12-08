@@ -81,20 +81,6 @@ public class LibrarySystemPersistenceJson implements LibrarySystemPersistence {
         checkLibrarySystemPersistenceJson();
         final String LIBRARY_NAME = "Shakespeare";
         LibrarySystem librarySystem = new LibrarySystem();
-//        try {
-//            Library library = new Library.LibraryBuilder().name(LIBRARY_NAME).build();
-//            for (Media media : this.hardCodedMedia) {
-//                for (int i = 0; i < 4; i++) {
-//                    library.addMedia(media);
-//                }
-//            }
-//            for (Resource resource : this.hardCodedResources) {
-//                library.addResource(resource);
-//            }
-//            librarySystem.addLibrary(library);
-//        } catch (InvalidNameException e) {
-//            throw new RuntimeException(e);
-//        }
         if (Files.exists(librarySystemStorage)) {
             try {
                 // Loads the library system from the storage

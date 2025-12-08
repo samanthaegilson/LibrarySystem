@@ -14,9 +14,8 @@ import ca.umanitoba.cs.egilsons.tests.TestResults;
 import java.time.LocalDateTime;
 
 /**
- * This is a test suite for the {@link Member} class.
+ * Testing of a {@link Member}.
  */
-
 public class TestMember {
     private int successes = 0;
     private int failures = 0;
@@ -109,7 +108,7 @@ public class TestMember {
             Member member = new Member.MemberBuilder().name("Sam").password("pass").build();
             Member other = new Member.MemberBuilder().name("Other").password("pass").build();
 
-            if (member.compareTo(other) == 1) {
+            if (member.compareTo(other) > 0) {
                 pass("Members successfully deemed different.");
             } else {
                 fail("Members should have been deemed different.");

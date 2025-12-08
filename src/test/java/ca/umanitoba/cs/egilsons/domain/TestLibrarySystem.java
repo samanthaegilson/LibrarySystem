@@ -2,6 +2,9 @@ package ca.umanitoba.cs.egilsons.domain;
 
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link LibrarySystem}.
+ */
 public class TestLibrarySystem {
     private int successes = 0;
     private int failures = 0;

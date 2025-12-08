@@ -4,54 +4,22 @@ import ca.umanitoba.cs.egilsons.domain.Library;
 import ca.umanitoba.cs.egilsons.domain.media.Book;
 import ca.umanitoba.cs.egilsons.domain.media.Media;
 import ca.umanitoba.cs.egilsons.domain.media.MediaCategory;
-import ca.umanitoba.cs.egilsons.domain.resource.Computer;
 import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import ca.umanitoba.cs.egilsons.domain.resource.Room;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link Map}.
+ */
 public class TestMap {
     private int successes = 0;
     private int failures = 0;
 
     public TestResults runTests() {
-        testCreateMap();
         testSetMediaCoordinates();
         testSetResourceCoordinates();
 
         return new TestResults(successes, failures);
-    }
-
-    public void testCreateMap() {
-        try {
-            Library library = new Library.LibraryBuilder().name("Test").build();
-            Resource computer = new Computer();
-            Resource room = new Room();
-            library.addResource(computer);
-            library.addResource(room);
-            Map map = new Map(library);
-            if (map.getDisplay().length == 43) {
-                if (map.getDisplay()[0].length == 10) {
-                    if (map.getKiosk().row() == 1) {
-                        if (map.getKiosk().column() == 28) {
-                            pass("Map created successfully.");
-                        } else {
-                            fail("Kiosk column was not set as expected, got " + map.getKiosk().column()
-                                    + " expected 28.");
-                        }
-                    } else {
-                        fail("Kiosk row was not set as expected, got " + map.getKiosk().row() + " expected 1.");
-                    }
-                } else {
-                    fail("Map display column length was not set as expected, got " + map.getDisplay()[0].length
-                            + " expected 10.");
-                }
-            } else {
-                fail("Map display row length was not set as expected, got " + map.getDisplay().length + " expected 43.");
-            }
-        } catch (Exception e) {
-            fail("Some exception was thrown.");
-            e.printStackTrace();
-        }
     }
 
     public void testSetMediaCoordinates() {

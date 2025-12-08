@@ -8,6 +8,9 @@ import ca.umanitoba.cs.egilsons.domain.resource.Resource;
 import ca.umanitoba.cs.egilsons.domain.resource.Room;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link Library}.
+ */
 public class TestLibrary {
     private int successes = 0;
     private int failures = 0;

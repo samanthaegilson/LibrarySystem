@@ -43,7 +43,8 @@ Please look at my test data for the stack in the file named
     * All other methods seemed to work correctly based on the tests I had.
 * `BadStack3`
     * My test cases said that the stack was not incrementing the size for
-      first push. Therefore, the size was always n-1.
+      the first push. Therefore, the size was always one less than it should
+      be.
     * All other methods seemed to work correctly based on the tests I had.
 * `BadStack4`
     * My test cases said that the stack setting size to 0 every time pop()

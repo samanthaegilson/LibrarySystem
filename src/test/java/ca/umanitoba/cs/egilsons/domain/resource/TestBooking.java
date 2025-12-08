@@ -2,6 +2,9 @@ package ca.umanitoba.cs.egilsons.domain.resource;
 
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link Booking}.
+ */
 public class TestBooking {
     private int successes = 0;
     private int failures = 0;

@@ -4,6 +4,9 @@ import ca.umanitoba.cs.comp2450.stack.Stack;
 import ca.umanitoba.cs.comp2450.stack.impl.*;
 import ca.umanitoba.cs.egilsons.tests.TestResults;
 
+/**
+ * Testing of a {@link Stack}.
+ */
 public class TestStack {
     private int successes = 0;
     private int failures = 0;
